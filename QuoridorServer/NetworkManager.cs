@@ -27,6 +27,11 @@ namespace QuoridorServer
             myServer.Start();
         }
 
+        public static void Deintialize()
+        {
+            myServer.Shutdown("Disconnect");
+        }
+
         public static void Update(RichTextBox aServerLog)
         {
             while (ReceivedValidMessage)
@@ -64,7 +69,7 @@ namespace QuoridorServer
                                         {
                                             System.Threading.Thread.Sleep(100);
                                             PlayerManager.myPlayers.Add(new Player(name));
-                                            aServerLog.AppendText(name + " connected!" + "\r\n");
+                                            aServerLog.AppendText(name + " connected!" + "\n");
 
                                             for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
                                             {
@@ -89,7 +94,7 @@ namespace QuoridorServer
                                             {
                                                 myServer.Connections[i].Disconnect("Disconnected");
                                                 System.Threading.Thread.Sleep(100);
-                                                aServerLog.AppendText(name + " disconnected." + "\r\n");
+                                                aServerLog.AppendText(name + " disconnected." + "\n");
 
                                                 if (myServer.ConnectionsCount != 0)
                                                 {

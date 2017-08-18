@@ -20,11 +20,27 @@ namespace QuoridorServer
 
         private void StartButton_Click(object sender, EventArgs e) //TODO Sluta hårdkoda.
         {
-            NetworkManager.Initialize();
-            LogTextBox.AppendText("Server started!" + "\r\n");
-            LogTextBox.AppendText("Waiting for connections.." + "\r\n\r\n");
+            if (StartButton.Text == "Start")
+            {
+                NetworkManager.Initialize();
+                LogTextBox.AppendText("Server started!" + "\n");
+                LogTextBox.AppendText("Waiting for connections.." + "\n\n");
 
-            StartButton.Enabled = false;
+                NumberOfPlayersGroup.Enabled = false;
+                PortGroup.Enabled = false;
+
+                StartButton.Text = "Disconnect";
+            }
+            else
+            {
+                NetworkManager.Deintialize();
+
+                LogTextBox.AppendText("Server closed!" + "\n\n");
+                NumberOfPlayersGroup.Enabled = true;
+                PortGroup.Enabled = true;
+
+                StartButton.Text = "Start";
+            }
         }
 
         private void Timer1_Tick(object sender, EventArgs e)

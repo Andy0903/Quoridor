@@ -20,14 +20,15 @@ namespace QuoridorServer
                     myPlayers[i].myTimeOut++;
 
                     NetworkManager.myOutMsg = NetworkManager.myServer.CreateMessage();
-                    NetworkManager.myOutMsg.Write("hey, " + myPlayers[i].myName);
+                    NetworkManager.myOutMsg.Write("hey");
+                    NetworkManager.myOutMsg.Write(myPlayers[i].myName);
                     NetworkManager.myServer.SendMessage(NetworkManager.myOutMsg, NetworkManager.myServer.Connections,
                         Lidgren.Network.NetDeliveryMethod.Unreliable, 0);
 
                     if (180 < myPlayers[i].myTimeOut) //Player timed out. Proceed to disconnect.
                     {
                         NetworkManager.myServer.Connections[i].Disconnect("Timed out.");
-                        aServerLog.AppendText(myPlayers[i].myName + " has timed out." + "\r\n");
+                        aServerLog.AppendText(myPlayers[i].myName + " has timed out." + "\n");
                         System.Threading.Thread.Sleep(100);
 
                         if (NetworkManager.myServer.ConnectionsCount != 0)
