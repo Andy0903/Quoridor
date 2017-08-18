@@ -28,14 +28,16 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.PortGroup = new System.Windows.Forms.GroupBox();
-            this.NumberOfPlayersGroup = new System.Windows.Forms.GroupBox();
-            this.LogGroup = new System.Windows.Forms.GroupBox();
-            this.RadioButton2Players = new System.Windows.Forms.RadioButton();
-            this.RadioButton4Player = new System.Windows.Forms.RadioButton();
             this.PortTextBox = new System.Windows.Forms.TextBox();
+            this.NumberOfPlayersGroup = new System.Windows.Forms.GroupBox();
+            this.RadioButton4Player = new System.Windows.Forms.RadioButton();
+            this.RadioButton2Players = new System.Windows.Forms.RadioButton();
+            this.LogGroup = new System.Windows.Forms.GroupBox();
             this.LogTextBox = new System.Windows.Forms.RichTextBox();
             this.StartButton = new System.Windows.Forms.Button();
+            this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.PortGroup.SuspendLayout();
             this.NumberOfPlayersGroup.SuspendLayout();
             this.LogGroup.SuspendLayout();
@@ -51,6 +53,13 @@
             this.PortGroup.TabStop = false;
             this.PortGroup.Text = "Port";
             // 
+            // PortTextBox
+            // 
+            this.PortTextBox.Location = new System.Drawing.Point(6, 17);
+            this.PortTextBox.Name = "PortTextBox";
+            this.PortTextBox.Size = new System.Drawing.Size(146, 20);
+            this.PortTextBox.TabIndex = 4;
+            // 
             // NumberOfPlayersGroup
             // 
             this.NumberOfPlayersGroup.Controls.Add(this.RadioButton4Player);
@@ -62,15 +71,15 @@
             this.NumberOfPlayersGroup.TabStop = false;
             this.NumberOfPlayersGroup.Text = "Number of Players";
             // 
-            // LogGroup
+            // RadioButton4Player
             // 
-            this.LogGroup.Controls.Add(this.LogTextBox);
-            this.LogGroup.Location = new System.Drawing.Point(12, 122);
-            this.LogGroup.Name = "LogGroup";
-            this.LogGroup.Size = new System.Drawing.Size(283, 355);
-            this.LogGroup.TabIndex = 1;
-            this.LogGroup.TabStop = false;
-            this.LogGroup.Text = "Log";
+            this.RadioButton4Player.AutoSize = true;
+            this.RadioButton4Player.Location = new System.Drawing.Point(43, 19);
+            this.RadioButton4Player.Name = "RadioButton4Player";
+            this.RadioButton4Player.Size = new System.Drawing.Size(31, 17);
+            this.RadioButton4Player.TabIndex = 3;
+            this.RadioButton4Player.Text = "4";
+            this.RadioButton4Player.UseVisualStyleBackColor = true;
             // 
             // RadioButton2Players
             // 
@@ -84,22 +93,15 @@
             this.RadioButton2Players.Text = "2";
             this.RadioButton2Players.UseVisualStyleBackColor = true;
             // 
-            // RadioButton4Player
+            // LogGroup
             // 
-            this.RadioButton4Player.AutoSize = true;
-            this.RadioButton4Player.Location = new System.Drawing.Point(43, 19);
-            this.RadioButton4Player.Name = "RadioButton4Player";
-            this.RadioButton4Player.Size = new System.Drawing.Size(31, 17);
-            this.RadioButton4Player.TabIndex = 3;
-            this.RadioButton4Player.Text = "4";
-            this.RadioButton4Player.UseVisualStyleBackColor = true;
-            // 
-            // PortTextBox
-            // 
-            this.PortTextBox.Location = new System.Drawing.Point(6, 17);
-            this.PortTextBox.Name = "PortTextBox";
-            this.PortTextBox.Size = new System.Drawing.Size(146, 20);
-            this.PortTextBox.TabIndex = 4;
+            this.LogGroup.Controls.Add(this.LogTextBox);
+            this.LogGroup.Location = new System.Drawing.Point(12, 122);
+            this.LogGroup.Name = "LogGroup";
+            this.LogGroup.Size = new System.Drawing.Size(283, 355);
+            this.LogGroup.TabIndex = 1;
+            this.LogGroup.TabStop = false;
+            this.LogGroup.Text = "Log";
             // 
             // LogTextBox
             // 
@@ -118,6 +120,13 @@
             this.StartButton.TabIndex = 3;
             this.StartButton.Text = "Start";
             this.StartButton.UseVisualStyleBackColor = true;
+            this.StartButton.Click += new System.EventHandler(this.StartButton_Click);
+            // 
+            // Timer1
+            // 
+            this.Timer1.Enabled = true;
+            this.Timer1.Interval = 16;
+            this.Timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // QuoridorServerForm
             // 
@@ -147,8 +156,9 @@
         private System.Windows.Forms.RadioButton RadioButton4Player;
         private System.Windows.Forms.RadioButton RadioButton2Players;
         private System.Windows.Forms.GroupBox LogGroup;
-        private System.Windows.Forms.RichTextBox LogTextBox;
+        public System.Windows.Forms.RichTextBox LogTextBox;
         private System.Windows.Forms.Button StartButton;
+        private System.Windows.Forms.Timer Timer1;
     }
 }
 

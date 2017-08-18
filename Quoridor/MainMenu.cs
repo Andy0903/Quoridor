@@ -1,5 +1,6 @@
 ﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
+using Lidgren.Network;
 using Microsoft.Xna.Framework;
 
 namespace Quoridor
@@ -46,7 +47,23 @@ namespace Quoridor
             Button connectButton = new Button("Connect");
             mainPanel.AddChild(connectButton);
             connectButton.SetOffset(new Vector2(0, 80));
-            
+
+
+            connectButton.OnClick = (Entity button) =>
+            {
+                //If pushed connect button
+                NetworkManager.myClient.Start();
+                NetworkManager.myClient.Connect("127.0.0.1", 14242); //TODO read from box.
+
+                System.Threading.Thread.Sleep(300);
+
+                NetworkManager.myOutMsg = NetworkManager.myClient.CreateMessage();
+                NetworkManager.myOutMsg.Write("Connect");
+                NetworkManager.myOutMsg.Write("kalle");
+                NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, NetDeliveryMethod.ReliableOrdered);
+                System.Threading.Thread.Sleep(300);
+                //End of if
+            };
         }
     }
 }

@@ -43,6 +43,9 @@
   <ItemGroup>
     <Compile Include="Game1.cs" />
     <Compile Include="MainMenu.cs" />
+    <Compile Include="NetworkManager.cs" />
+    <Compile Include="Player.cs" />
+    <Compile Include="PlayerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -54,6 +57,10 @@
     <Reference Include="GeonBit.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GeonBit.UI.3.0.0.1\lib\geonbitui\GeonBit.UI.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Lidgren.Network, Version=3.6.0.1625, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Lidgren.Network.dll</HintPath>
     </Reference>
     <Reference Include="MonoGame.Framework">
       <HintPath>$(MonoGameInstallDirectory)\MonoGame\v3.0\Assemblies\Windows\MonoGame.Framework.dll</HintPath>

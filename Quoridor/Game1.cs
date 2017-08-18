@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 
 using GeonBit.UI;
+using Lidgren.Network;
 
 namespace Quoridor
 {
@@ -17,12 +18,19 @@ namespace Quoridor
             myGraphics.PreferredBackBufferHeight = 720;
             myGraphics.PreferredBackBufferWidth = 1280;
             Content.RootDirectory = "Content";
+
+            myGraphics.SynchronizeWithVerticalRetrace = false;
+            IsFixedTimeStep = true;
+            myGraphics.ApplyChanges();
         }
 
         protected override void Initialize()
         {
             UserInterface.Initialize(Content, BuiltinThemes.hd);
             myMainMenu = new MainMenu();
+
+            NetworkManager.myConfig = new NetPeerConfiguration("QuoridorConfig");   //Must be same appIdentifier as the server uses.
+            NetworkManager.myClient = new NetClient(NetworkManager.myConfig);
             
             base.Initialize();
         }
@@ -38,7 +46,10 @@ namespace Quoridor
 
         protected override void Update(GameTime gameTime)
         {
+            NetworkManager.Update();
+            PlayerManager.Update();
             UserInterface.Active.Update(gameTime);
+
             base.Update(gameTime);
         }
         protected override void Draw(GameTime gameTime)
