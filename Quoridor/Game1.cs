@@ -1,9 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 using GeonBit.UI;
-using GeonBit.UI.Entities;
 
 namespace Quoridor
 {
@@ -23,7 +21,7 @@ namespace Quoridor
 
         protected override void Initialize()
         {
-            UserInterface.Initialize(Content, BuiltinThemes.editor);
+            UserInterface.Initialize(Content, BuiltinThemes.hd);
             myMainMenu = new MainMenu();
             
             base.Initialize();
