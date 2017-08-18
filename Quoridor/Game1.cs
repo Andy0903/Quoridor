@@ -23,7 +23,7 @@ namespace Quoridor
 
         protected override void Initialize()
         {
-            UserInterface.Initialize(Content, BuiltinThemes.hd);
+            UserInterface.Initialize(Content, BuiltinThemes.editor);
             myMainMenu = new MainMenu();
             
             base.Initialize();
@@ -45,7 +45,7 @@ namespace Quoridor
         }
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             UserInterface.Active.Draw(mySpriteBatch);
             base.Draw(gameTime);
