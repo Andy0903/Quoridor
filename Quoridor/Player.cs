@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Quoridor
 {
-    class Player
+    public class Player
     {
         public string myName;
 

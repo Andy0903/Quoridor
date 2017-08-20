@@ -6,12 +6,19 @@ using Lidgren.Network;
 
 namespace Quoridor
 {
+    public enum GameState
+    {
+        MainMenu,
+        Playing,
+    }
+
     public class Game1 : Game
     {
         GraphicsDeviceManager myGraphics;
         SpriteBatch mySpriteBatch;
         MainMenu myMainMenu;
-        Player myLocalPlayer;
+        public Player LocalPlayer { get; set; }
+        public GameState State { get; set; }
 
         public Game1()
         {
@@ -28,11 +35,12 @@ namespace Quoridor
         protected override void Initialize()
         {
             UserInterface.Initialize(Content, BuiltinThemes.hd);
-            myMainMenu = new MainMenu(myLocalPlayer);
+            myMainMenu = new MainMenu();
+            State = GameState.MainMenu;
 
             NetworkManager.myConfig = new NetPeerConfiguration("QuoridorConfig");   //Must be same appIdentifier as the server uses.
             NetworkManager.myClient = new NetClient(NetworkManager.myConfig);
-            
+
             base.Initialize();
         }
 
@@ -47,9 +55,18 @@ namespace Quoridor
 
         protected override void Update(GameTime gameTime)
         {
-            NetworkManager.Update();
-            PlayerManager.Update();
-            UserInterface.Active.Update(gameTime);
+            switch (State)
+            {
+                case GameState.MainMenu:
+                    UserInterface.Active.Update(gameTime);
+                    break;
+                case GameState.Playing:
+                    NetworkManager.Update();
+                    PlayerManager.Update();
+                    break;
+                default:
+                    break;
+            }
 
             base.Update(gameTime);
         }
@@ -57,7 +74,17 @@ namespace Quoridor
         {
             GraphicsDevice.Clear(Color.Black);
 
-            UserInterface.Active.Draw(mySpriteBatch);
+            switch (State)
+            {
+                case GameState.MainMenu:
+                    UserInterface.Active.Draw(mySpriteBatch);
+                    break;
+                case GameState.Playing:
+                    break;
+                default:
+                    break;
+            }
+
             base.Draw(gameTime);
         }
     }

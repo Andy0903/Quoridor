@@ -3,19 +3,16 @@
 namespace Quoridor
 {
 #if WINDOWS || LINUX
-    /// <summary>
-    /// The main class.
-    /// </summary>
+
     public static class Program
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
+        public static Game1 Game { get; private set; }
+        
         [STAThread]
         static void Main()
         {
-            using (var game = new Game1())
-                game.Run();
+            using (Game = new Game1())
+                Game.Run();
         }
     }
 #endif

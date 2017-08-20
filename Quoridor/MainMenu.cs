@@ -7,12 +7,12 @@ namespace Quoridor
 {
     class MainMenu
     {
-        public MainMenu(Player aLocalPlayer)
+        public MainMenu()
         {
-            Initialize(aLocalPlayer);
+            Initialize();
         }
 
-        public void Initialize(Player aLocalPlayer)
+        public void Initialize()
         {
             Panel titlePanel = new Panel(new Vector2(250, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 5));
             UserInterface.Active.AddEntity(titlePanel);
@@ -63,14 +63,16 @@ namespace Quoridor
                 NetworkManager.myClient.Connect(ipText.Value, port);
 
                 System.Threading.Thread.Sleep(300);
-
-                aLocalPlayer = new Player(nameText.Value);
+                
+                Program.Game.LocalPlayer = new Player(nameText.Value);
 
                 NetworkManager.myOutMsg = NetworkManager.myClient.CreateMessage();
                 NetworkManager.myOutMsg.Write("Connect");
-                NetworkManager.myOutMsg.Write(aLocalPlayer.myName);
+                NetworkManager.myOutMsg.Write(Program.Game.LocalPlayer.myName);
                 NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, NetDeliveryMethod.ReliableOrdered);
                 System.Threading.Thread.Sleep(300);
+
+                Program.Game.State = GameState.Playing;
             };
         }
     }
