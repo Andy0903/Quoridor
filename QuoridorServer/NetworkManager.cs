@@ -18,10 +18,13 @@ namespace QuoridorServer
 
         private static bool ReceivedValidMessage { get { return (myIncMsg = myServer.ReadMessage()) != null; } }
 
-        public static void Initialize()
+        public static void Initialize(TextBox aPortTextBox)
         {
             myConfig = new NetPeerConfiguration("QuoridorConfig");
-            myConfig.Port = 14242;
+
+            int port;
+            int.TryParse(aPortTextBox.Text, out port);
+            myConfig.Port = port;
 
             myServer = new NetServer(myConfig);
             myServer.Start();
@@ -102,7 +105,7 @@ namespace QuoridorServer
                                                     myOutMsg.Write("Disconnect");
                                                     myOutMsg.Write(name);
                                                     myServer.SendMessage(myOutMsg, myServer.Connections,
-                                                        NetDeliveryMethod.ReliableOrdered, 0);                                                    
+                                                        NetDeliveryMethod.ReliableOrdered, 0);
                                                 }
 
                                                 PlayerManager.myPlayers.RemoveAt(i);

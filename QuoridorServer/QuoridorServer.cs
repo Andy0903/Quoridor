@@ -22,7 +22,7 @@ namespace QuoridorServer
         {
             if (StartButton.Text == "Start")
             {
-                NetworkManager.Initialize();
+                NetworkManager.Initialize(PortTextBox);
                 LogTextBox.AppendText("Server started!" + "\n");
                 LogTextBox.AppendText("Waiting for connections.." + "\n\n");
 
@@ -45,7 +45,7 @@ namespace QuoridorServer
 
         private void Timer1_Tick(object sender, EventArgs e)
         {
-            if (StartButton.Enabled == false)
+            if (StartButton.Text == "Disconnect")
             {
                 NetworkManager.Update(LogTextBox);
                 //Update player

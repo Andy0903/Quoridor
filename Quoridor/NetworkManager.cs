@@ -32,7 +32,7 @@ namespace Quoridor
                                     {
                                         string name = myIncMsg.ReadString();
 
-                                        PlayerManager.myPlayers.Add(new Player("Gustav")); //TODO give name
+                                        PlayerManager.myPlayers.Add(new Player(name));
 
                                         for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
                                         {

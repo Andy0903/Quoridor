@@ -7,12 +7,12 @@ namespace Quoridor
 {
     class MainMenu
     {
-        public MainMenu()
+        public MainMenu(Player aLocalPlayer)
         {
-            Initialize();
+            Initialize(aLocalPlayer);
         }
 
-        public void Initialize()
+        public void Initialize(Player aLocalPlayer)
         {
             Panel titlePanel = new Panel(new Vector2(250, 75), PanelSkin.Default, Anchor.TopCenter, new Vector2(0, 5));
             UserInterface.Active.AddEntity(titlePanel);
@@ -47,22 +47,31 @@ namespace Quoridor
             Button connectButton = new Button("Connect");
             mainPanel.AddChild(connectButton);
             connectButton.SetOffset(new Vector2(0, 80));
-
-
+            
             connectButton.OnClick = (Entity button) =>
             {
-                //If pushed connect button
                 NetworkManager.myClient.Start();
-                NetworkManager.myClient.Connect("127.0.0.1", 14242); //TODO read from box.
+                if (ipText.Value == "" && portText.Value == "" && nameText.Value == "") //TODO remove?
+                {
+                    nameText.Value = "StandardName";
+                    NetworkManager.myClient.Connect("127.0.0.1", 14242);
+                }
+                else
+                {
+                    int port;
+                    int.TryParse(portText.Value, out port);
+                    NetworkManager.myClient.Connect(ipText.Value, port);
+                }
 
                 System.Threading.Thread.Sleep(300);
+
+                aLocalPlayer = new Player(nameText.Value);
 
                 NetworkManager.myOutMsg = NetworkManager.myClient.CreateMessage();
                 NetworkManager.myOutMsg.Write("Connect");
-                NetworkManager.myOutMsg.Write("kalle");
+                NetworkManager.myOutMsg.Write(aLocalPlayer.myName);
                 NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, NetDeliveryMethod.ReliableOrdered);
                 System.Threading.Thread.Sleep(300);
-                //End of if
             };
         }
     }

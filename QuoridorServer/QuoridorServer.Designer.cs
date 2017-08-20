@@ -59,6 +59,7 @@
             this.PortTextBox.Name = "PortTextBox";
             this.PortTextBox.Size = new System.Drawing.Size(146, 20);
             this.PortTextBox.TabIndex = 4;
+            this.PortTextBox.Text = "14242";
             // 
             // NumberOfPlayersGroup
             // 

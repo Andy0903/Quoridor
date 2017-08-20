@@ -11,6 +11,7 @@ namespace Quoridor
         GraphicsDeviceManager myGraphics;
         SpriteBatch mySpriteBatch;
         MainMenu myMainMenu;
+        Player myLocalPlayer;
 
         public Game1()
         {
@@ -27,7 +28,7 @@ namespace Quoridor
         protected override void Initialize()
         {
             UserInterface.Initialize(Content, BuiltinThemes.hd);
-            myMainMenu = new MainMenu();
+            myMainMenu = new MainMenu(myLocalPlayer);
 
             NetworkManager.myConfig = new NetPeerConfiguration("QuoridorConfig");   //Must be same appIdentifier as the server uses.
             NetworkManager.myClient = new NetClient(NetworkManager.myConfig);
