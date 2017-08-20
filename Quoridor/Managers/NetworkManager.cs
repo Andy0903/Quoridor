@@ -31,8 +31,10 @@ namespace Quoridor
                                 case "Connect":
                                     {
                                         string name = myIncMsg.ReadString();
-
+                                        Program.Game.PlayerNumbers = (NumberOfPlayers)myIncMsg.ReadInt32();
                                         PlayerManager.myPlayers.Add(new Player(name));
+
+                                        Console.WriteLine(Program.Game.PlayerNumbers);
 
                                         for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
                                         {

@@ -5,8 +5,15 @@ namespace QuoridorServer
 {
     class PlayerManager
     {
+        public enum NumberOfPlayersGameMode
+        {
+            TwoPlayers,
+            FourPlayers
+        }
+
         public static List<Player> myPlayers = new List<Player>();
         private static bool ConnectionCountAndPlayerCountEqual { get { return NetworkManager.myServer.ConnectionsCount == myPlayers.Count; } }
+        public static NumberOfPlayersGameMode GameModePlayers { get; set; }
 
         private static void CheckTimeOuts(RichTextBox aServerLog)
         {

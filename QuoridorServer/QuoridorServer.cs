@@ -53,5 +53,21 @@ namespace QuoridorServer
                 PlayerManager.Update(LogTextBox);
             }
         }
+
+        private void RadioButton2Players_CheckedChanged(object sender, EventArgs e)
+        {
+            if(RadioButton2Players.Checked)
+            {
+                PlayerManager.GameModePlayers = PlayerManager.NumberOfPlayersGameMode.TwoPlayers;
+            }
+        }
+
+        private void RadioButton4Player_CheckedChanged(object sender, EventArgs e)
+        {
+            if (RadioButton4Player.Checked)
+            {
+                PlayerManager.GameModePlayers = PlayerManager.NumberOfPlayersGameMode.FourPlayers;
+            }
+        }
     }
 }

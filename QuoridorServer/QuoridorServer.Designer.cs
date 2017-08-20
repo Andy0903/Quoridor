@@ -81,6 +81,7 @@
             this.RadioButton4Player.TabIndex = 3;
             this.RadioButton4Player.Text = "4";
             this.RadioButton4Player.UseVisualStyleBackColor = true;
+            this.RadioButton4Player.CheckedChanged += new System.EventHandler(this.RadioButton4Player_CheckedChanged);
             // 
             // RadioButton2Players
             // 
@@ -93,6 +94,7 @@
             this.RadioButton2Players.TabStop = true;
             this.RadioButton2Players.Text = "2";
             this.RadioButton2Players.UseVisualStyleBackColor = true;
+            this.RadioButton2Players.CheckedChanged += new System.EventHandler(this.RadioButton2Players_CheckedChanged);
             // 
             // LogGroup
             // 

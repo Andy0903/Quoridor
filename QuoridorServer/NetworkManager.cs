@@ -74,6 +74,7 @@ namespace QuoridorServer
                                                 myOutMsg = myServer.CreateMessage();
                                                 myOutMsg.Write("Connect");
                                                 myOutMsg.Write(PlayerManager.myPlayers[i].Name);
+                                                myOutMsg.Write((int)PlayerManager.GameModePlayers);
 
                                                 myServer.SendMessage(myOutMsg, myServer.Connections,
                                                     NetDeliveryMethod.ReliableOrdered, 0);
