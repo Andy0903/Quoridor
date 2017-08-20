@@ -12,13 +12,20 @@ namespace Quoridor
         Playing,
     }
 
+    public enum NumberOfPlayers
+    {
+        TwoPlayers,
+        FourPlayers,
+    }
+
     public class Game1 : Game
     {
-        GraphicsDeviceManager myGraphics;
+        public GraphicsDeviceManager myGraphics;
         SpriteBatch mySpriteBatch;
         MainMenu myMainMenu;
         public Player LocalPlayer { get; set; }
         public GameState State { get; set; }
+        public NumberOfPlayers PlayerNumbers { get; set; } //TODO ask server for amount of players.
 
         public Game1()
         {

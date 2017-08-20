@@ -42,10 +42,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Game1.cs" />
-    <Compile Include="MainMenu.cs" />
-    <Compile Include="NetworkManager.cs" />
-    <Compile Include="Player.cs" />
-    <Compile Include="PlayerManager.cs" />
+    <Compile Include="GameWorld\GameBoard.cs" />
+    <Compile Include="GameWorld\GraphicalObject.cs" />
+    <Compile Include="GameWorld\Tiles\NarrowTile.cs" />
+    <Compile Include="GameWorld\Tiles\Tile.cs" />
+    <Compile Include="GameWorld\Tiles\WideTile.cs" />
+    <Compile Include="Menus\MainMenu.cs" />
+    <Compile Include="Managers\NetworkManager.cs" />
+    <Compile Include="GameWorld\Player.cs" />
+    <Compile Include="Managers\PlayerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
