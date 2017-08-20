@@ -18,8 +18,8 @@ namespace Quoridor
         public void Update()
         {
             NetworkManager.myOutMsg = NetworkManager.myClient.CreateMessage();
-            NetworkManager.myOutMsg.Write(myName);
             NetworkManager.myOutMsg.Write("Update");
+            NetworkManager.myOutMsg.Write(myName);
             NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, Lidgren.Network.NetDeliveryMethod.Unreliable);
         }
     }

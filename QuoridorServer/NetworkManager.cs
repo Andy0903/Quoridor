@@ -49,11 +49,11 @@ namespace QuoridorServer
 
                                         for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
                                         {
-                                            if (PlayerManager.myPlayers[i].Equals(name) || PlayerManager.ServerFull)
+                                            if (PlayerManager.myPlayers[i].Name.Equals(name) || PlayerManager.ServerFull)
                                             {
                                                 myOutMsg = myServer.CreateMessage();
                                                 myOutMsg.Write("Duplicate name");
-                                                aServerLog.AppendText("Duplicate name or full server!");
+                                                aServerLog.AppendText("Duplicate name or full server!\n");
 
                                                 myServer.SendMessage(myOutMsg, myIncMsg.SenderConnection,
                                                     NetDeliveryMethod.ReliableOrdered, 0);
