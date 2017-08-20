@@ -47,21 +47,20 @@ namespace Quoridor
             Button connectButton = new Button("Connect");
             mainPanel.AddChild(connectButton);
             connectButton.SetOffset(new Vector2(0, 80));
-            
+
             connectButton.OnClick = (Entity button) =>
             {
                 NetworkManager.myClient.Start();
                 if (ipText.Value == "" && portText.Value == "" && nameText.Value == "") //TODO remove?
                 {
-                    nameText.Value = "StandardName";
-                    NetworkManager.myClient.Connect("127.0.0.1", 14242);
+                    nameText.Value = "Default";
+                    ipText.Value = "127.0.0.1";
+                    portText.Value = "14242";
                 }
-                else
-                {
-                    int port;
-                    int.TryParse(portText.Value, out port);
-                    NetworkManager.myClient.Connect(ipText.Value, port);
-                }
+
+                int port;
+                int.TryParse(portText.Value, out port);
+                NetworkManager.myClient.Connect(ipText.Value, port);
 
                 System.Threading.Thread.Sleep(300);
 

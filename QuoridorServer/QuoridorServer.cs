@@ -1,13 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Lidgren.Network;
 
 namespace QuoridorServer
 {
@@ -18,29 +10,39 @@ namespace QuoridorServer
             InitializeComponent();
         }
 
-        private void StartButton_Click(object sender, EventArgs e) //TODO Sluta hårdkoda.
+        private void StartButton_Click(object sender, EventArgs e)
         {
             if (StartButton.Text == "Start")
             {
-                NetworkManager.Initialize(PortTextBox);
-                LogTextBox.AppendText("Server started!" + "\n");
-                LogTextBox.AppendText("Waiting for connections.." + "\n\n");
-
-                NumberOfPlayersGroup.Enabled = false;
-                PortGroup.Enabled = false;
-
-                StartButton.Text = "Disconnect";
+                RunServer();
             }
             else
             {
-                NetworkManager.Deintialize();
-
-                LogTextBox.AppendText("Server closed!" + "\n\n");
-                NumberOfPlayersGroup.Enabled = true;
-                PortGroup.Enabled = true;
-
-                StartButton.Text = "Start";
+                StopServer();
             }
+        }
+
+        private void RunServer()
+        {
+            NetworkManager.Initialize(PortTextBox);
+            LogTextBox.AppendText("Server started!" + "\n");
+            LogTextBox.AppendText("Waiting for connections.." + "\n\n");
+
+            NumberOfPlayersGroup.Enabled = false;
+            PortGroup.Enabled = false;
+
+            StartButton.Text = "Disconnect";
+        }
+
+        private void StopServer()
+        {
+            NetworkManager.Deintialize();
+
+            LogTextBox.AppendText("Server closed!" + "\n\n");
+            NumberOfPlayersGroup.Enabled = true;
+            PortGroup.Enabled = true;
+
+            StartButton.Text = "Start";
         }
 
         private void Timer1_Tick(object sender, EventArgs e)
@@ -48,7 +50,7 @@ namespace QuoridorServer
             if (StartButton.Text == "Disconnect")
             {
                 NetworkManager.Update(LogTextBox);
-                //Update player
+                PlayerManager.Update(LogTextBox);
             }
         }
     }

@@ -1,9 +1,4 @@
 ﻿using Lidgren.Network;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace QuoridorServer
@@ -78,7 +73,7 @@ namespace QuoridorServer
                                             {
                                                 myOutMsg = myServer.CreateMessage();
                                                 myOutMsg.Write("Connect");
-                                                myOutMsg.Write(PlayerManager.myPlayers[i].myName);
+                                                myOutMsg.Write(PlayerManager.myPlayers[i].Name);
 
                                                 myServer.SendMessage(myOutMsg, myServer.Connections,
                                                     NetDeliveryMethod.ReliableOrdered, 0);
@@ -93,7 +88,7 @@ namespace QuoridorServer
 
                                         for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
                                         {
-                                            if (PlayerManager.myPlayers[i].myName.Equals(name))
+                                            if (PlayerManager.myPlayers[i].Name.Equals(name))
                                             {
                                                 myServer.Connections[i].Disconnect("Disconnected");
                                                 System.Threading.Thread.Sleep(100);

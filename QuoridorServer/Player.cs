@@ -1,19 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace QuoridorServer
+﻿namespace QuoridorServer
 {
     class Player
     {
-        public string myName;
+        public string Name { get; private set; }
         public int myTimeOut;
 
         public Player(string aName)
         {
-            myName = aName;
+            Name = aName;
             myTimeOut = 0;
         }
     }
