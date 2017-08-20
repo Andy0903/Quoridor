@@ -49,10 +49,11 @@ namespace QuoridorServer
 
                                         for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
                                         {
-                                            if (PlayerManager.myPlayers[i].Equals(name))
+                                            if (PlayerManager.myPlayers[i].Equals(name) || PlayerManager.ServerFull)
                                             {
                                                 myOutMsg = myServer.CreateMessage();
-                                                myOutMsg.Write("Duplicate name!");
+                                                myOutMsg.Write("Duplicate name");
+                                                aServerLog.AppendText("Duplicate name or full server!");
 
                                                 myServer.SendMessage(myOutMsg, myIncMsg.SenderConnection,
                                                     NetDeliveryMethod.ReliableOrdered, 0);
@@ -78,6 +79,19 @@ namespace QuoridorServer
 
                                                 myServer.SendMessage(myOutMsg, myServer.Connections,
                                                     NetDeliveryMethod.ReliableOrdered, 0);
+                                            }
+                                        }
+                                    }
+                                    break;
+
+                                case "Update":
+                                    {
+                                        string name = myIncMsg.ReadString();
+                                        for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
+                                        {
+                                            if (PlayerManager.myPlayers[i].Name.Equals(name))
+                                            {
+                                                PlayerManager.myPlayers[i].myTimeOut = 0;
                                             }
                                         }
                                     }

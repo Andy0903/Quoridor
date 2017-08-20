@@ -15,6 +15,23 @@ namespace QuoridorServer
         private static bool ConnectionCountAndPlayerCountEqual { get { return NetworkManager.myServer.ConnectionsCount == myPlayers.Count; } }
         public static NumberOfPlayersGameMode GameModePlayers { get; set; }
 
+        public static bool ServerFull
+        {
+            get
+            {
+                if (GameModePlayers == NumberOfPlayersGameMode.TwoPlayers && myPlayers.Count > 2 ||
+                GameModePlayers == NumberOfPlayersGameMode.FourPlayers && myPlayers.Count > 4)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            
+        }
+
         private static void CheckTimeOuts(RichTextBox aServerLog)
         {
             if (ConnectionCountAndPlayerCountEqual)
@@ -43,10 +60,9 @@ namespace QuoridorServer
                             NetworkManager.myServer.SendMessage(NetworkManager.myOutMsg, NetworkManager.myServer.Connections,
                                 Lidgren.Network.NetDeliveryMethod.ReliableOrdered, 0);
                         }
+                        myPlayers.RemoveAt(i);
+                        i--;
                     }
-
-                    myPlayers.RemoveAt(i);
-                    i--;
                     break;
                 }
             }
