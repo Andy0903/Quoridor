@@ -14,11 +14,13 @@ namespace Quoridor
             const int boarderPadding = 10;
             const int tileWidth = 64;
             const int tilePadding = 16;
+
             for (int i = 0; i < myWideTiles.GetLength(0); i++)
             {
                 for (int k = 0; k < myWideTiles.GetLength(1); k++)
                 {
-                    myWideTiles[i, k] = new WideTile(new Vector2(boarderPadding + (i * (tileWidth + tilePadding)), boarderPadding + (k * (tileWidth + tilePadding))));
+                    myWideTiles[i, k] = new WideTile(new Vector2(boarderPadding + (i * (tileWidth + tilePadding)),
+                        boarderPadding + (k * (tileWidth + tilePadding))));
                 }
             }
 
@@ -26,7 +28,8 @@ namespace Quoridor
             {
                 for (int k = 0; k < myVerticals.GetLength(1); k++)
                 {
-                    myVerticals[i, k] = new NarrowVerticalTile(new Vector2(boarderPadding + tileWidth + i * (tileWidth + 16), boarderPadding + k * (tileWidth + 16)));
+                    myVerticals[i, k] = new NarrowVerticalTile(new Vector2(boarderPadding + tileWidth + i * (tileWidth + tilePadding),
+                        boarderPadding + k * (tileWidth + tilePadding)));
                 }
             }
 
@@ -34,7 +37,8 @@ namespace Quoridor
             {
                 for (int k = 0; k < myVerticals.GetLength(0); k++)
                 {
-                    myHorizontals[i, k] = new NarrowHorizontalTile(new Vector2(boarderPadding + i * (tileWidth + 16), boarderPadding + tileWidth + k * (tileWidth + 16)));
+                    myHorizontals[i, k] = new NarrowHorizontalTile(new Vector2(boarderPadding + i * (tileWidth + tilePadding),
+                        boarderPadding + tileWidth + k * (tileWidth + tilePadding)));
                 }
             }
 
