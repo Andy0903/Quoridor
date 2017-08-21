@@ -3,15 +3,16 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quoridor
 {
-    class WideTile : Tile
+    class NarrowVerticalTile : Tile
     {
+
         private Texture2D myTexture;
         public Color Color { get; set; }
 
-        public WideTile(Vector2 aPosition) : base(64, 64, aPosition)
+        public NarrowVerticalTile(Vector2 aPosition) : base(16, 64, aPosition)
         {
-            myTexture = Program.Game.Content.Load<Texture2D>("WideTile");
-            Color = Color.DimGray;
+            myTexture = Program.Game.Content.Load<Texture2D>("NarrowVertical");
+            Color = Color.Red;
         }
 
         public void Draw(SpriteBatch aSB)

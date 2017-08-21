@@ -29,7 +29,6 @@ namespace QuoridorServer
                     return false;
                 }
             }
-            
         }
 
         private static void CheckTimeOuts(RichTextBox aServerLog)

@@ -25,12 +25,13 @@ namespace Quoridor
         MainMenu myMainMenu;
         public Player LocalPlayer { get; set; }
         public GameState State { get; set; }
-        public NumberOfPlayers PlayerNumbers { get; set; } //TODO ask server for amount of players.
+        public NumberOfPlayers PlayerNumbers { get; set; }
+        GameBoard myGameBoard;
 
         public Game1()
         {
             myGraphics = new GraphicsDeviceManager(this);
-            myGraphics.PreferredBackBufferHeight = 720;
+            myGraphics.PreferredBackBufferHeight = 740;
             myGraphics.PreferredBackBufferWidth = 1280;
             Content.RootDirectory = "Content";
 
@@ -47,6 +48,8 @@ namespace Quoridor
 
             NetworkManager.myConfig = new NetPeerConfiguration("QuoridorConfig");   //Must be same appIdentifier as the server uses.
             NetworkManager.myClient = new NetClient(NetworkManager.myConfig);
+
+            myGameBoard = new GameBoard();
 
             base.Initialize();
         }
@@ -70,6 +73,7 @@ namespace Quoridor
                 case GameState.Playing:
                     NetworkManager.Update();
                     PlayerManager.Update();
+                    myGameBoard.Update();
                     break;
                 default:
                     break;
@@ -87,8 +91,9 @@ namespace Quoridor
                     UserInterface.Active.Draw(mySpriteBatch);
                     break;
                 case GameState.Playing:
-                    break;
-                default:
+                    mySpriteBatch.Begin();
+                    myGameBoard.Draw(mySpriteBatch);
+                    mySpriteBatch.End();
                     break;
             }
 

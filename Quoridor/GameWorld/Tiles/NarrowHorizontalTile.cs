@@ -1,17 +1,18 @@
-﻿using Microsoft.Xna.Framework;
+﻿
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Quoridor
 {
-    class WideTile : Tile
+    class NarrowHorizontalTile : Tile
     {
         private Texture2D myTexture;
         public Color Color { get; set; }
 
-        public WideTile(Vector2 aPosition) : base(64, 64, aPosition)
+        public NarrowHorizontalTile(Vector2 aPosition) : base(64, 16, aPosition)
         {
-            myTexture = Program.Game.Content.Load<Texture2D>("WideTile");
-            Color = Color.DimGray;
+            myTexture = Program.Game.Content.Load<Texture2D>("NarrowHorizontal");
+            Color = Color.Blue;
         }
 
         public void Draw(SpriteBatch aSB)
