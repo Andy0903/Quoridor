@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 
 namespace Quoridor
@@ -17,9 +18,9 @@ namespace Quoridor
 
         public static void Draw(SpriteBatch aSB)
         {
-            foreach (Player player in myPlayers)
+            for (int i = 0; i < myPlayers.Count; i++)
             {
-                player.Draw(aSB);
+                myPlayers[i].Draw(aSB);
             }
         }
     }

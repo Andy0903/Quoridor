@@ -31,7 +31,7 @@ namespace Quoridor
                         Position = Program.Game.GameBoard.GetPositionOfTile(0, 4);
                         break;
                     case 3:
-                        Color = Color.LightGoldenrodYellow;
+                        Color = Color.Yellow;
                         Position = Program.Game.GameBoard.GetPositionOfTile(8, 4);
                         break;
                     default:

@@ -8,6 +8,7 @@ namespace Quoridor
         WideTile[,] myWideTiles = new WideTile[9, 9];
         NarrowVerticalTile[,] myVerticals = new NarrowVerticalTile[8, 9];
         NarrowHorizontalTile[,] myHorizontals = new NarrowHorizontalTile[9, 8];
+        private SpriteFont mySF;
 
         public Vector2 GetPositionOfTile(int aColumn, int aRow)
         {
@@ -16,6 +17,7 @@ namespace Quoridor
 
         public GameBoard()
         {
+            mySF = Program.Game.Content.Load<SpriteFont>(@"GeonBit.UI/themes/hd/fonts/Regular");
             const int boarderPadding = 10;
             const int tileWidth = 64;
             const int tilePadding = 16;
@@ -38,7 +40,7 @@ namespace Quoridor
             {
                 for (int i = 0; i < myWideTiles.GetLength(1); i++)
                 {
-                    myWideTiles[0, i].Color = Color.Yellow;
+                    myWideTiles[0, i].Color = new Color(0.8f, 0.8f, 0);
                     myWideTiles[myWideTiles.GetLength(1) - 1, i].Color = new Color(0.4f, 1f, 0.4f);
                 }
             }
@@ -83,6 +85,11 @@ namespace Quoridor
             foreach (NarrowHorizontalTile hTile in myHorizontals)
             {
                 hTile.Draw(aSB);
+            }
+
+            for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
+            {
+                aSB.DrawString(mySF, PlayerManager.myPlayers[i].Name, new Vector2(800, 150 * i + 50), PlayerManager.myPlayers[i].Color);
             }
         }
     }
