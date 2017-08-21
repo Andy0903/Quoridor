@@ -24,6 +24,21 @@ namespace Quoridor
                 }
             }
 
+            for (int i = 0; i < myWideTiles.GetLength(0); i++)
+            {
+                myWideTiles[i, 0].Color = new Color(1, 0.4f, 0.4f);
+                myWideTiles[i, myWideTiles.GetLength(0) - 1].Color = new Color(0.4f, 0.4f, 1f);
+            }
+
+            if (Program.Game.PlayerNumbers == NumberOfPlayers.FourPlayers)
+            {
+                for (int i = 0; i < myWideTiles.GetLength(1); i++)
+                {
+                    myWideTiles[0, i].Color = Color.Yellow;
+                    myWideTiles[myWideTiles.GetLength(1) - 1, i].Color = new Color(0.4f, 1f, 0.4f);
+                }
+            }
+
             for (int i = 0; i < myVerticals.GetLength(0); i++)
             {
                 for (int k = 0; k < myVerticals.GetLength(1); k++)

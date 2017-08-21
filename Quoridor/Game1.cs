@@ -49,9 +49,12 @@ namespace Quoridor
             NetworkManager.myConfig = new NetPeerConfiguration("QuoridorConfig");   //Must be same appIdentifier as the server uses.
             NetworkManager.myClient = new NetClient(NetworkManager.myConfig);
 
-            myGameBoard = new GameBoard();
-
             base.Initialize();
+        }
+
+        public void ConstructBoard()
+        {
+            myGameBoard = new GameBoard();
         }
 
         protected override void LoadContent()
@@ -65,13 +68,13 @@ namespace Quoridor
 
         protected override void Update(GameTime gameTime)
         {
+            NetworkManager.Update();
             switch (State)
             {
                 case GameState.MainMenu:
                     UserInterface.Active.Update(gameTime);
                     break;
                 case GameState.Playing:
-                    NetworkManager.Update();
                     PlayerManager.Update();
                     myGameBoard.Update();
                     break;

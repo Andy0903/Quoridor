@@ -72,7 +72,8 @@ namespace Quoridor
                 NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, NetDeliveryMethod.ReliableOrdered);
                 System.Threading.Thread.Sleep(300);
 
-                Program.Game.State = GameState.Playing;
+                //Program.Game.State = GameState.Playing;
+                //Program.Game.ConstructBoard();
             };
         }
     }

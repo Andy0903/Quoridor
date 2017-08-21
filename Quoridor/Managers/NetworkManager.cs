@@ -48,6 +48,9 @@ namespace Quoridor
                                                 }
                                             }
                                         }
+                                        Program.Game.State = GameState.Playing;
+                                        Program.Game.ConstructBoard();
+
                                     }
                                     break;
                                 case "Disconnect":
