@@ -23,7 +23,7 @@ namespace Quoridor
         public GraphicsDeviceManager myGraphics;
         SpriteBatch mySpriteBatch;
         MainMenu myMainMenu;
-        public Player LocalPlayer { get; set; }
+        //public Player LocalPlayer { get; set; }
         public GameState State { get; set; }
         public NumberOfPlayers PlayerNumbers { get; set; }
         GameBoard myGameBoard;

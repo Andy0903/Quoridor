@@ -32,15 +32,16 @@ namespace Quoridor
                                     {
                                         string name = myIncMsg.ReadString();
                                         Program.Game.PlayerNumbers = (NumberOfPlayers)myIncMsg.ReadInt32();
-                                        PlayerManager.myPlayers.Add(new Player(name));
-
-                                        Console.WriteLine(Program.Game.PlayerNumbers);
+                                        int slot = myIncMsg.ReadInt32();
+                                        Player recentlyJoined = new Player(name);
+                                        recentlyJoined.Slot = slot;
+                                        PlayerManager.myPlayers.Add(recentlyJoined);
 
                                         for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
                                         {
                                             for (int k = i + 1; k < PlayerManager.myPlayers.Count; k++)
                                             {
-                                                if (i != k && PlayerManager.myPlayers[i].myName.Equals(PlayerManager.myPlayers[k].myName))
+                                                if (i != k && PlayerManager.myPlayers[i].Name.Equals(PlayerManager.myPlayers[k].Name))
                                                 {
                                                     PlayerManager.myPlayers.RemoveAt(i);
                                                     i--;
@@ -51,6 +52,13 @@ namespace Quoridor
                                         Program.Game.State = GameState.Playing;
                                         Program.Game.ConstructBoard();
 
+                                        for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
+                                        {
+                                            Console.WriteLine("Name: " + PlayerManager.myPlayers[i].Name);
+                                            Console.WriteLine("Slot: " + PlayerManager.myPlayers[i].Slot);
+                                            Console.WriteLine("Color: " + PlayerManager.myPlayers[i].Color);
+                                        }
+
                                     }
                                     break;
                                 case "Disconnect":
@@ -59,7 +67,7 @@ namespace Quoridor
 
                                         for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
                                         {
-                                            if (PlayerManager.myPlayers[i].myName.Equals(name))
+                                            if (PlayerManager.myPlayers[i].Name.Equals(name))
                                             {
                                                 PlayerManager.myPlayers.RemoveAt(i);
                                                 i--;

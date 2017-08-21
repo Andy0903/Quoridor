@@ -64,11 +64,11 @@ namespace Quoridor
 
                 System.Threading.Thread.Sleep(300);
                 
-                Program.Game.LocalPlayer = new Player(nameText.Value);
+                //Program.Game.LocalPlayer = new Player(nameText.Value);
 
                 NetworkManager.myOutMsg = NetworkManager.myClient.CreateMessage();
                 NetworkManager.myOutMsg.Write("Connect");
-                NetworkManager.myOutMsg.Write(Program.Game.LocalPlayer.myName);
+                NetworkManager.myOutMsg.Write(nameText.Value);
                 NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, NetDeliveryMethod.ReliableOrdered);
                 System.Threading.Thread.Sleep(300);
 
