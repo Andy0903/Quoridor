@@ -28,11 +28,11 @@ namespace Quoridor
                         break;
                     case 2:
                         Color = Color.Green;
-                        Position = Program.Game.GameBoard.GetPositionOfTile(8, 4);
+                        Position = Program.Game.GameBoard.GetPositionOfTile(0, 4);
                         break;
                     case 3:
                         Color = Color.LightGoldenrodYellow;
-                        Position = Program.Game.GameBoard.GetPositionOfTile(0, 4);
+                        Position = Program.Game.GameBoard.GetPositionOfTile(8, 4);
                         break;
                     default:
                         Color = Color.White;
