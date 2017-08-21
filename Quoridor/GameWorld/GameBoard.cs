@@ -3,18 +3,22 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quoridor
 {
-    class GameBoard
+    public class GameBoard
     {
         WideTile[,] myWideTiles = new WideTile[9, 9];
         NarrowVerticalTile[,] myVerticals = new NarrowVerticalTile[8, 9];
         NarrowHorizontalTile[,] myHorizontals = new NarrowHorizontalTile[9, 8];
+
+        public Vector2 GetPositionOfTile(int aColumn, int aRow)
+        {
+            return myWideTiles[aColumn, aRow].Position;
+        }
 
         public GameBoard()
         {
             const int boarderPadding = 10;
             const int tileWidth = 64;
             const int tilePadding = 16;
-
             for (int i = 0; i < myWideTiles.GetLength(0); i++)
             {
                 for (int k = 0; k < myWideTiles.GetLength(1); k++)

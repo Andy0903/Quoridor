@@ -34,6 +34,7 @@ namespace Quoridor
                                         Program.Game.PlayerNumbers = (NumberOfPlayers)myIncMsg.ReadInt32();
                                         int slot = myIncMsg.ReadInt32();
                                         Player recentlyJoined = new Player(name);
+                                        Program.Game.ConstructBoard();
                                         recentlyJoined.Slot = slot;
                                         PlayerManager.myPlayers.Add(recentlyJoined);
 
@@ -50,7 +51,6 @@ namespace Quoridor
                                             }
                                         }
                                         Program.Game.State = GameState.Playing;
-                                        Program.Game.ConstructBoard();
 
                                         for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
                                         {

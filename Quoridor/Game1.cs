@@ -26,7 +26,7 @@ namespace Quoridor
         //public Player LocalPlayer { get; set; }
         public GameState State { get; set; }
         public NumberOfPlayers PlayerNumbers { get; set; }
-        GameBoard myGameBoard;
+        public GameBoard GameBoard { get; private set; }
 
         public Game1()
         {
@@ -54,7 +54,7 @@ namespace Quoridor
 
         public void ConstructBoard()
         {
-            myGameBoard = new GameBoard();
+            GameBoard = new GameBoard();
         }
 
         protected override void LoadContent()
@@ -76,7 +76,7 @@ namespace Quoridor
                     break;
                 case GameState.Playing:
                     PlayerManager.Update();
-                    myGameBoard.Update();
+                    GameBoard.Update();
                     break;
                 default:
                     break;
@@ -95,7 +95,8 @@ namespace Quoridor
                     break;
                 case GameState.Playing:
                     mySpriteBatch.Begin();
-                    myGameBoard.Draw(mySpriteBatch);
+                    GameBoard.Draw(mySpriteBatch);
+                    PlayerManager.Draw(mySpriteBatch);
                     mySpriteBatch.End();
                     break;
             }
