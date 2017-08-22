@@ -32,6 +32,8 @@ namespace Quoridor
                 myHorizontals[aColumn, aRow].IsOccupied = true;
                 myHorizontals[aColumn + 1, aRow].IsOccupied = true;
             }
+
+            PlayerManager.myPlayers[aSlot].NumberOfWalls--;
         }
 
         public GameBoard()
@@ -86,11 +88,11 @@ namespace Quoridor
 
         public void Update()
         {
-            //if (Keyboard.GetState().IsKeyDown(Keys.K)) DEBUGGING
-            //{
-            //    PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].PlaceWall(Tile.TileType.NarrowVertical, 4, 4);
-            //   // PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].PlaceWall(Tile.TileType.NarrowHorizontal, 4, 4);
-            //}
+            if (Keyboard.GetState().IsKeyDown(Keys.K)) //DEBUGGING
+            {
+                PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].PlaceWall(Tile.TileType.NarrowVertical, 4, 4);
+                // PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].PlaceWall(Tile.TileType.NarrowHorizontal, 4, 4);
+            }
         }
 
         public void Draw(SpriteBatch aSB)
