@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace Quoridor
@@ -10,11 +11,27 @@ namespace Quoridor
         WideTile[,] myWideTiles = new WideTile[9, 9];
         NarrowVerticalTile[,] myVerticals = new NarrowVerticalTile[8, 9];
         NarrowHorizontalTile[,] myHorizontals = new NarrowHorizontalTile[9, 8];
-        List<Wall> myWalls = new List<Wall>();
+        List<GraphicalObject> myWalls = new List<GraphicalObject>();
 
         public Vector2 GetPositionOfTile(int aColumn, int aRow)
         {
             return myWideTiles[aColumn, aRow].Position;
+        }
+
+        public void PlaceWall(int aSlot, Tile.TileType aType, int aColumn, int aRow)
+        {
+            if (aType == Tile.TileType.NarrowVertical)
+            {
+                myWalls.Add(new VerticalWall(myVerticals[aColumn, aRow].Position, PlayerManager.myPlayers[aSlot].Color));
+                myVerticals[aColumn, aRow].IsOccupied = true;
+                myVerticals[aColumn, aRow + 1].IsOccupied = true;
+            }
+            else if (aType == Tile.TileType.NarrowHorizontal)
+            {
+                myWalls.Add(new HorizontalWall(myHorizontals[aColumn, aRow].Position, PlayerManager.myPlayers[aSlot].Color));
+                myHorizontals[aColumn, aRow].IsOccupied = true;
+                myHorizontals[aColumn + 1, aRow].IsOccupied = true;
+            }
         }
 
         public GameBoard()
@@ -69,7 +86,11 @@ namespace Quoridor
 
         public void Update()
         {
-
+            //if (Keyboard.GetState().IsKeyDown(Keys.K)) DEBUGGING
+            //{
+            //    PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].PlaceWall(Tile.TileType.NarrowVertical, 4, 4);
+            //   // PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].PlaceWall(Tile.TileType.NarrowHorizontal, 4, 4);
+            //}
         }
 
         public void Draw(SpriteBatch aSB)
@@ -79,14 +100,19 @@ namespace Quoridor
                 wTile.Draw(aSB);
             }
 
-            foreach (NarrowVerticalTile vTile in myVerticals)
-            {
-                vTile.Draw(aSB);
-            }
+            //foreach (NarrowVerticalTile vTile in myVerticals)
+            //{
+            //    vTile.Draw(aSB);
+            //}
 
-            foreach (NarrowHorizontalTile hTile in myHorizontals)
+            //foreach (NarrowHorizontalTile hTile in myHorizontals)
+            //{
+            //    hTile.Draw(aSB);
+            //} 
+                 
+            foreach (GraphicalObject wall in myWalls)
             {
-                hTile.Draw(aSB);
+                wall.Draw(aSB);
             }
 
             for (int i = 0; i < PlayerManager.myPlayers.Count; i++)

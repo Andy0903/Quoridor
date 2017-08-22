@@ -5,9 +5,8 @@ namespace Quoridor
     public class Player : GraphicalObject
     {
         public string Name { get; private set; }
-
         public int NumberOfWalls { get; set; }
-
+   
         private int slot;
         public int Slot //Which player you are, 1st, 2nd, 3rd, 4th.. (0-3)
         {
@@ -42,7 +41,6 @@ namespace Quoridor
             }
         } 
 
-
         public Player(string aName) : base(32, 32, "Player")
         {
             Name = aName;
@@ -52,10 +50,10 @@ namespace Quoridor
 
         public void Update()
         {
-            NetworkManager.myOutMsg = NetworkManager.myClient.CreateMessage();
-            NetworkManager.myOutMsg.Write("Update");
-            NetworkManager.myOutMsg.Write(Name);
-            NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, Lidgren.Network.NetDeliveryMethod.Unreliable);
+            //NetworkManager.myOutMsg = NetworkManager.myClient.CreateMessage();
+            //NetworkManager.myOutMsg.Write("Update");
+            ////NetworkManager.myOutMsg.Write(Name);
+            //NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, Lidgren.Network.NetDeliveryMethod.Unreliable);
         }
 
         public void PlaceWall(Tile.TileType aType, int aColumn, int aRow)

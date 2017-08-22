@@ -11,15 +11,14 @@ namespace Quoridor
             Wide
         }
 
-        bool myIsOccupied;
-
+        public bool IsOccupied { get; set; }
         public int Height { get; protected set; }
         public int Width { get; protected set; }
         public Vector2 Position { get; protected set; }
 
         public Tile(TileType aType, Vector2 aPosition)
         {
-            myIsOccupied = false;
+            IsOccupied = false;
             Position = aPosition;
 
             switch (aType)

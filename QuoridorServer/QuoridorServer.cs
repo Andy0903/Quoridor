@@ -41,6 +41,7 @@ namespace QuoridorServer
             LogTextBox.AppendText("Server closed!" + "\n\n");
             NumberOfPlayersGroup.Enabled = true;
             PortGroup.Enabled = true;
+            PlayerLabel.Text = "Players: 0";
 
             StartButton.Text = "Start";
         }

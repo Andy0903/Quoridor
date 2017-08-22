@@ -86,6 +86,7 @@ namespace QuoridorServer
                                 myVerticals[column, row].IsOccupied = true;
                                 myVerticals[column, row + 1].IsOccupied = true;
                                 NetworkManager.UpdateWallInfo(myPlayerIndexThisTurn, Tile.TileType.NarrowVertical, column, row);
+                                NextTurn();
                             }
                             break;
                         case Tile.TileType.NarrowHorizontal:
@@ -95,6 +96,7 @@ namespace QuoridorServer
                                 myHorizontals[column, row].IsOccupied = true;
                                 myHorizontals[column + 1, row].IsOccupied = true;
                                 NetworkManager.UpdateWallInfo(myPlayerIndexThisTurn, Tile.TileType.NarrowHorizontal, column, row);
+                                NextTurn();
                             }
                             break;
                         case Tile.TileType.Wide:

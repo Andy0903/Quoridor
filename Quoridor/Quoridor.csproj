@@ -44,11 +44,12 @@
     <Compile Include="Game1.cs" />
     <Compile Include="GameWorld\GameBoard.cs" />
     <Compile Include="GameWorld\GraphicalObject.cs" />
+    <Compile Include="GameWorld\HorizontalWall.cs" />
     <Compile Include="GameWorld\Tiles\NarrowHorizontalTile.cs" />
     <Compile Include="GameWorld\Tiles\NarrowVerticalTile.cs" />
     <Compile Include="GameWorld\Tiles\Tile.cs" />
     <Compile Include="GameWorld\Tiles\WideTile.cs" />
-    <Compile Include="GameWorld\Wall.cs" />
+    <Compile Include="GameWorld\VerticalWall.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Managers\NetworkManager.cs" />
     <Compile Include="GameWorld\Player.cs" />

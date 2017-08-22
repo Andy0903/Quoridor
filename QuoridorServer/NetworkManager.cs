@@ -83,7 +83,7 @@ namespace QuoridorServer
             }
         }
 
-        private static void PlayerJoining(RichTextBox aServerLog)
+        private static void PlayerConnecting(RichTextBox aServerLog)
         {
             string name = myIncMsg.ReadString();
             myPlayerNameValid = true;
@@ -139,8 +139,17 @@ namespace QuoridorServer
                     string headStringMsg = myIncMsg.ReadString();
                     switch (headStringMsg)
                     {
+                        //case "Update":
+                        //    for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
+                        //    {
+                        //        if (myIncMsg.SenderConnection.RemoteUniqueIdentifier == PlayerManager.myPlayers[i].RemoteUniqueIdentifier)
+                        //        {
+                        //            PlayerManager.myPlayers[i].myTimeOut = 0;
+                        //        }
+                        //    }
+                        //    break;
                         case "Connect":
-                            PlayerJoining(aServerLog);
+                            PlayerConnecting(aServerLog);
                             if (PlayerManager.ServerFull)
                             {
                                 myGame.NextTurn();

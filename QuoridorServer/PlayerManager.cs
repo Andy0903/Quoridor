@@ -37,7 +37,7 @@ namespace QuoridorServer
             {
                 for (int i = 0; i < myPlayers.Count; i++)
                 {
-                    myPlayers[i].myTimeOut++;
+                  //  myPlayers[i].myTimeOut++; TODO maybe add back
 
                     NetworkManager.myOutMsg = NetworkManager.myServer.CreateMessage();
                     NetworkManager.myOutMsg.Write("hey");
