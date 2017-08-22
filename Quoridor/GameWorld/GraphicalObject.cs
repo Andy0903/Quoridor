@@ -19,7 +19,7 @@ namespace Quoridor
             myTexture = Program.Game.Content.Load<Texture2D>(aGraphicsString);
         }
 
-        public void Draw(SpriteBatch aSB)
+        public virtual void Draw(SpriteBatch aSB)
         {
             aSB.Draw(myTexture, Position, Color);
         }

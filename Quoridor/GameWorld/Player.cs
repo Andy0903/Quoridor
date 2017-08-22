@@ -57,5 +57,16 @@ namespace Quoridor
             NetworkManager.myOutMsg.Write(Name);
             NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, Lidgren.Network.NetDeliveryMethod.Unreliable);
         }
+
+        public void PlaceWall(Tile.TileType aType, int aColumn, int aRow)
+        {
+            NetworkManager.myOutMsg = NetworkManager.myClient.CreateMessage();
+            NetworkManager.myOutMsg.Write("Place Wall");
+            // NetworkManager.myOutMsg.Write(Name);
+            NetworkManager.myOutMsg.Write((int)aType);
+            NetworkManager.myOutMsg.Write(aColumn);
+            NetworkManager.myOutMsg.Write(aRow);
+            NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, Lidgren.Network.NetDeliveryMethod.ReliableOrdered);
+        }
     }
 }

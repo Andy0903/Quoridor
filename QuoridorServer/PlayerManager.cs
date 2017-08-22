@@ -19,8 +19,8 @@ namespace QuoridorServer
         {
             get
             {
-                if (GameModePlayers == NumberOfPlayersGameMode.TwoPlayers && myPlayers.Count >= 2 ||
-                GameModePlayers == NumberOfPlayersGameMode.FourPlayers && myPlayers.Count >= 4)
+                if (GameModePlayers == NumberOfPlayersGameMode.TwoPlayers && myPlayers.Count == 2 ||
+                GameModePlayers == NumberOfPlayersGameMode.FourPlayers && myPlayers.Count == 4)
                 {
                     return true;
                 }

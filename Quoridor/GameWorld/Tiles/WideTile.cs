@@ -8,7 +8,7 @@ namespace Quoridor
         private Texture2D myTexture;
         public Color Color { get; set; }
 
-        public WideTile(Vector2 aPosition) : base(64, 64, aPosition)
+        public WideTile(Vector2 aPosition) : base(TileType.Wide, aPosition)
         {
             myTexture = Program.Game.Content.Load<Texture2D>("WideTile");
             Color = Color.DimGray;

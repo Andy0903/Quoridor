@@ -9,7 +9,7 @@ namespace Quoridor
         private Texture2D myTexture;
         public Color Color { get; set; }
 
-        public NarrowHorizontalTile(Vector2 aPosition) : base(64, 16, aPosition)
+        public NarrowHorizontalTile(Vector2 aPosition) : base(TileType.NarrowHorizontal, aPosition)
         {
             myTexture = Program.Game.Content.Load<Texture2D>("NarrowHorizontal");
             Color = Color.Blue;

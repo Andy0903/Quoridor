@@ -5,11 +5,10 @@ namespace Quoridor
 {
     class NarrowVerticalTile : Tile
     {
-
         private Texture2D myTexture;
         public Color Color { get; set; }
 
-        public NarrowVerticalTile(Vector2 aPosition) : base(16, 64, aPosition)
+        public NarrowVerticalTile(Vector2 aPosition) : base(TileType.NarrowVertical, aPosition)
         {
             myTexture = Program.Game.Content.Load<Texture2D>("NarrowVertical");
             Color = Color.Red;
