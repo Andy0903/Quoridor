@@ -7,6 +7,7 @@ namespace Quoridor
     {
         public static List<Player> myPlayers = new List<Player>();
         public static int CurrentSlotTurn { get; set; }
+        public static int NumberOfTurns { get; set; }
 
         public static void Update()
         {

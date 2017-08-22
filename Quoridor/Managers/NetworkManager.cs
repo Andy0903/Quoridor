@@ -79,6 +79,7 @@ namespace Quoridor
                             break;
                         case "New Turn":
                             PlayerManager.CurrentSlotTurn = myIncMsg.ReadInt32();
+                            PlayerManager.NumberOfTurns++;
                             break;
                         case "New Wall":
                             int slotThatPutDownWall = myIncMsg.ReadInt32();

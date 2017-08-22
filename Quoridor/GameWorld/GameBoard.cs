@@ -123,6 +123,7 @@ namespace Quoridor
                 aSB.DrawString(mySF, "Walls: " + PlayerManager.myPlayers[i].NumberOfWalls.ToString(), new Vector2(800, 150 * i + 75), PlayerManager.myPlayers[i].Color);
             }
             aSB.DrawString(mySF, "-->", new Vector2(750, 150 * PlayerManager.CurrentSlotTurn + 50), PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].Color);
+            aSB.DrawString(mySF, "Turns: " + PlayerManager.NumberOfTurns, new Vector2(800, 10), Color.DarkGray);
         }
     }
 }

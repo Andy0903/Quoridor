@@ -44,6 +44,7 @@ namespace Quoridor
             UserInterface.Initialize(Content, BuiltinThemes.hd);
             myMainMenu = new MainMenu();
             State = GameState.MainMenu;
+            PlayerManager.NumberOfTurns = -1;
 
             NetworkManager.myConfig = new NetPeerConfiguration("QuoridorConfig");   //Must be same appIdentifier as the server uses.
             NetworkManager.myClient = new NetClient(NetworkManager.myConfig);
