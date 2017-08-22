@@ -1,14 +1,16 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using System.Collections.Generic;
 
 namespace Quoridor
 {
     public class GameBoard
     {
+        private SpriteFont mySF;
         WideTile[,] myWideTiles = new WideTile[9, 9];
         NarrowVerticalTile[,] myVerticals = new NarrowVerticalTile[8, 9];
         NarrowHorizontalTile[,] myHorizontals = new NarrowHorizontalTile[9, 8];
-        private SpriteFont mySF;
+        List<Wall> myWalls = new List<Wall>();
 
         public Vector2 GetPositionOfTile(int aColumn, int aRow)
         {
@@ -90,6 +92,7 @@ namespace Quoridor
             for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
             {
                 aSB.DrawString(mySF, PlayerManager.myPlayers[i].Name, new Vector2(800, 150 * i + 50), PlayerManager.myPlayers[i].Color);
+                aSB.DrawString(mySF, "Walls: " + PlayerManager.myPlayers[i].NumberOfWalls.ToString(), new Vector2(800, 150 * i + 75), PlayerManager.myPlayers[i].Color);
             }
         }
     }

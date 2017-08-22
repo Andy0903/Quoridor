@@ -32,7 +32,7 @@ namespace Quoridor
         {
             myGraphics = new GraphicsDeviceManager(this);
             myGraphics.PreferredBackBufferHeight = 740;
-            myGraphics.PreferredBackBufferWidth = 1280;
+            myGraphics.PreferredBackBufferWidth = 1000;
             Content.RootDirectory = "Content";
 
             myGraphics.SynchronizeWithVerticalRetrace = false;

@@ -33,9 +33,11 @@ namespace Quoridor
                                         string name = myIncMsg.ReadString();
                                         Program.Game.PlayerNumbers = (NumberOfPlayers)myIncMsg.ReadInt32();
                                         int slot = myIncMsg.ReadInt32();
+                                        int numberOfWalls = myIncMsg.ReadInt32();
                                         Player recentlyJoined = new Player(name);
                                         Program.Game.ConstructBoard();
                                         recentlyJoined.Slot = slot;
+                                        recentlyJoined.NumberOfWalls = numberOfWalls;
                                         PlayerManager.myPlayers.Add(recentlyJoined);
 
                                         for (int i = 0; i < PlayerManager.myPlayers.Count; i++)

@@ -48,6 +48,7 @@
     <Compile Include="GameWorld\Tiles\NarrowVerticalTile.cs" />
     <Compile Include="GameWorld\Tiles\Tile.cs" />
     <Compile Include="GameWorld\Tiles\WideTile.cs" />
+    <Compile Include="GameWorld\Wall.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="Managers\NetworkManager.cs" />
     <Compile Include="GameWorld\Player.cs" />

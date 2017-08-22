@@ -1,14 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Quoridor
 {
-    public class Player
+    public class Player : GraphicalObject
     {
-        private Texture2D myTexture;
         public string Name { get; private set; }
-        public Color Color { get; set; }
-        public Vector2 Position { get; private set; }
+
+        public int NumberOfWalls { get; set; }
 
         private int slot;
         public int Slot //Which player you are, 1st, 2nd, 3rd, 4th.. (0-3)
@@ -45,11 +43,11 @@ namespace Quoridor
         } 
 
 
-        public Player(string aName)
+        public Player(string aName) : base(32, 32, "Player")
         {
             Name = aName;
-            myTexture = Program.Game.Content.Load<Texture2D>("Player");
             Slot = -1;
+            NumberOfWalls = -1;
         }
 
         public void Update()
@@ -58,11 +56,6 @@ namespace Quoridor
             NetworkManager.myOutMsg.Write("Update");
             NetworkManager.myOutMsg.Write(Name);
             NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, Lidgren.Network.NetDeliveryMethod.Unreliable);
-        }
-
-        public void Draw(SpriteBatch aSB)
-        {
-            aSB.Draw(myTexture, Position, Color);
         }
     }
 }
