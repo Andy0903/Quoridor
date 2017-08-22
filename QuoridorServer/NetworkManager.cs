@@ -32,7 +32,12 @@ namespace QuoridorServer
             myServer.Shutdown("Disconnect");
         }
 
-        public static void MessageNextTurn(int aSlotToMessage) //TODO message client
+        private static void UpdatePlayerLabel(Label aPlayerLabel)
+        {
+            aPlayerLabel.Text = "Players: " + PlayerManager.myPlayers.Count;
+        }
+
+        public static void MessageNextTurn(int aSlotToMessage) //TODO message client inc
         {
             myOutMsg = myServer.CreateMessage();
             myOutMsg.Write("New Turn");
@@ -40,7 +45,7 @@ namespace QuoridorServer
             myServer.SendMessage(myOutMsg, myServer.Connections, NetDeliveryMethod.ReliableOrdered, 0);
         }
 
-        public static void UpdateWallInfo(int aSlotThatPutWall, Tile.TileType aTileType, int aColumn, int aRow) //TODO message client
+        public static void UpdateWallInfo(int aSlotThatPutWall, Tile.TileType aTileType, int aColumn, int aRow) //TODO message client inc 
         {
             myOutMsg = myServer.CreateMessage();
             myOutMsg.Write("New Wall");
@@ -120,10 +125,13 @@ namespace QuoridorServer
                         NetDeliveryMethod.ReliableOrdered, 0);
                 }
             }
+
+            
         }
 
-        public static void Update(RichTextBox aServerLog)
+        public static void Update(RichTextBox aServerLog, Label aPlayerLabel)
         {
+            UpdatePlayerLabel(aPlayerLabel);
             while (ReceivedValidMessage)
             {
                 if (myIncMsg.MessageType == NetIncomingMessageType.Data)

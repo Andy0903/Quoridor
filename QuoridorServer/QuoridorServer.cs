@@ -49,7 +49,7 @@ namespace QuoridorServer
         {
             if (StartButton.Text == "Disconnect")
             {
-                NetworkManager.Update(LogTextBox);
+                NetworkManager.Update(LogTextBox, PlayerLabel);
                 PlayerManager.Update(LogTextBox);
             }
         }

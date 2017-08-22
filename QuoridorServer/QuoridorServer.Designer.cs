@@ -38,6 +38,7 @@
             this.LogTextBox = new System.Windows.Forms.RichTextBox();
             this.StartButton = new System.Windows.Forms.Button();
             this.Timer1 = new System.Windows.Forms.Timer(this.components);
+            this.PlayerLabel = new System.Windows.Forms.Label();
             this.PortGroup.SuspendLayout();
             this.NumberOfPlayersGroup.SuspendLayout();
             this.LogGroup.SuspendLayout();
@@ -131,11 +132,22 @@
             this.Timer1.Interval = 16;
             this.Timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
+            // PlayerLabel
+            // 
+            this.PlayerLabel.AutoSize = true;
+            this.PlayerLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PlayerLabel.Location = new System.Drawing.Point(198, 25);
+            this.PlayerLabel.Name = "PlayerLabel";
+            this.PlayerLabel.Size = new System.Drawing.Size(91, 24);
+            this.PlayerLabel.TabIndex = 4;
+            this.PlayerLabel.Text = "Players: 0";
+            // 
             // QuoridorServerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(306, 489);
+            this.Controls.Add(this.PlayerLabel);
             this.Controls.Add(this.StartButton);
             this.Controls.Add(this.LogGroup);
             this.Controls.Add(this.NumberOfPlayersGroup);
@@ -148,6 +160,7 @@
             this.NumberOfPlayersGroup.PerformLayout();
             this.LogGroup.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -162,6 +175,7 @@
         public System.Windows.Forms.RichTextBox LogTextBox;
         private System.Windows.Forms.Button StartButton;
         private System.Windows.Forms.Timer Timer1;
+        private System.Windows.Forms.Label PlayerLabel;
     }
 }
 
