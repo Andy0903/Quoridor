@@ -76,7 +76,7 @@ namespace QuoridorServer
                     0 <= aRow && aRow < myWideTiles.GetLength(1));
         }
 
-        private bool IsAdjacantToPlayerOrJumpsOver(int aColumn, int aRow)
+        private bool IsValidMovesetAndNotBlockedByWall(int aColumn, int aRow)
         {
             int playerColumn = PlayerManager.myPlayers[myPlayerIndexThisTurn].WideTilePosition.X;
             int playerRow = PlayerManager.myPlayers[myPlayerIndexThisTurn].WideTilePosition.Y;
@@ -84,7 +84,7 @@ namespace QuoridorServer
             bool validColumnMove = ((playerColumn == (aColumn - 1) || playerColumn == (aColumn + 1)) && playerRow == aRow);
             bool validRowMove = ((playerRow == (aRow - 1) || playerRow == (aRow + 1)) && playerColumn == aColumn);
 
-            if (validColumnMove != validRowMove) //XOR checking so it's not a diagnoal move.
+            if (validColumnMove != validRowMove) //XOR checking so it's not a diagonal move.
             {
                 return true; //MoveSimple
             }
@@ -117,7 +117,7 @@ namespace QuoridorServer
         {
             if (IsWithinGameBoard(aWishColumn, aWishRow) && myWideTiles[aWishColumn, aWishRow].IsOccupied == false)
             {
-                if (IsAdjacantToPlayerOrJumpsOver(aWishColumn, aWishRow))
+                if (IsValidMovesetAndNotBlockedByWall(aWishColumn, aWishRow))
                 {
                     int oldColumn = aPlayer.WideTilePosition.X;
                     int oldRow = aPlayer.WideTilePosition.Y;
