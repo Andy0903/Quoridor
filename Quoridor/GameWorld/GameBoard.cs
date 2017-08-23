@@ -57,6 +57,9 @@ namespace Quoridor
                 myWideTiles[i, myWideTiles.GetLength(0) - 1].Color = new Color(0.4f, 0.4f, 1f);
             }
 
+            myWideTiles[4, 8].IsOccupied = true;
+            myWideTiles[4, 0].IsOccupied = true;
+
             if (Program.Game.PlayerNumbers == NumberOfPlayers.FourPlayers)
             {
                 for (int i = 0; i < myWideTiles.GetLength(1); i++)
@@ -64,6 +67,9 @@ namespace Quoridor
                     myWideTiles[0, i].Color = new Color(0.8f, 0.8f, 0);
                     myWideTiles[myWideTiles.GetLength(1) - 1, i].Color = new Color(0.4f, 1f, 0.4f);
                 }
+
+                myWideTiles[0, 4].IsOccupied = true;
+                myWideTiles[8, 4].IsOccupied = true;
             }
 
             for (int i = 0; i < myVerticals.GetLength(0); i++)
@@ -86,13 +92,24 @@ namespace Quoridor
 
         }
 
+        public void MoveOccupation(int movedToColumn, int movedToRow, int oldColumn, int oldRow)
+        {
+            myWideTiles[movedToColumn, movedToRow].IsOccupied = true;
+            myWideTiles[oldColumn, oldRow].IsOccupied = false;
+        }
+
         public void Update()
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.K)) //DEBUGGING
-            {
-                PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].PlaceWall(Tile.TileType.NarrowVertical, 4, 4);
-                // PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].PlaceWall(Tile.TileType.NarrowHorizontal, 4, 4);
-            }
+            //if (Keyboard.GetState().IsKeyDown(Keys.K)) //DEBUGGING
+            //{
+            //    PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].PlaceWall(Tile.TileType.NarrowVertical, 4, 4);
+            //    // PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].PlaceWall(Tile.TileType.NarrowHorizontal, 4, 4);
+            //}
+
+            //if (Keyboard.GetState().IsKeyDown(Keys.W))
+            //{
+            //    PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].Move(4, 7);
+            //}
         }
 
         public void Draw(SpriteBatch aSB)

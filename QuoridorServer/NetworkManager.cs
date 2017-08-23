@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using Microsoft.Xna.Framework;
 using System.Windows.Forms;
 
 namespace QuoridorServer
@@ -37,7 +38,19 @@ namespace QuoridorServer
             aPlayerLabel.Text = "Players: " + PlayerManager.myPlayers.Count;
         }
 
-        public static void MessageNextTurn(int aSlotToMessage) //TODO message client inc
+        public static void MessagePlayerMovement(int aSlotThatMoved, int aNewColumn, int aNewRow, int aOldColumn, int aOldRow) //TODO Clientside
+        {
+            myOutMsg = myServer.CreateMessage();
+            myOutMsg.Write("Player Moved");
+            myOutMsg.Write(aSlotThatMoved);
+            myOutMsg.Write(aNewColumn);
+            myOutMsg.Write(aNewRow);
+            myOutMsg.Write(aOldColumn);
+            myOutMsg.Write(aOldRow);
+            myServer.SendMessage(myOutMsg, myServer.Connections, NetDeliveryMethod.ReliableOrdered, 0);
+        }
+
+        public static void MessageNextTurn(int aSlotToMessage)
         {
             myOutMsg = myServer.CreateMessage();
             myOutMsg.Write("New Turn");
@@ -45,7 +58,7 @@ namespace QuoridorServer
             myServer.SendMessage(myOutMsg, myServer.Connections, NetDeliveryMethod.ReliableOrdered, 0);
         }
 
-        public static void UpdateWallInfo(int aSlotThatPutWall, Tile.TileType aTileType, int aColumn, int aRow) //TODO message client inc 
+        public static void UpdateWallInfo(int aSlotThatPutWall, Tile.TileType aTileType, int aColumn, int aRow)
         {
             myOutMsg = myServer.CreateMessage();
             myOutMsg.Write("New Wall");
@@ -109,7 +122,34 @@ namespace QuoridorServer
             {
                 System.Threading.Thread.Sleep(100);
                 int numberOfWalls = PlayerManager.GameModePlayers == PlayerManager.NumberOfPlayersGameMode.TwoPlayers ? 10 : 5;
-                PlayerManager.myPlayers.Add(new Player(name, myIncMsg.SenderConnection.RemoteUniqueIdentifier, numberOfWalls));
+
+                Tile.Colors color = Tile.Colors.NONE;
+                Point wideTilePosition = new Point(0, 0);
+
+                switch (PlayerManager.myPlayers.Count)
+                {
+                    case 0:
+                        color = Tile.Colors.Red;
+                        wideTilePosition = new Point(4, 8);
+                        break;
+                    case 1:
+                        color = Tile.Colors.Blue;
+                        wideTilePosition = new Point(4, 0);
+                        break;
+                    case 2:
+                        color = Tile.Colors.Green;
+                        wideTilePosition = new Point(8, 4);
+                        break;
+                    case 3:
+                        color = Tile.Colors.Yellow;
+                        wideTilePosition = new Point(0, 4);
+                        break;
+                    default:
+                        break;
+                }
+
+
+                PlayerManager.myPlayers.Add(new Player(name, myIncMsg.SenderConnection.RemoteUniqueIdentifier, numberOfWalls, color, wideTilePosition));
                 aServerLog.AppendText(name + " connected!" + "\n");
 
                 for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
@@ -126,7 +166,7 @@ namespace QuoridorServer
                 }
             }
 
-            
+
         }
 
         public static void Update(RichTextBox aServerLog, Label aPlayerLabel)
@@ -154,6 +194,9 @@ namespace QuoridorServer
                             {
                                 myGame.NextTurn();
                             }
+                            break;
+                        case "Move":
+                            myGame.Move(myIncMsg);
                             break;
                         case "Place Wall":
                             myGame.PlaceWall(myIncMsg);

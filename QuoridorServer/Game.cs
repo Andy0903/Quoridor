@@ -31,6 +31,9 @@ namespace QuoridorServer
                 myWideTiles[i, myWideTiles.GetLength(0) - 1].Color = Tile.Colors.Blue;
             }
 
+            myWideTiles[4, 8].IsOccupied = true;
+            myWideTiles[4, 0].IsOccupied = true;
+
             if (PlayerManager.GameModePlayers == PlayerManager.NumberOfPlayersGameMode.FourPlayers)
             {
                 for (int i = 0; i < myWideTiles.GetLength(1); i++)
@@ -38,6 +41,9 @@ namespace QuoridorServer
                     myWideTiles[0, i].Color = Tile.Colors.Yellow;
                     myWideTiles[myWideTiles.GetLength(1) - 1, i].Color = Tile.Colors.Green;
                 }
+                
+                myWideTiles[0, 4].IsOccupied = true;
+                myWideTiles[8, 4].IsOccupied = true;
             }
 
             for (int i = 0; i < myVerticals.GetLength(0); i++)
@@ -62,6 +68,82 @@ namespace QuoridorServer
         {
             myPlayerIndexThisTurn = (myPlayerIndexThisTurn + 1) % PlayerManager.myPlayers.Count;
             NetworkManager.MessageNextTurn(myPlayerIndexThisTurn);
+        }
+
+        private bool IsWithinGameBoard(int aColumn, int aRow)
+        {
+            return (0 <= aColumn && aColumn < myWideTiles.GetLength(0) &&
+                    0 <= aRow && aRow < myWideTiles.GetLength(1));
+        }
+
+        private bool IsAdjacantToPlayerOrJumpsOver(int aColumn, int aRow)
+        {
+            int playerColumn = PlayerManager.myPlayers[myPlayerIndexThisTurn].WideTilePosition.X;
+            int playerRow = PlayerManager.myPlayers[myPlayerIndexThisTurn].WideTilePosition.Y;
+
+            bool validColumnMove = ((playerColumn == (aColumn - 1) || playerColumn == (aColumn + 1)) && playerRow == aRow);
+            bool validRowMove = ((playerRow == (aRow - 1) || playerRow == (aRow + 1)) && playerColumn == aColumn);
+
+            if (validColumnMove != validRowMove) //XOR checking so it's not a diagnoal move.
+            {
+                return true; //MoveSimple
+            }
+            else //Jumping over player possibility
+            {
+                for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
+                {
+                    if (i == myPlayerIndexThisTurn)
+                    {
+                        continue;
+                    }
+
+                    int playerIColumn = PlayerManager.myPlayers[i].WideTilePosition.X;
+                    int playerIRow = PlayerManager.myPlayers[i].WideTilePosition.Y;
+
+                    bool validColumnMovePlayerI = ((playerIColumn == (aColumn - 1) || playerIColumn == (aColumn + 1)) && playerIRow == aRow);
+                    bool validRowMovePlayerI = ((playerIRow == (aRow - 1) || playerIRow == (aRow + 1)) && playerIColumn == aColumn);
+
+                    if (validColumnMovePlayerI != validRowMovePlayerI) //Valid move from player.
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private void MoveIfValid(Player aPlayer, int aWishColumn, int aWishRow)
+        {
+            if (IsWithinGameBoard(aWishColumn, aWishRow) && myWideTiles[aWishColumn, aWishRow].IsOccupied == false)
+            {
+                if (IsAdjacantToPlayerOrJumpsOver(aWishColumn, aWishRow))
+                {
+                    int oldColumn = aPlayer.WideTilePosition.X;
+                    int oldRow = aPlayer.WideTilePosition.Y;
+                    myWideTiles[oldColumn, oldRow].IsOccupied = false;
+                    aPlayer.WideTilePosition = new Microsoft.Xna.Framework.Point(aWishColumn, aWishRow);
+                    myWideTiles[aWishColumn, aWishRow].IsOccupied = true;
+                    NetworkManager.MessagePlayerMovement(myPlayerIndexThisTurn, aWishColumn, aWishRow, oldColumn, oldRow);
+
+                    NextTurn();
+                }
+            }
+        }
+
+        public void Move(NetIncomingMessage aIncMsg)
+        {
+            if (aIncMsg.SenderConnection.RemoteUniqueIdentifier == PlayerManager.myPlayers[myPlayerIndexThisTurn].RemoteUniqueIdentifier)
+            {
+                Player player = PlayerManager.myPlayers[myPlayerIndexThisTurn];
+                player.myTimeOut = 0;
+
+                int wishToMoveToColumn = aIncMsg.ReadInt32();
+                int wishToMoveToRow = aIncMsg.ReadInt32();
+
+                MoveIfValid(player, wishToMoveToColumn, wishToMoveToRow);
+
+            }
         }
 
         public void PlaceWall(NetIncomingMessage aIncMsg)

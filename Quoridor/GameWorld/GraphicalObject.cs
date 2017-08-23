@@ -8,7 +8,7 @@ namespace Quoridor
         public int Width { get; private set; }
         public int Height { get; private set; }
         public Color Color { get; protected set; }
-        public Vector2 Position { get; protected set; }
+        public Vector2 Position { get; set; }
 
         protected Texture2D myTexture;
 

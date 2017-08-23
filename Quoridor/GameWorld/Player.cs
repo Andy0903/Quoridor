@@ -66,5 +66,14 @@ namespace Quoridor
             NetworkManager.myOutMsg.Write(aRow);
             NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, Lidgren.Network.NetDeliveryMethod.ReliableOrdered);
         }
+
+        public void Move(int aColumn, int aRow)
+        {
+            NetworkManager.myOutMsg = NetworkManager.myClient.CreateMessage();
+            NetworkManager.myOutMsg.Write("Move");
+            NetworkManager.myOutMsg.Write(aColumn);
+            NetworkManager.myOutMsg.Write(aRow);
+            NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, Lidgren.Network.NetDeliveryMethod.ReliableOrdered);
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace Quoridor
                 }
             }
         }
-
+        
         private static void ConnectingToServer()
         {
             string name = myIncMsg.ReadString();
@@ -80,6 +80,16 @@ namespace Quoridor
                         case "New Turn":
                             PlayerManager.CurrentSlotTurn = myIncMsg.ReadInt32();
                             PlayerManager.NumberOfTurns++;
+                            break;
+                        case "Player Moved":
+                            int slotThatMoved = myIncMsg.ReadInt32();
+                            int movedToColumn = myIncMsg.ReadInt32();
+                            int movedToRow = myIncMsg.ReadInt32();
+                            int oldColumn = myIncMsg.ReadInt32();
+                            int oldRow = myIncMsg.ReadInt32();
+
+                            PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].Position = Program.Game.GameBoard.GetPositionOfTile(movedToColumn, movedToRow);
+                            Program.Game.GameBoard.MoveOccupation(movedToColumn, movedToRow, oldColumn, oldRow);
                             break;
                         case "New Wall":
                             int slotThatPutDownWall = myIncMsg.ReadInt32();
