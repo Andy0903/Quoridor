@@ -162,7 +162,7 @@ namespace QuoridorServer
                     switch (type)
                     {
                         case Tile.TileType.NarrowVertical:
-                            if (myVerticals[column, row].IsOccupied == false && row != myVerticals.GetLength(0)) //TODO bug test these two (The one under as well)
+                            if (myVerticals[column, row].IsOccupied == false && myVerticals[column, row + 1].IsOccupied == false && row != myVerticals.GetLength(0)) //TODO bug test these two (The one under as well)
                             {
                                 player.DecrementWalls();
                                 myVerticals[column, row].IsOccupied = true;
@@ -172,7 +172,7 @@ namespace QuoridorServer
                             }
                             break;
                         case Tile.TileType.NarrowHorizontal:
-                            if (myHorizontals[column, row].IsOccupied == false && column != myHorizontals.GetLength(1))
+                            if (myHorizontals[column, row].IsOccupied == false && myHorizontals[column + 1, row].IsOccupied == false && column != myHorizontals.GetLength(1))
                             {
                                 player.DecrementWalls();
                                 myHorizontals[column, row].IsOccupied = true;
