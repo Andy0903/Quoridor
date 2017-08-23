@@ -126,6 +126,11 @@ namespace QuoridorServer
                     myWideTiles[aWishColumn, aWishRow].IsOccupied = true;
                     NetworkManager.MessagePlayerMovement(myPlayerIndexThisTurn, aWishColumn, aWishRow, oldColumn, oldRow);
 
+                    if (myWideTiles[aPlayer.WideTilePosition.X, aPlayer.WideTilePosition.Y].Color == PlayerManager.myPlayers[myPlayerIndexThisTurn].Color)
+                    {
+                        NetworkManager.MessagePlayerWon(myPlayerIndexThisTurn);
+                    }
+
                     NextTurn();
                 }
             }

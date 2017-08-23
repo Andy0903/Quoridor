@@ -98,6 +98,10 @@ namespace Quoridor
                             int placedOnRow = myIncMsg.ReadInt32();
                             Program.Game.GameBoard.PlaceWall(slotThatPutDownWall, onWhatTypeOfTile, placedOnColumn, placedOnRow);
                             break;
+                        case "Player Won":
+                            int slotThatWon = myIncMsg.ReadInt32();
+                            Program.Game.GameBoard.PlayerWon(slotThatWon);
+                            break;
                     }
                 }
                 break;

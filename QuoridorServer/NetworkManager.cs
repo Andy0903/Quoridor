@@ -38,7 +38,15 @@ namespace QuoridorServer
             aPlayerLabel.Text = "Players: " + PlayerManager.myPlayers.Count;
         }
 
-        public static void MessagePlayerMovement(int aSlotThatMoved, int aNewColumn, int aNewRow, int aOldColumn, int aOldRow) //TODO Clientside
+        public static void MessagePlayerWon(int aSlotThatWon)
+        {
+            myOutMsg = myServer.CreateMessage();
+            myOutMsg.Write("Player Won");
+            myOutMsg.Write(aSlotThatWon);
+            myServer.SendMessage(myOutMsg, myServer.Connections, NetDeliveryMethod.ReliableOrdered, 0);
+        }
+
+        public static void MessagePlayerMovement(int aSlotThatMoved, int aNewColumn, int aNewRow, int aOldColumn, int aOldRow)
         {
             myOutMsg = myServer.CreateMessage();
             myOutMsg.Write("Player Moved");

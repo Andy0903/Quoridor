@@ -12,10 +12,20 @@ namespace Quoridor
         NarrowVerticalTile[,] myVerticals = new NarrowVerticalTile[8, 9];
         NarrowHorizontalTile[,] myHorizontals = new NarrowHorizontalTile[9, 8];
         List<GraphicalObject> myWalls = new List<GraphicalObject>();
+        bool mySomeoneWon = false;
+        Color myWinTextColor;
+        string myWinnerName;
 
         public Vector2 GetPositionOfTile(int aColumn, int aRow)
         {
             return myWideTiles[aColumn, aRow].Position;
+        }
+
+        public void PlayerWon(int aSlot)
+        {
+            mySomeoneWon = true;
+            myWinTextColor = PlayerManager.myPlayers[aSlot].Color;
+            myWinnerName = PlayerManager.myPlayers[aSlot].Name;
         }
 
         public void PlaceWall(int aSlot, Tile.TileType aType, int aColumn, int aRow)
@@ -110,6 +120,11 @@ namespace Quoridor
             //{
             //    PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].Move(4, 7);
             //}
+
+            //if (Keyboard.GetState().IsKeyDown(Keys.B))
+            //{
+            //    PlayerWon(0);
+            //}
         }
 
         public void Draw(SpriteBatch aSB)
@@ -148,6 +163,11 @@ namespace Quoridor
             else
             {
                 aSB.DrawString(mySF, "Waiting for players..", new Vector2(725, 10), Color.DarkGray);
+            }
+
+            if (mySomeoneWon == true)
+            {
+                OutlinedText.DrawCenteredText(aSB, mySF, 3.5f, myWinnerName + " wins!", new Vector2(500, 360), myWinTextColor);
             }
         }
     }

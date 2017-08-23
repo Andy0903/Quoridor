@@ -41,6 +41,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="OutlinedText.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameWorld\GameBoard.cs" />
     <Compile Include="GameWorld\GraphicalObject.cs" />
