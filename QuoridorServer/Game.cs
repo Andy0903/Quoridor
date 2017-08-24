@@ -161,7 +161,7 @@ namespace QuoridorServer
                             }
                         }
                     }
-                }
+                }   
             }
 
             return false;
