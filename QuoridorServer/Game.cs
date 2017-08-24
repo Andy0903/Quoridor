@@ -41,7 +41,7 @@ namespace QuoridorServer
                     myWideTiles[0, i].Color = Tile.Colors.Yellow;
                     myWideTiles[myWideTiles.GetLength(1) - 1, i].Color = Tile.Colors.Green;
                 }
-                
+
                 myWideTiles[0, 4].IsOccupied = true;
                 myWideTiles[8, 4].IsOccupied = true;
             }
@@ -76,7 +76,7 @@ namespace QuoridorServer
                     0 <= aRow && aRow < myWideTiles.GetLength(1));
         }
 
-        private bool IsValidMovesetAndNotBlockedByWall(int aColumn, int aRow)
+        private bool IsValidMovesetAndNotBlockedByWall(int aColumn, int aRow) //TODO add wall part.
         {
             int playerColumn = PlayerManager.myPlayers[myPlayerIndexThisTurn].WideTilePosition.X;
             int playerRow = PlayerManager.myPlayers[myPlayerIndexThisTurn].WideTilePosition.Y;
@@ -86,7 +86,34 @@ namespace QuoridorServer
 
             if (validColumnMove != validRowMove) //XOR checking so it's not a diagonal move.
             {
-                return true; //MoveSimple
+                if ((aRow - playerRow) < 0) //Up
+                {
+                    if (myHorizontals[aRow, aColumn].IsOccupied == false)
+                    {
+                        return true;
+                    }
+                }
+                else if ((aRow - playerRow) > 0) //Down
+                {
+                    if (myHorizontals[aRow - 1, aColumn].IsOccupied == false)
+                    {
+                        return true;
+                    }
+                }
+                else if ((aColumn - playerColumn) < 0) //Left
+                {
+                    if (myVerticals[aRow, aColumn].IsOccupied == false)
+                    {
+                        return true;
+                    }
+                }
+                else if ((aColumn - playerColumn) > 0) //Right
+                {
+                    if (myVerticals[aRow, aColumn - 1].IsOccupied == false)
+                    {
+                        return true;
+                    }
+                }
             }
             else //Jumping over player possibility
             {
@@ -105,7 +132,34 @@ namespace QuoridorServer
 
                     if (validColumnMovePlayerI != validRowMovePlayerI) //Valid move from player.
                     {
-                        return true;
+                        if ((aRow - playerIRow) < 0) //Up
+                        {
+                            if (myHorizontals[aRow, aColumn].IsOccupied == false)
+                            {
+                                return true;
+                            }
+                        }
+                        else if ((aRow - playerIRow) > 0) //Down
+                        {
+                            if (myHorizontals[aRow - 1, aColumn].IsOccupied == false)
+                            {
+                                return true;
+                            }
+                        }
+                        else if ((aColumn - playerIColumn) < 0) //Left
+                        {
+                            if (myVerticals[aRow, aColumn].IsOccupied == false)
+                            {
+                                return true;
+                            }
+                        }
+                        else if ((aColumn - playerIColumn) > 0) //Right
+                        {
+                            if (myVerticals[aRow, aColumn - 1].IsOccupied == false)
+                            {
+                                return true;
+                            }
+                        }
                     }
                 }
             }
