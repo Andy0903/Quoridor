@@ -66,6 +66,14 @@ namespace QuoridorServer
             myServer.SendMessage(myOutMsg, myServer.Connections, NetDeliveryMethod.ReliableOrdered, 0);
         }
 
+        public static void DoSomethingElse(int aSlotThatShouldDoSomething)
+        {
+            myOutMsg = myServer.CreateMessage();
+            myOutMsg.Write("New Action");
+            myOutMsg.Write(aSlotThatShouldDoSomething);
+            myServer.SendMessage(myOutMsg, myServer.Connections, NetDeliveryMethod.ReliableOrdered, 0);
+        }
+
         public static void UpdateWallInfo(int aSlotThatPutWall, Tile.TileType aTileType, int aColumn, int aRow)
         {
             myOutMsg = myServer.CreateMessage();

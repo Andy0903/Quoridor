@@ -121,6 +121,10 @@ namespace Quoridor
                             int slotThatWon = myIncMsg.ReadInt32();
                             Program.Game.GameBoard.PlayerWon(slotThatWon);
                             break;
+                        case "New Action":
+                            int slotThatShouldDoSomethingNew = myIncMsg.ReadInt32();
+                            //TODO något som säger att den kan testa något nytt?
+                            break;
                     }
                 }
                 break;

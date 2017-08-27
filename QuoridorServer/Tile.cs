@@ -1,4 +1,6 @@
-﻿namespace QuoridorServer
+﻿using Microsoft.Xna.Framework;
+
+namespace QuoridorServer
 {
     class Tile
     {
@@ -20,11 +22,13 @@
 
         public bool IsOccupied { get; set; }
         public Colors Color { get; set; }
+        public Point Position { get; private set; }
 
-        public Tile()
+        public Tile(Point aIndex)
         {
             IsOccupied = false;
             Color = Colors.NONE;
+            Position = aIndex;
         }
     }
 }

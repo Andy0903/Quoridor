@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +10,6 @@ namespace QuoridorServer
 {
     class Game
     {
-        //väggar
         public static int myPlayerIndexThisTurn = -1;
         Tile[,] myWideTiles = new Tile[9, 9];
         Tile[,] myVerticals = new Tile[8, 9];
@@ -21,7 +21,7 @@ namespace QuoridorServer
             {
                 for (int k = 0; k < myWideTiles.GetLength(1); k++)
                 {
-                    myWideTiles[i, k] = new Tile();
+                    myWideTiles[i, k] = new Tile(new Microsoft.Xna.Framework.Point(i, k));
                 }
             }
 
@@ -50,7 +50,7 @@ namespace QuoridorServer
             {
                 for (int k = 0; k < myVerticals.GetLength(1); k++)
                 {
-                    myVerticals[i, k] = new Tile();
+                    myVerticals[i, k] = new Tile(new Microsoft.Xna.Framework.Point(i, k));
                 }
             }
 
@@ -58,7 +58,7 @@ namespace QuoridorServer
             {
                 for (int k = 0; k < myVerticals.GetLength(0); k++)
                 {
-                    myHorizontals[i, k] = new Tile();
+                    myHorizontals[i, k] = new Tile(new Microsoft.Xna.Framework.Point(i, k));
                 }
             }
 
@@ -161,7 +161,7 @@ namespace QuoridorServer
                             }
                         }
                     }
-                }   
+                }
             }
 
             return false;
@@ -223,21 +223,43 @@ namespace QuoridorServer
                         case Tile.TileType.NarrowVertical:
                             if (myVerticals[column, row].IsOccupied == false && myVerticals[column, row + 1].IsOccupied == false && row != myVerticals.GetLength(0)) //TODO bug test these two (The one under as well)
                             {
-                                player.DecrementWalls();
                                 myVerticals[column, row].IsOccupied = true;
                                 myVerticals[column, row + 1].IsOccupied = true;
-                                NetworkManager.UpdateWallInfo(myPlayerIndexThisTurn, Tile.TileType.NarrowVertical, column, row);
-                                NextTurn();
+
+                                if (PathToGoalExists())
+                                {
+                                    player.DecrementWalls();
+                                    NetworkManager.UpdateWallInfo(myPlayerIndexThisTurn, Tile.TileType.NarrowVertical, column, row);
+                                    NextTurn();
+                                }
+                                else
+                                {
+                                    myVerticals[column, row].IsOccupied = false;
+                                    myVerticals[column, row + 1].IsOccupied = false;
+                                    NetworkManager.DoSomethingElse(myPlayerIndexThisTurn);
+                                }
+
                             }
                             break;
                         case Tile.TileType.NarrowHorizontal:
                             if (myHorizontals[column, row].IsOccupied == false && myHorizontals[column + 1, row].IsOccupied == false && column != myHorizontals.GetLength(1))
                             {
-                                player.DecrementWalls();
                                 myHorizontals[column, row].IsOccupied = true;
                                 myHorizontals[column + 1, row].IsOccupied = true;
-                                NetworkManager.UpdateWallInfo(myPlayerIndexThisTurn, Tile.TileType.NarrowHorizontal, column, row);
-                                NextTurn();
+
+                                if (PathToGoalExists())
+                                {
+                                    player.DecrementWalls();
+                                    NetworkManager.UpdateWallInfo(myPlayerIndexThisTurn, Tile.TileType.NarrowHorizontal, column, row);
+                                    NextTurn();
+                                }
+                                else
+                                {
+                                    myHorizontals[column, row].IsOccupied = true;
+                                    myHorizontals[column + 1, row].IsOccupied = true;
+                                    NetworkManager.DoSomethingElse(myPlayerIndexThisTurn);
+                                }
+
                             }
                             break;
                         case Tile.TileType.Wide:
@@ -246,10 +268,77 @@ namespace QuoridorServer
                             break;
                     }
                 }
-
-                //IF TILES AT COLUMN ROW IS FREE AND PLAYER HAS WALL, PLACE WALL, TAKE AWAY WALL FORM PLAYER AND UPDATE EVERYONES INFO. TODO
-                //Set new players turn
             }
+        }
+
+        private bool PathToGoalExists()
+        {
+            SortedSet<Tile> S = new SortedSet<Tile>();
+            Queue<Tile> Q = new Queue<Tile>();
+
+            foreach (Player p in PlayerManager.myPlayers)
+            {
+                Tile root = myWideTiles[p.WideTilePosition.X, p.WideTilePosition.Y];
+                S.Add(root);
+                Q.Enqueue(root);
+
+                while (Q.Count > 0)
+                {
+                    Tile current = Q.Dequeue();
+
+                    if (current.Color == p.Color) //Current is a goal tile for the player.
+                    {
+                        return true;
+                    }
+
+                    foreach (Tile t in GetAdjacentTiles(current.Position))
+                    {
+                        if (S.Contains(t) == false)
+                        {
+                            S.Add(t);
+                            Q.Enqueue(t);
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private List<Tile> GetAdjacentTiles(Point aIndex)
+        {
+            List<Tile> adjacent = new List<Tile>();
+
+            if (aIndex.Y - 1 >= 0)
+            {
+                if (myHorizontals[aIndex.X, aIndex.Y - 1].IsOccupied == false)
+                {
+                    adjacent.Add(myWideTiles[aIndex.X, aIndex.Y - 1]); //Up
+                }
+            }
+            if (aIndex.X - 1 >= 0)
+            {
+                if (myVerticals[aIndex.X - 1, aIndex.Y].IsOccupied == false)
+                {
+                    adjacent.Add(myWideTiles[aIndex.X - 1, aIndex.Y]); //Left
+                }
+            }
+            if (aIndex.Y + 1 < myWideTiles.Length)
+            {
+                if (myHorizontals[aIndex.Y, aIndex.X].IsOccupied == false)
+                {
+                    adjacent.Add(myWideTiles[aIndex.X, aIndex.Y + 1]); //Down
+                }
+            }
+            if (aIndex.X + 1 < myWideTiles.Length)
+            {
+                if (myVerticals[aIndex.X, aIndex.Y].IsOccupied == false)
+                {
+                    adjacent.Add(myWideTiles[aIndex.X + 1, aIndex.Y]);  //Right
+                }
+            }
+
+            return adjacent;
         }
     }
 }
