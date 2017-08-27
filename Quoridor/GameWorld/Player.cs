@@ -70,7 +70,7 @@ namespace Quoridor
             NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, Lidgren.Network.NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void Move(int aColumn, int aRow)
+        private void Move(int aColumn, int aRow)
         {
             NetworkManager.myOutMsg = NetworkManager.myClient.CreateMessage();
             NetworkManager.myOutMsg.Write("Move");
