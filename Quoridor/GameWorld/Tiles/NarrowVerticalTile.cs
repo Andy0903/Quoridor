@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quoridor
 {
-    class NarrowVerticalTile : Tile
+    public class NarrowVerticalTile : Tile
     {
         private Texture2D myTexture;
         public Color Color { get; set; }

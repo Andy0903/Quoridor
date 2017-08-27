@@ -6,7 +6,9 @@ namespace Quoridor
     {
         public string Name { get; private set; }
         public int NumberOfWalls { get; set; }
-   
+
+        public Point WideTilePosition { get; private set; }
+
         private int slot;
         public int Slot //Which player you are, 1st, 2nd, 3rd, 4th.. (0-3)
         {
@@ -41,11 +43,12 @@ namespace Quoridor
             }
         } 
 
-        public Player(string aName) : base(32, 32, "Player")
+        public Player(string aName, Point aWideTilePosition) : base(32, 32, "Player")
         {
             Name = aName;
             Slot = -1;
             NumberOfWalls = -1;
+            WideTilePosition = aWideTilePosition;
         }
 
         public void Update()
@@ -74,6 +77,120 @@ namespace Quoridor
             NetworkManager.myOutMsg.Write(aColumn);
             NetworkManager.myOutMsg.Write(aRow);
             NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, Lidgren.Network.NetDeliveryMethod.ReliableOrdered);
+        }
+
+        private bool IsValidMovesetAndNotBlockedByWall(int aColumn, int aRow)
+        {
+            int playerColumn = PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].WideTilePosition.X;
+            int playerRow = PlayerManager.myPlayers[PlayerManager.CurrentSlotTurn].WideTilePosition.Y;
+
+            bool validColumnMove = ((playerColumn == (aColumn - 1) || playerColumn == (aColumn + 1)) && playerRow == aRow);
+            bool validRowMove = ((playerRow == (aRow - 1) || playerRow == (aRow + 1)) && playerColumn == aColumn);
+
+            if (validColumnMove != validRowMove) //XOR checking so it's not a diagonal move.
+            {
+                if ((aRow - playerRow) < 0) //Up
+                {
+                    if (Program.Game.GameBoard.myHorizontals[aRow, aColumn].IsOccupied == false)
+                    {
+                        return true;
+                    }
+                }
+                else if ((aRow - playerRow) > 0) //Down
+                {
+                    if (Program.Game.GameBoard.myHorizontals[aRow - 1, aColumn].IsOccupied == false)
+                    {
+                        return true;
+                    }
+                }
+                else if ((aColumn - playerColumn) < 0) //Left
+                {
+                    if (Program.Game.GameBoard.myVerticals[aRow, aColumn].IsOccupied == false)
+                    {
+                        return true;
+                    }
+                }
+                else if ((aColumn - playerColumn) > 0) //Right
+                {
+                    if (Program.Game.GameBoard.myVerticals[aRow, aColumn - 1].IsOccupied == false)
+                    {
+                        return true;
+                    }
+                }
+            }
+            else //Jumping over player possibility
+            {
+                for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
+                {
+                    if (i == PlayerManager.CurrentSlotTurn)
+                    {
+                        continue;
+                    }
+
+                    int playerIColumn = PlayerManager.myPlayers[i].WideTilePosition.X;
+                    int playerIRow = PlayerManager.myPlayers[i].WideTilePosition.Y;
+
+                    bool validColumnMovePlayerI = ((playerIColumn == (aColumn - 1) || playerIColumn == (aColumn + 1)) && playerIRow == aRow);
+                    bool validRowMovePlayerI = ((playerIRow == (aRow - 1) || playerIRow == (aRow + 1)) && playerIColumn == aColumn);
+
+                    if (validColumnMovePlayerI != validRowMovePlayerI) //Valid move from player.
+                    {
+                        if ((aRow - playerIRow) < 0) //Up
+                        {
+                            if (Program.Game.GameBoard.myHorizontals[aRow, aColumn].IsOccupied == false)
+                            {
+                                return true;
+                            }
+                        }
+                        else if ((aRow - playerIRow) > 0) //Down
+                        {
+                            if (Program.Game.GameBoard.myHorizontals[aRow - 1, aColumn].IsOccupied == false)
+                            {
+                                return true;
+                            }
+                        }
+                        else if ((aColumn - playerIColumn) < 0) //Left
+                        {
+                            if (Program.Game.GameBoard.myVerticals[aRow, aColumn].IsOccupied == false)
+                            {
+                                return true;
+                            }
+                        }
+                        else if ((aColumn - playerIColumn) > 0) //Right
+                        {
+                            if (Program.Game.GameBoard.myVerticals[aRow, aColumn - 1].IsOccupied == false)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private void MoveIfValid(Player aPlayer, int aWishColumn, int aWishRow)
+        {
+            if (Program.Game.GameBoard.IsWithinGameBoard(aWishColumn, aWishRow) && Program.Game.GameBoard.TileNotOccupied(aWishColumn, aWishRow))
+            {
+                if (IsValidMovesetAndNotBlockedByWall(aWishColumn, aWishRow))
+                {
+                    int oldColumn = aPlayer.WideTilePosition.X;
+                    int oldRow = aPlayer.WideTilePosition.Y;
+                    Program.Game.GameBoard.SetWideTilesOccupied(oldColumn, oldRow, false);
+                    aPlayer.WideTilePosition = new Point(aWishColumn, aWishRow);
+                    Program.Game.GameBoard.SetWideTilesOccupied(aWishColumn, aWishRow, true);
+
+                    Move(aWishColumn, aWishRow);
+
+                    //SKa klienten hålla koll på om någon vinner?
+                    //if (myWideTiles[aPlayer.WideTilePosition.X, aPlayer.WideTilePosition.Y].Color == PlayerManager.myPlayers[myPlayerIndexThisTurn].Color)
+                    //{
+                    //    NetworkManager.MessagePlayerWon(myPlayerIndexThisTurn);
+                    //}
+                }
+            }
         }
     }
 }

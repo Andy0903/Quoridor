@@ -76,7 +76,7 @@ namespace QuoridorServer
                     0 <= aRow && aRow < myWideTiles.GetLength(1));
         }
 
-        private bool IsValidMovesetAndNotBlockedByWall(int aColumn, int aRow) //TODO add wall part.
+        private bool IsValidMovesetAndNotBlockedByWall(int aColumn, int aRow)
         {
             int playerColumn = PlayerManager.myPlayers[myPlayerIndexThisTurn].WideTilePosition.X;
             int playerRow = PlayerManager.myPlayers[myPlayerIndexThisTurn].WideTilePosition.Y;

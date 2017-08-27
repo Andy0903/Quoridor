@@ -1,4 +1,5 @@
 ﻿using Lidgren.Network;
+using Microsoft.Xna.Framework;
 using System;
 
 namespace Quoridor
@@ -26,14 +27,32 @@ namespace Quoridor
                 }
             }
         }
-        
+
         private static void ConnectingToServer()
         {
             string name = myIncMsg.ReadString();
             Program.Game.PlayerNumbers = (NumberOfPlayers)myIncMsg.ReadInt32();
             int slot = myIncMsg.ReadInt32();
             int numberOfWalls = myIncMsg.ReadInt32();
-            Player recentlyJoined = new Player(name);
+            Point startTilePos = new Point(0, 0);
+            switch (slot)
+            {
+                case 0:
+                    startTilePos = new Point(4, 8);
+                    break;
+                case 1:
+                    startTilePos = new Point(4, 0);
+                    break;
+                case 2:
+                    startTilePos = new Point(8, 4);
+                    break;
+                case 3:
+                    startTilePos = new Point(0, 4);
+                    break;
+            }
+
+
+            Player recentlyJoined = new Player(name, startTilePos);
             Program.Game.ConstructBoard();
             recentlyJoined.Slot = slot;
             recentlyJoined.NumberOfWalls = numberOfWalls;

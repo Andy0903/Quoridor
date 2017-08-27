@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace Quoridor
 {
-    class NarrowHorizontalTile : Tile
+    public class NarrowHorizontalTile : Tile
     {
         private Texture2D myTexture;
         public Color Color { get; set; }

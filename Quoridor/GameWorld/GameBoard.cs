@@ -9,12 +9,28 @@ namespace Quoridor
     {
         private SpriteFont mySF;
         WideTile[,] myWideTiles = new WideTile[9, 9];
-        NarrowVerticalTile[,] myVerticals = new NarrowVerticalTile[8, 9];
-        NarrowHorizontalTile[,] myHorizontals = new NarrowHorizontalTile[9, 8];
+        public NarrowVerticalTile[,] myVerticals = new NarrowVerticalTile[8, 9];
+        public NarrowHorizontalTile[,] myHorizontals = new NarrowHorizontalTile[9, 8];
         List<GraphicalObject> myWalls = new List<GraphicalObject>();
         bool mySomeoneWon = false;
         Color myWinTextColor;
         string myWinnerName;
+
+        public bool TileNotOccupied(int aColumn, int aRow)
+        {
+            return myWideTiles[aColumn, aRow].IsOccupied == false;
+        }
+
+        public void SetWideTilesOccupied(int aColumn, int aRow, bool aState)
+        {
+            myWideTiles[aColumn, aRow].IsOccupied = aState;
+        }
+
+        public bool IsWithinGameBoard(int aColumn, int aRow)
+        {
+            return (0 <= aColumn && aColumn < myWideTiles.GetLength(0) &&
+                    0 <= aRow && aRow < myWideTiles.GetLength(1));
+        }
 
         public Vector2 GetPositionOfTile(int aColumn, int aRow)
         {
