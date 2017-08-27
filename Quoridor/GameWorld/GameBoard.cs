@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System;
 
 namespace Quoridor
 {
@@ -141,6 +142,11 @@ namespace Quoridor
             //{
             //    PlayerWon(0);
             //}
+        }
+
+        public void NothingHappened(int aSlotThatShouldDoSomethingNew)
+        {
+            throw new NotImplementedException();
         }
 
         public void Draw(SpriteBatch aSB)
