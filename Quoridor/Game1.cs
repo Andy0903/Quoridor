@@ -1,8 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-
 using GeonBit.UI;
-using Lidgren.Network;
 
 namespace Quoridor
 {
@@ -12,20 +10,18 @@ namespace Quoridor
         Playing,
     }
 
-    public enum NumberOfPlayers
-    {
-        TwoPlayers,
-        FourPlayers,
-    }
-
     public class Game1 : Game
     {
         public GraphicsDeviceManager myGraphics;
         SpriteBatch mySpriteBatch;
         MainMenu myMainMenu;
         public GameState State { get; set; }
-        public NumberOfPlayers PlayerNumbers { get; set; }
-        public GameBoard GameBoard { get; private set; }
+        GameBoard myGameBoard;
+
+        private void NetworkManager_OnGameReadyToStart(object aSender, GameReadyToStartMessage e)
+        {
+            myGameBoard = new GameBoard(e.PlayerNames);
+        }
 
         public Game1()
         {
@@ -44,17 +40,22 @@ namespace Quoridor
             UserInterface.Initialize(Content, BuiltinThemes.hd);
             myMainMenu = new MainMenu();
             State = GameState.MainMenu;
-            PlayerManager.NumberOfTurns = -1;
 
-            NetworkManager.myConfig = new NetPeerConfiguration("QuoridorConfig");   //Must be same appIdentifier as the server uses.
-            NetworkManager.myClient = new NetClient(NetworkManager.myConfig);
+            NetworkManager.OnGameReadyToStart += NetworkManager_OnGameReadyToStart;
+            NetworkManager.OnDisconnect += NetworkManager_OnDisconnect;
+            NetworkManager.OnConnect += NetworkManager_OnConnect;
 
             base.Initialize();
         }
 
-        public void ConstructBoard()
+        private void NetworkManager_OnConnect(object sender, System.EventArgs e)
         {
-            GameBoard = new GameBoard();
+            State = GameState.Playing;
+        }
+
+        private void NetworkManager_OnDisconnect(object sender, System.EventArgs e)
+        {
+            throw new System.NotImplementedException();
         }
 
         protected override void LoadContent()
@@ -75,8 +76,6 @@ namespace Quoridor
                     UserInterface.Active.Update(gameTime);
                     break;
                 case GameState.Playing:
-                    PlayerManager.Update();
-                    GameBoard.Update();
                     break;
                 default:
                     break;
@@ -95,8 +94,7 @@ namespace Quoridor
                     break;
                 case GameState.Playing:
                     mySpriteBatch.Begin();
-                    GameBoard.Draw(mySpriteBatch);
-                    PlayerManager.Draw(mySpriteBatch);
+                    myGameBoard.Draw(mySpriteBatch);
                     mySpriteBatch.End();
                     break;
             }

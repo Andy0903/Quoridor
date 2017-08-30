@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quoridor", "Quoridor\Quorid
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuoridorServer", "QuoridorServer\QuoridorServer.csproj", "{5B7FA3B0-63E4-4AAC-8953-DB11E40F8F96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuoridorNetwork", "Messages\QuoridorNetwork.csproj", "{3A018902-8755-4AF5-928D-580D5ED5C5D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,6 +32,14 @@ Global
 		{5B7FA3B0-63E4-4AAC-8953-DB11E40F8F96}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5B7FA3B0-63E4-4AAC-8953-DB11E40F8F96}.Release|x86.ActiveCfg = Release|Any CPU
 		{5B7FA3B0-63E4-4AAC-8953-DB11E40F8F96}.Release|x86.Build.0 = Release|Any CPU
+		{3A018902-8755-4AF5-928D-580D5ED5C5D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A018902-8755-4AF5-928D-580D5ED5C5D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A018902-8755-4AF5-928D-580D5ED5C5D7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3A018902-8755-4AF5-928D-580D5ED5C5D7}.Debug|x86.Build.0 = Debug|Any CPU
+		{3A018902-8755-4AF5-928D-580D5ED5C5D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A018902-8755-4AF5-928D-580D5ED5C5D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A018902-8755-4AF5-928D-580D5ED5C5D7}.Release|x86.ActiveCfg = Release|Any CPU
+		{3A018902-8755-4AF5-928D-580D5ED5C5D7}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

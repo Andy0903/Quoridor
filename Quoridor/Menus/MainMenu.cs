@@ -1,12 +1,13 @@
 ﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
-using Lidgren.Network;
 using Microsoft.Xna.Framework;
 
 namespace Quoridor
 {
     class MainMenu
     {
+        string myNameText;
+
         public MainMenu()
         {
             Initialize();
@@ -48,9 +49,11 @@ namespace Quoridor
             mainPanel.AddChild(connectButton);
             connectButton.SetOffset(new Vector2(0, 80));
 
+            NetworkManager.OnConnect += OnConnect;
+
             connectButton.OnClick = (Entity button) =>
             {
-                NetworkManager.myClient.Start();
+                NetworkManager.Client.Start();
                 if (ipText.Value == "" && portText.Value == "" && nameText.Value == "") //TODO remove?
                 {
                     nameText.Value = "Default";
@@ -58,23 +61,17 @@ namespace Quoridor
                     portText.Value = "14242";
                 }
 
+                myNameText = nameText.Value;
                 int port;
                 int.TryParse(portText.Value, out port);
-                NetworkManager.myClient.Connect(ipText.Value, port);
+                NetworkManager.Client.Connect(ipText.Value, port);
 
-                System.Threading.Thread.Sleep(300);
-                
-                //Program.Game.LocalPlayer = new Player(nameText.Value);
-
-                NetworkManager.myOutMsg = NetworkManager.myClient.CreateMessage();
-                NetworkManager.myOutMsg.Write("Connect");
-                NetworkManager.myOutMsg.Write(nameText.Value);
-                NetworkManager.myClient.SendMessage(NetworkManager.myOutMsg, NetDeliveryMethod.ReliableOrdered);
-                System.Threading.Thread.Sleep(300);
-
-                //Program.Game.State = GameState.Playing;
-                //Program.Game.ConstructBoard();
             };
+        }
+
+        private void OnConnect(object sender, System.EventArgs e)
+        {
+            PlayerConnectMessage msg = new PlayerConnectMessage(myNameText);
         }
     }
 }

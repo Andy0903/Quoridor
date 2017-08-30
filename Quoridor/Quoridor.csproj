@@ -52,9 +52,7 @@
     <Compile Include="GameWorld\Tiles\WideTile.cs" />
     <Compile Include="GameWorld\VerticalWall.cs" />
     <Compile Include="Menus\MainMenu.cs" />
-    <Compile Include="Managers\NetworkManager.cs" />
     <Compile Include="GameWorld\Player.cs" />
-    <Compile Include="Managers\PlayerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -670,6 +668,12 @@
     <None Include="Content\GeonBit.UI\themes\lowres\fonts\Italic.spritefont" />
     <None Include="Content\GeonBit.UI\themes\lowres\fonts\Regular.spritefont" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messages\QuoridorNetwork.csproj">
+      <Project>{3a018902-8755-4af5-928d-580d5ed5c5d7}</Project>
+      <Name>QuoridorNetwork</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\MonoGame\v3.0\MonoGame.Content.Builder.targets" />

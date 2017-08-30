@@ -4,13 +4,6 @@ namespace Quoridor
 {
     public abstract class Tile
     {
-        public enum TileType
-        {
-            NarrowVertical,
-            NarrowHorizontal,
-            Wide
-        }
-
         public bool IsOccupied { get; set; }
         public int Height { get; protected set; }
         public int Width { get; protected set; }
