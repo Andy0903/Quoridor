@@ -1,4 +1,4 @@
-﻿namespace Quoridor
+﻿namespace QuoridorNetwork
 {
     public enum MessageType
     {
@@ -8,5 +8,6 @@
         PlayerConnect,
         PlayerMove,
         PlayerWon,
+        ActionReject,
     }
 }

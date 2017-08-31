@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI;
+using QuoridorNetwork;
 
 namespace Quoridor
 {
@@ -69,13 +70,13 @@ namespace Quoridor
 
         protected override void Update(GameTime gameTime)
         {
-            NetworkManager.Update();
             switch (State)
             {
                 case GameState.MainMenu:
                     UserInterface.Active.Update(gameTime);
                     break;
                 case GameState.Playing:
+                    NetworkManager.Update();
                     break;
                 default:
                     break;

@@ -1,45 +1,53 @@
 ﻿using Lidgren.Network;
 using Microsoft.Xna.Framework;
+using QuoridorNetwork;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuoridorServer
 {
     class Game
     {
-        public static int myPlayerIndexThisTurn = -1;
+        List<Player> myPlayers = new List<Player>();
+        int myPlayerIndexThisTurn = -1;
         Tile[,] myWideTiles = new Tile[9, 9];
         Tile[,] myVerticals = new Tile[8, 9];
         Tile[,] myHorizontals = new Tile[9, 8];
 
-        public Game()
+        Player CurrentPlayer => myPlayers[myPlayerIndexThisTurn];
+        bool PlayerInGoal => myWideTiles[CurrentPlayer.WideTilePosition.X, CurrentPlayer.WideTilePosition.Y].Color == CurrentPlayer.Color;
+
+        public Game(List<Tuple<string, long>> aClients)
         {
+            for (int i = 0; i < aClients.Count; i++)
+            {
+                myPlayers.Add(new Player(aClients[i].Item1, aClients[i].Item2, (aClients.Count == 2 ? 10 : 5), i));
+            }
+
             for (int i = 0; i < myWideTiles.GetLength(0); i++)
             {
                 for (int k = 0; k < myWideTiles.GetLength(1); k++)
                 {
-                    myWideTiles[i, k] = new Tile(new Microsoft.Xna.Framework.Point(i, k));
+                    myWideTiles[i, k] = new Tile(new Point(i, k));
                 }
             }
 
             for (int i = 0; i < myWideTiles.GetLength(0); i++)
             {
-                myWideTiles[i, 0].Color = Tile.Colors.Red;
-                myWideTiles[i, myWideTiles.GetLength(0) - 1].Color = Tile.Colors.Blue;
+                myWideTiles[i, 0].Color = Color.Red;
+                myWideTiles[i, myWideTiles.GetLength(0) - 1].Color = Color.Blue;
             }
 
             myWideTiles[4, 8].IsOccupied = true;
             myWideTiles[4, 0].IsOccupied = true;
 
-            if (PlayerManager.GameModePlayers == PlayerManager.NumberOfPlayersGameMode.FourPlayers)
+            if (myPlayers.Count == 4)
             {
                 for (int i = 0; i < myWideTiles.GetLength(1); i++)
                 {
-                    myWideTiles[0, i].Color = Tile.Colors.Yellow;
-                    myWideTiles[myWideTiles.GetLength(1) - 1, i].Color = Tile.Colors.Green;
+                    myWideTiles[0, i].Color = Color.Yellow;
+                    myWideTiles[myWideTiles.GetLength(1) - 1, i].Color = Color.Green;
                 }
 
                 myWideTiles[0, 4].IsOccupied = true;
@@ -50,7 +58,7 @@ namespace QuoridorServer
             {
                 for (int k = 0; k < myVerticals.GetLength(1); k++)
                 {
-                    myVerticals[i, k] = new Tile(new Microsoft.Xna.Framework.Point(i, k));
+                    myVerticals[i, k] = new Tile(new Point(i, k));
                 }
             }
 
@@ -58,16 +66,65 @@ namespace QuoridorServer
             {
                 for (int k = 0; k < myVerticals.GetLength(0); k++)
                 {
-                    myHorizontals[i, k] = new Tile(new Microsoft.Xna.Framework.Point(i, k));
+                    myHorizontals[i, k] = new Tile(new Point(i, k));
                 }
             }
+        }
 
+        public void Start()
+        {
+            NetworkManager.OnPlayerMoved += NetworkManager_OnPlayerMoved;
+            NetworkManager.OnNewWallPlaced += NetworkManager_OnNewWallPlaced;
+            NetworkManager.Send(new GameReadyToStartMessage(myPlayers.Select(i => i.Name).ToList()));
+            NextTurn();
+        }
+
+        private void NetworkManager_OnNewWallPlaced(object sender, PlaceWallMessage e)
+        {
+            if (e.Sender.RemoteUniqueIdentifier != CurrentPlayer.RemoteUniqueIdentifier)
+                return;
+
+            bool validWallPlacement = PlaceWall(e);
+            if (validWallPlacement)
+            {
+                NetworkManager.Send(new PlaceWallMessage(e.WallType, e.Column, e.Row, myPlayerIndexThisTurn));
+                NextTurn();
+            }
+            else
+            {
+                NetworkManager.Send(new ActionRejectMessage(), e.Sender);
+            }
+        }
+
+        private void NetworkManager_OnPlayerMoved(object sender, PlayerMoveMessage e)
+        {
+            if (e.Sender.RemoteUniqueIdentifier != CurrentPlayer.RemoteUniqueIdentifier)
+                return;
+
+            bool validMove = Move(e);
+            if (validMove)
+            {
+                NetworkManager.Send(new PlayerMoveMessage(e.Column, e.Row, myPlayerIndexThisTurn));
+
+                if (PlayerInGoal)
+                {
+                    NetworkManager.Send(new PlayerWonMessage(myPlayerIndexThisTurn));
+                }
+                else
+                {
+                    NextTurn();
+                }
+            }
+            else
+            {
+                NetworkManager.Send(new ActionRejectMessage(), e.Sender);
+            }
         }
 
         public void NextTurn()
         {
-            myPlayerIndexThisTurn = (myPlayerIndexThisTurn + 1) % PlayerManager.myPlayers.Count;
-            NetworkManager.MessageNextTurn(myPlayerIndexThisTurn);
+            myPlayerIndexThisTurn = (myPlayerIndexThisTurn + 1) % myPlayers.Count;
+            NetworkManager.Send(new NewTurnMessage(myPlayerIndexThisTurn));
         }
 
         private bool IsWithinGameBoard(int aColumn, int aRow)
@@ -76,199 +133,128 @@ namespace QuoridorServer
                     0 <= aRow && aRow < myWideTiles.GetLength(1));
         }
 
-        private bool IsValidMovesetAndNotBlockedByWall(int aColumn, int aRow)
+        private List<Point> ValidMovesFromTilePosition(Point aPosition, bool isInFirstStep = true)
         {
-            int playerColumn = PlayerManager.myPlayers[myPlayerIndexThisTurn].WideTilePosition.X;
-            int playerRow = PlayerManager.myPlayers[myPlayerIndexThisTurn].WideTilePosition.Y;
+            List<Point> validPoints = new List<Point>();
 
-            bool validColumnMove = ((playerColumn == (aColumn - 1) || playerColumn == (aColumn + 1)) && playerRow == aRow);
-            bool validRowMove = ((playerRow == (aRow - 1) || playerRow == (aRow + 1)) && playerColumn == aColumn);
-
-            if (validColumnMove != validRowMove) //XOR checking so it's not a diagonal move.
+            for (int i = -1; i <= 1; i++)
             {
-                if ((aRow - playerRow) < 0) //Up
+                for (int k = -1; k <= 1; k++)
                 {
-                    if (myHorizontals[aRow, aColumn].IsOccupied == false)
+                    if (i == 0 && k == 0)
+                        continue;
+
+                    Point p = new Point(aPosition.X + i, aPosition.Y + k);
+
+                    if (!IsWithinGameBoard(p.X, p.Y) || !CanMoveBetween(aPosition, p))
+                        continue;
+
+                    if (!myWideTiles[p.X, p.Y].IsOccupied)
                     {
-                        return true;
+                        validPoints.Add(p);
                     }
-                }
-                else if ((aRow - playerRow) > 0) //Down
-                {
-                    if (myHorizontals[aRow - 1, aColumn].IsOccupied == false)
+                    else if (isInFirstStep)
                     {
-                        return true;
-                    }
-                }
-                else if ((aColumn - playerColumn) < 0) //Left
-                {
-                    if (myVerticals[aRow, aColumn].IsOccupied == false)
-                    {
-                        return true;
-                    }
-                }
-                else if ((aColumn - playerColumn) > 0) //Right
-                {
-                    if (myVerticals[aRow, aColumn - 1].IsOccupied == false)
-                    {
-                        return true;
+                        validPoints.AddRange(ValidMovesFromTilePosition(p, false));
                     }
                 }
             }
-            else //Jumping over player possibility
+
+            return validPoints;
+        }
+
+        private bool CanMoveBetween(Point aStartPoint, Point aEndPoint)
+        {
+            if (aStartPoint.X == aEndPoint.X)
             {
-                for (int i = 0; i < PlayerManager.myPlayers.Count; i++)
-                {
-                    if (i == myPlayerIndexThisTurn)
-                    {
-                        continue;
-                    }
-
-                    int playerIColumn = PlayerManager.myPlayers[i].WideTilePosition.X;
-                    int playerIRow = PlayerManager.myPlayers[i].WideTilePosition.Y;
-
-                    bool validColumnMovePlayerI = ((playerIColumn == (aColumn - 1) || playerIColumn == (aColumn + 1)) && playerIRow == aRow);
-                    bool validRowMovePlayerI = ((playerIRow == (aRow - 1) || playerIRow == (aRow + 1)) && playerIColumn == aColumn);
-
-                    if (validColumnMovePlayerI != validRowMovePlayerI) //Valid move from player.
-                    {
-                        if ((aRow - playerIRow) < 0) //Up
-                        {
-                            if (myHorizontals[aRow, aColumn].IsOccupied == false)
-                            {
-                                return true;
-                            }
-                        }
-                        else if ((aRow - playerIRow) > 0) //Down
-                        {
-                            if (myHorizontals[aRow - 1, aColumn].IsOccupied == false)
-                            {
-                                return true;
-                            }
-                        }
-                        else if ((aColumn - playerIColumn) < 0) //Left
-                        {
-                            if (myVerticals[aRow, aColumn].IsOccupied == false)
-                            {
-                                return true;
-                            }
-                        }
-                        else if ((aColumn - playerIColumn) > 0) //Right
-                        {
-                            if (myVerticals[aRow, aColumn - 1].IsOccupied == false)
-                            {
-                                return true;
-                            }
-                        }
-                    }
-                }
+                int minRow = Math.Min(aStartPoint.Y, aEndPoint.Y);
+                return !myHorizontals[aStartPoint.X, minRow].IsOccupied;
+            }
+            else if (aStartPoint.Y == aEndPoint.Y)
+            {
+                int minColumn = Math.Min(aStartPoint.X, aEndPoint.X);
+                return !myVerticals[minColumn, aStartPoint.Y].IsOccupied;
             }
 
             return false;
         }
 
-        private void MoveIfValid(Player aPlayer, int aWishColumn, int aWishRow)
+        private bool Move(PlayerMoveMessage aMsg)
         {
-            if (IsWithinGameBoard(aWishColumn, aWishRow) && myWideTiles[aWishColumn, aWishRow].IsOccupied == false)
-            {
-                if (IsValidMovesetAndNotBlockedByWall(aWishColumn, aWishRow))
-                {
-                    int oldColumn = aPlayer.WideTilePosition.X;
-                    int oldRow = aPlayer.WideTilePosition.Y;
-                    myWideTiles[oldColumn, oldRow].IsOccupied = false;
-                    aPlayer.WideTilePosition = new Microsoft.Xna.Framework.Point(aWishColumn, aWishRow);
-                    myWideTiles[aWishColumn, aWishRow].IsOccupied = true;
-                    NetworkManager.MessagePlayerMovement(myPlayerIndexThisTurn, aWishColumn, aWishRow, oldColumn, oldRow);
+            if (!IsWithinGameBoard(aMsg.Column, aMsg.Row))
+                return false;
+            if (myWideTiles[aMsg.Column, aMsg.Row].IsOccupied)
+                return false;
 
-                    if (myWideTiles[aPlayer.WideTilePosition.X, aPlayer.WideTilePosition.Y].Color == PlayerManager.myPlayers[myPlayerIndexThisTurn].Color)
-                    {
-                        NetworkManager.MessagePlayerWon(myPlayerIndexThisTurn);
-                    }
+            List<Point> validMoves = ValidMovesFromTilePosition(CurrentPlayer.WideTilePosition);
+            Point newPosition = new Point(aMsg.Column, aMsg.Row);
 
-                    NextTurn();
-                }
-            }
+            if (!validMoves.Contains(newPosition))
+                return false;
+
+            int oldColumn = CurrentPlayer.WideTilePosition.X;
+            int oldRow = CurrentPlayer.WideTilePosition.Y;
+            myWideTiles[oldColumn, oldRow].IsOccupied = false;
+
+            CurrentPlayer.WideTilePosition = newPosition;
+            myWideTiles[aMsg.Column, aMsg.Row].IsOccupied = true;
+
+            return true;
         }
 
-        public void Move(NetIncomingMessage aIncMsg)
+        public bool PlaceWall(PlaceWallMessage aMsg)
         {
-            if (aIncMsg.SenderConnection.RemoteUniqueIdentifier == PlayerManager.myPlayers[myPlayerIndexThisTurn].RemoteUniqueIdentifier)
+            int row = aMsg.Row;
+            int column = aMsg.Column;
+
+            if (CurrentPlayer.NumberOfWalls <= 0)
+                return false;
+
+            switch (aMsg.WallType)
             {
-                Player player = PlayerManager.myPlayers[myPlayerIndexThisTurn];
-                player.myTimeOut = 0;
+                case TileType.NarrowVertical:
+                    if (column < 0 || myVerticals.GetLength(0) <= column)
+                        return false;
+                    if (row < 0 || myVerticals.GetLength(1) - 1 <= row)
+                        return false;
+                    if (myVerticals[column, row].IsOccupied || myVerticals[column, row + 1].IsOccupied)
+                        return false;
 
-                int wishToMoveToColumn = aIncMsg.ReadInt32();
-                int wishToMoveToRow = aIncMsg.ReadInt32();
+                    myVerticals[column, row].IsOccupied = true;
+                    myVerticals[column, row + 1].IsOccupied = true;
 
-                MoveIfValid(player, wishToMoveToColumn, wishToMoveToRow);
-
-            }
-        }
-
-        public void PlaceWall(NetIncomingMessage aIncMsg)
-        {
-            if (aIncMsg.SenderConnection.RemoteUniqueIdentifier == PlayerManager.myPlayers[myPlayerIndexThisTurn].RemoteUniqueIdentifier)
-            {
-                Player player = PlayerManager.myPlayers[myPlayerIndexThisTurn];
-
-                player.myTimeOut = 0;
-                Tile.TileType type = (Tile.TileType)aIncMsg.ReadInt32();
-                int column = aIncMsg.ReadInt32();
-                int row = aIncMsg.ReadInt32();
-
-                if (player.NumberOfWalls > 0)
-                {
-                    switch (type)
+                    if (!PathToGoalExists())
                     {
-                        case Tile.TileType.NarrowVertical:
-                            if (myVerticals[column, row].IsOccupied == false && myVerticals[column, row + 1].IsOccupied == false && row != myVerticals.GetLength(0)) //TODO bug test these two (The one under as well)
-                            {
-                                myVerticals[column, row].IsOccupied = true;
-                                myVerticals[column, row + 1].IsOccupied = true;
-
-                                if (PathToGoalExists())
-                                {
-                                    player.DecrementWalls();
-                                    NetworkManager.UpdateWallInfo(myPlayerIndexThisTurn, Tile.TileType.NarrowVertical, column, row);
-                                    NextTurn();
-                                }
-                                else
-                                {
-                                    myVerticals[column, row].IsOccupied = false;
-                                    myVerticals[column, row + 1].IsOccupied = false;
-                                    NetworkManager.DoSomethingElse(myPlayerIndexThisTurn);
-                                }
-
-                            }
-                            break;
-                        case Tile.TileType.NarrowHorizontal:
-                            if (myHorizontals[column, row].IsOccupied == false && myHorizontals[column + 1, row].IsOccupied == false && column != myHorizontals.GetLength(1))
-                            {
-                                myHorizontals[column, row].IsOccupied = true;
-                                myHorizontals[column + 1, row].IsOccupied = true;
-
-                                if (PathToGoalExists())
-                                {
-                                    player.DecrementWalls();
-                                    NetworkManager.UpdateWallInfo(myPlayerIndexThisTurn, Tile.TileType.NarrowHorizontal, column, row);
-                                    NextTurn();
-                                }
-                                else
-                                {
-                                    myHorizontals[column, row].IsOccupied = true;
-                                    myHorizontals[column + 1, row].IsOccupied = true;
-                                    NetworkManager.DoSomethingElse(myPlayerIndexThisTurn);
-                                }
-
-                            }
-                            break;
-                        case Tile.TileType.Wide:
-                            break;
-                        default:
-                            break;
+                        myVerticals[column, row].IsOccupied = false;
+                        myVerticals[column, row + 1].IsOccupied = false;
+                        return false;
                     }
-                }
+                    break;
+                case TileType.NarrowHorizontal:
+                    if (column < 0 || myHorizontals.GetLength(0) - 1 <= column)
+                        return false;
+                    if (row < 0 || myHorizontals.GetLength(1) <= row)
+                        return false;
+                    if (myHorizontals[column, row].IsOccupied || myHorizontals[column + 1, row].IsOccupied)
+                        return false;
+
+                    myHorizontals[column, row].IsOccupied = true;
+                    myHorizontals[column + 1, row].IsOccupied = true;
+
+                    if (!PathToGoalExists())
+                    {
+                        myHorizontals[column, row].IsOccupied = false;
+                        myHorizontals[column + 1, row].IsOccupied = false;
+                        return false;
+                    }
+
+                    break;
+                default:
+                    return false;
             }
+
+            CurrentPlayer.DecrementWalls();
+            return true;
         }
 
         private bool PathToGoalExists()
@@ -276,7 +262,7 @@ namespace QuoridorServer
             SortedSet<Tile> S = new SortedSet<Tile>();
             Queue<Tile> Q = new Queue<Tile>();
 
-            foreach (Player p in PlayerManager.myPlayers)
+            foreach (Player p in myPlayers)
             {
                 Tile root = myWideTiles[p.WideTilePosition.X, p.WideTilePosition.Y];
                 S.Add(root);
@@ -287,9 +273,7 @@ namespace QuoridorServer
                     Tile current = Q.Dequeue();
 
                     if (current.Color == p.Color) //Current is a goal tile for the player.
-                    {
                         return true;
-                    }
 
                     foreach (Tile t in GetAdjacentTiles(current.Position))
                     {

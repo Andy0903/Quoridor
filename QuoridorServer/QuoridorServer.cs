@@ -1,10 +1,18 @@
 ﻿using System;
 using System.Windows.Forms;
+using QuoridorNetwork;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace QuoridorServer
 {
     public partial class QuoridorServerForm : Form
     {
+        List<Tuple<string, long>> myClients = new List<Tuple<string, long>>();
+        Game myGameboard;
+
+        private bool ServerIsFull { get { return (myClients.Count == (RadioButton2Players.Checked ? 2 : 4)); } }
+        
         public QuoridorServerForm()
         {
             InitializeComponent();
@@ -24,7 +32,7 @@ namespace QuoridorServer
 
         private void RunServer()
         {
-            NetworkManager.Initialize(PortTextBox);
+            NetworkManager.InitializeServer(int.Parse(PortTextBox.Text));
             LogTextBox.AppendText("Server started!" + "\n");
             LogTextBox.AppendText("Waiting for connections.." + "\n\n");
 
@@ -32,11 +40,30 @@ namespace QuoridorServer
             PortGroup.Enabled = false;
 
             StartButton.Text = "Disconnect";
+
+            NetworkManager.OnPlayerConnected += NetworkManager_OnPlayerConnected;
+        }
+
+        private void NetworkManager_OnPlayerConnected(object sender, PlayerConnectMessage e)
+        {
+            if (ServerIsFull)
+            {
+                e.Sender.Disconnect("Disconnect");
+                return;
+            }
+            
+            myClients.Add(new Tuple<string, long>(e.PlayerName, e.Sender.RemoteUniqueIdentifier));
+
+            if (ServerIsFull)
+            {
+                myGameboard = new Game(myClients);
+                myGameboard.Start();
+            }
         }
 
         private void StopServer()
         {
-            NetworkManager.Deintialize();
+            NetworkManager.Deinitialize();
 
             LogTextBox.AppendText("Server closed!" + "\n\n");
             NumberOfPlayersGroup.Enabled = true;
@@ -44,31 +71,6 @@ namespace QuoridorServer
             PlayerLabel.Text = "Players: 0";
 
             StartButton.Text = "Start";
-        }
-
-        private void Timer1_Tick(object sender, EventArgs e)
-        {
-            if (StartButton.Text == "Disconnect")
-            {
-                NetworkManager.Update(LogTextBox, PlayerLabel);
-                PlayerManager.Update(LogTextBox);
-            }
-        }
-
-        private void RadioButton2Players_CheckedChanged(object sender, EventArgs e)
-        {
-            if(RadioButton2Players.Checked)
-            {
-                PlayerManager.GameModePlayers = PlayerManager.NumberOfPlayersGameMode.TwoPlayers;
-            }
-        }
-
-        private void RadioButton4Player_CheckedChanged(object sender, EventArgs e)
-        {
-            if (RadioButton4Player.Checked)
-            {
-                PlayerManager.GameModePlayers = PlayerManager.NumberOfPlayersGameMode.FourPlayers;
-            }
         }
     }
 }

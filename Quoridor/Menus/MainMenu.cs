@@ -1,12 +1,13 @@
 ﻿using GeonBit.UI;
 using GeonBit.UI.Entities;
 using Microsoft.Xna.Framework;
+using QuoridorNetwork;
 
 namespace Quoridor
 {
     class MainMenu
     {
-        string myNameText;
+        TextInput myNameText;
 
         public MainMenu()
         {
@@ -27,9 +28,9 @@ namespace Quoridor
 
             HorizontalLine hline0 = new HorizontalLine();
             mainPanel.AddChild(hline0);
-            TextInput nameText = new TextInput(false);
-            nameText.PlaceholderText = "Insert name here..";
-            mainPanel.AddChild(nameText);
+            myNameText = new TextInput(false);
+            myNameText.PlaceholderText = "Insert name here..";
+            mainPanel.AddChild(myNameText);
             HorizontalLine hline1 = new HorizontalLine();
             mainPanel.AddChild(hline1);
 
@@ -53,25 +54,19 @@ namespace Quoridor
 
             connectButton.OnClick = (Entity button) =>
             {
-                NetworkManager.Client.Start();
-                if (ipText.Value == "" && portText.Value == "" && nameText.Value == "") //TODO remove?
+                if (ipText.Value == "" && portText.Value == "" && myNameText.Value == "") //TODO remove?
                 {
-                    nameText.Value = "Default";
+                    myNameText.Value = "Default";
                     ipText.Value = "127.0.0.1";
                     portText.Value = "14242";
                 }
-
-                myNameText = nameText.Value;
-                int port;
-                int.TryParse(portText.Value, out port);
-                NetworkManager.Client.Connect(ipText.Value, port);
-
+                NetworkManager.InitializeClient(int.Parse(portText.Value), ipText.Value);
             };
         }
 
         private void OnConnect(object sender, System.EventArgs e)
         {
-            PlayerConnectMessage msg = new PlayerConnectMessage(myNameText);
+            PlayerConnectMessage msg = new PlayerConnectMessage(myNameText.Value);
         }
     }
 }

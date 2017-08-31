@@ -1,12 +1,17 @@
 ﻿using Lidgren.Network;
 using System.Collections.Generic;
 
-namespace Quoridor
+namespace QuoridorNetwork
 {
-    public class GameReadyToStartMessage : IMessage
+    public class GameReadyToStartMessage : Message
     {
         public List<string> PlayerNames { get; private set; }
         
+        public GameReadyToStartMessage(List<string> aPlayerNames)
+        {
+            PlayerNames = aPlayerNames;
+        }
+
         public GameReadyToStartMessage(NetIncomingMessage aIncMessage)
         {
             int numberOfPlayers = aIncMessage.ReadInt32();
@@ -16,17 +21,16 @@ namespace Quoridor
             }
         }
 
-        public void Send()
+        public static implicit operator NetOutgoingMessage(GameReadyToStartMessage aMessage)
         {
-            NetOutgoingMessage outMessage = NetworkManager.Client.CreateMessage();
+            NetOutgoingMessage outMessage = NetworkManager.Peer.CreateMessage();
             outMessage.Write((int)MessageType.GameReadyToStart);
-            outMessage.Write(PlayerNames.Count);
-            foreach (string name in PlayerNames)
+            outMessage.Write(aMessage.PlayerNames.Count);
+            foreach (string name in aMessage.PlayerNames)
             {
                 outMessage.Write(name);
             }
-
-            NetworkManager.Client.SendMessage(outMessage, NetDeliveryMethod.ReliableOrdered);
+            return outMessage;
         }
     }
 }

@@ -1,31 +1,66 @@
 ﻿using Lidgren.Network;
 using System;
 
-namespace Quoridor
+namespace QuoridorNetwork
 {
     public static class NetworkManager
     {
         public static event EventHandler OnConnect;
         public static event EventHandler OnDisconnect;
-        public static event EventHandler OnActionRejected;
+        public static event EventHandler<ActionRejectMessage> OnActionRejected;
         public static event EventHandler<NewTurnMessage> OnNewTurn;
         public static event EventHandler<PlayerMoveMessage> OnPlayerMoved;
         public static event EventHandler<PlaceWallMessage> OnNewWallPlaced;
         public static event EventHandler<PlayerWonMessage> OnPlayerWon;
         public static event EventHandler<GameReadyToStartMessage> OnGameReadyToStart;
+        public static event EventHandler<PlayerConnectMessage> OnPlayerConnected;
 
-        public static NetClient Client { get; private set; }
+        public static NetPeer Peer { get; private set; }
 
-        static NetworkManager()
+        public static void Send(NetOutgoingMessage aOutMsg, NetConnection aRecipient = null)
         {
-            Client = new NetClient(new NetPeerConfiguration("QuoridorConfig"));
+            if (aRecipient != null)
+            {
+                Peer.SendMessage(aOutMsg, aRecipient, NetDeliveryMethod.ReliableOrdered);
+            }
+            else if (Peer is NetClient)
+            {
+                ((NetClient)Peer).SendMessage(aOutMsg, NetDeliveryMethod.ReliableOrdered);
+            }
+            else if (Peer is NetServer)
+            {
+                NetServer server = (NetServer)Peer;
+                server.SendMessage(aOutMsg, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
+        }
+
+        public static void InitializeServer(int aPort)
+        {
+            Peer = new NetServer(new NetPeerConfiguration("QuoridorConfig") { Port = aPort });
+            Peer.Start();
+        }
+
+        public static void Deinitialize()
+        {
+            Peer.Shutdown("Disconnect");
+        }
+
+        public static void InitializeClient(int aPort, string aIP)
+        {
+            Peer = new NetClient(new NetPeerConfiguration("QuoridorConfig"));
+            Peer.Start();
+            Peer.Connect(aIP, aPort);
         }
 
         public static void Update()
         {
             NetIncomingMessage incMsg;
 
-            while ((incMsg = Client.ReadMessage()) != null)
+            while ((incMsg = Peer.ReadMessage()) != null)
             {
                 switch (incMsg.MessageType)
                 {
@@ -40,7 +75,7 @@ namespace Quoridor
 
             if (incMsg != null)
             {
-                Client.Recycle(incMsg);
+                Peer.Recycle(incMsg);
             }
         }
 
@@ -59,13 +94,16 @@ namespace Quoridor
                     OnNewWallPlaced?.Invoke(null, new PlaceWallMessage(incMsg));
                     break;
                 case MessageType.PlayerConnect:
-                    //Not needed by client.
+                    OnPlayerConnected?.Invoke(null, new PlayerConnectMessage(incMsg));
                     break;
                 case MessageType.PlayerMove:
                     OnPlayerMoved?.Invoke(null, new PlayerMoveMessage(incMsg));
                     break;
                 case MessageType.PlayerWon:
                     OnPlayerWon?.Invoke(null, new PlayerWonMessage(incMsg));
+                    break;
+                case MessageType.ActionReject:
+                    OnActionRejected?.Invoke(null, new ActionRejectMessage(incMsg));
                     break;
                 default:
                     throw new NotImplementedException();

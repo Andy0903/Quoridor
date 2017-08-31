@@ -1,34 +1,35 @@
 ﻿using Lidgren.Network;
 
-namespace Quoridor
+namespace QuoridorNetwork
 {
-    public class PlayerMoveMessage : IMessage
+    public class PlayerMoveMessage : Message
     {
         public int Column { get; private set; }
         public int Row { get; private set; }
-        public int OldColumn { get; private set; }
-        public int OldRow { get; private set; }
         public int PlayerSlot { get; private set; }
 
-        public PlayerMoveMessage(NetIncomingMessage aIncMessage)
+        public PlayerMoveMessage(int aColumn, int aRow, int aPlayerSlot)
+        {
+            Column = aColumn;
+            Row = aRow;
+            PlayerSlot = aPlayerSlot;
+        }
+
+        public PlayerMoveMessage(NetIncomingMessage aIncMessage) : base(aIncMessage)
         {
             Column = aIncMessage.ReadInt32();
             Row = aIncMessage.ReadInt32();
-            OldColumn = aIncMessage.ReadInt32();
-            OldRow = aIncMessage.ReadInt32();
             PlayerSlot = aIncMessage.ReadInt32();
         }
 
-        public void Send()
+        public static implicit operator NetOutgoingMessage(PlayerMoveMessage aMessage)
         {
-            NetOutgoingMessage outMessage = NetworkManager.Client.CreateMessage();
+            NetOutgoingMessage outMessage = NetworkManager.Peer.CreateMessage();
             outMessage.Write((int)MessageType.PlayerMove);
-            outMessage.Write(Column);
-            outMessage.Write(Row);
-            outMessage.Write(OldColumn);
-            outMessage.Write(OldRow);
-            outMessage.Write(PlayerSlot);
-            NetworkManager.Client.SendMessage(outMessage, NetDeliveryMethod.ReliableOrdered);
+            outMessage.Write(aMessage.Column);
+            outMessage.Write(aMessage.Row);
+            outMessage.Write(aMessage.PlayerSlot);
+            return outMessage;
         }
     }
 }

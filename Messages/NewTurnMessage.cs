@@ -1,8 +1,8 @@
 ﻿using Lidgren.Network;
 
-namespace Quoridor
+namespace QuoridorNetwork
 {
-    public class NewTurnMessage : IMessage
+    public class NewTurnMessage : Message
     {
         public int PlayerSlot { get; private set; }
 
@@ -11,17 +11,17 @@ namespace Quoridor
             PlayerSlot = aPlayerSlot;
         }
 
-        public NewTurnMessage(NetIncomingMessage aIncMessage)
+        public NewTurnMessage(NetIncomingMessage aIncMessage) : base(aIncMessage)
         {
             PlayerSlot = aIncMessage.ReadInt32();
         }
 
-        public void Send()
+        public static implicit operator NetOutgoingMessage(NewTurnMessage aMessage)
         {
-            NetOutgoingMessage outMessage = NetworkManager.Client.CreateMessage();
+            NetOutgoingMessage outMessage = NetworkManager.Peer.CreateMessage();
             outMessage.Write((int)MessageType.NewTurn);
-            outMessage.Write(PlayerSlot);
-            NetworkManager.Client.SendMessage(outMessage, NetDeliveryMethod.ReliableOrdered);
+            outMessage.Write(aMessage.PlayerSlot);
+            return aMessage;
         }
     }
 }

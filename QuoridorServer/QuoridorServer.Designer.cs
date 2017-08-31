@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             this.PortGroup = new System.Windows.Forms.GroupBox();
             this.PortTextBox = new System.Windows.Forms.TextBox();
             this.NumberOfPlayersGroup = new System.Windows.Forms.GroupBox();
@@ -37,7 +36,6 @@
             this.LogGroup = new System.Windows.Forms.GroupBox();
             this.LogTextBox = new System.Windows.Forms.RichTextBox();
             this.StartButton = new System.Windows.Forms.Button();
-            this.Timer1 = new System.Windows.Forms.Timer(this.components);
             this.PlayerLabel = new System.Windows.Forms.Label();
             this.PortGroup.SuspendLayout();
             this.NumberOfPlayersGroup.SuspendLayout();
@@ -82,7 +80,6 @@
             this.RadioButton4Player.TabIndex = 3;
             this.RadioButton4Player.Text = "4";
             this.RadioButton4Player.UseVisualStyleBackColor = true;
-            this.RadioButton4Player.CheckedChanged += new System.EventHandler(this.RadioButton4Player_CheckedChanged);
             // 
             // RadioButton2Players
             // 
@@ -95,7 +92,6 @@
             this.RadioButton2Players.TabStop = true;
             this.RadioButton2Players.Text = "2";
             this.RadioButton2Players.UseVisualStyleBackColor = true;
-            this.RadioButton2Players.CheckedChanged += new System.EventHandler(this.RadioButton2Players_CheckedChanged);
             // 
             // LogGroup
             // 
@@ -125,12 +121,6 @@
             this.StartButton.Text = "Start";
             this.StartButton.UseVisualStyleBackColor = true;
             this.StartButton.Click += new System.EventHandler(this.StartButton_Click);
-            // 
-            // Timer1
-            // 
-            this.Timer1.Enabled = true;
-            this.Timer1.Interval = 16;
-            this.Timer1.Tick += new System.EventHandler(this.Timer1_Tick);
             // 
             // PlayerLabel
             // 
@@ -174,7 +164,6 @@
         private System.Windows.Forms.GroupBox LogGroup;
         public System.Windows.Forms.RichTextBox LogTextBox;
         private System.Windows.Forms.Button StartButton;
-        private System.Windows.Forms.Timer Timer1;
         private System.Windows.Forms.Label PlayerLabel;
     }
 }

@@ -54,10 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Color.cs" />
     <Compile Include="Game.cs" />
-    <Compile Include="NetworkManager.cs" />
     <Compile Include="Player.cs" />
-    <Compile Include="PlayerManager.cs" />
     <Compile Include="QuoridorServer.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -91,6 +90,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Messages\QuoridorNetwork.csproj">
+      <Project>{3a018902-8755-4af5-928d-580d5ed5c5d7}</Project>
+      <Name>QuoridorNetwork</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

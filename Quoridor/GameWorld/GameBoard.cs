@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System;
+using QuoridorNetwork;
 
 namespace Quoridor
 {
@@ -96,7 +97,7 @@ namespace Quoridor
         private void NetworkManager_OnPlayerMoved(object sender, PlayerMoveMessage e)
         {
             myPlayers[myCurrentSlotTurn].Position = GetPositionOfTile(e.Column, e.Row);
-            MoveOccupation(e.Column, e.Row, e.OldColumn, e.OldRow);
+            MoveOccupation(e.Column, e.Row, e.PlayerSlot);
         }
 
         private void NetworkManager_OnNewTurn(object sender, NewTurnMessage e)
@@ -105,7 +106,7 @@ namespace Quoridor
             myNumberOfTurns++;
         }
 
-        private void NetworkManager_OnActionRejected(object sender, EventArgs e)
+        private void NetworkManager_OnActionRejected(object sender, ActionRejectMessage e)
         {
             //Call on AI to do something (Ask what AI want to do?)
             throw new NotImplementedException();
@@ -165,10 +166,10 @@ namespace Quoridor
             }
         }
 
-        public void MoveOccupation(int movedToColumn, int movedToRow, int oldColumn, int oldRow)
+        public void MoveOccupation(int aColumn, int aRow, int aPlayerSlot)
         {
-            myWideTiles[movedToColumn, movedToRow].IsOccupied = true;
-            myWideTiles[oldColumn, oldRow].IsOccupied = false;
+            myWideTiles[aColumn, aRow].IsOccupied = true;
+            myWideTiles[myPlayers[aPlayerSlot].WideTilePosition.X, myPlayers[aPlayerSlot].WideTilePosition.Y].IsOccupied = false;
         }
 
         public void NothingHappened(int aSlotThatShouldDoSomethingNew)
