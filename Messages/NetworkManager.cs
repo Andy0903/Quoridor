@@ -15,6 +15,8 @@ namespace QuoridorNetwork
         public static event EventHandler<GameReadyToStartMessage> OnGameReadyToStart;
         public static event EventHandler<PlayerConnectMessage> OnPlayerConnected;
 
+        const string myApplicationIdentifier = "QuoridorConfig";
+
         public static NetPeer Peer { get; private set; }
 
         public static void Send(NetOutgoingMessage aOutMsg, NetConnection aRecipient = null)
@@ -40,7 +42,7 @@ namespace QuoridorNetwork
 
         public static void InitializeServer(int aPort)
         {
-            Peer = new NetServer(new NetPeerConfiguration("QuoridorConfig") { Port = aPort });
+            Peer = new NetServer(new NetPeerConfiguration(myApplicationIdentifier) { Port = aPort });
             Peer.Start();
         }
 
@@ -51,13 +53,15 @@ namespace QuoridorNetwork
 
         public static void InitializeClient(int aPort, string aIP)
         {
-            Peer = new NetClient(new NetPeerConfiguration("QuoridorConfig"));
+            Peer = new NetClient(new NetPeerConfiguration(myApplicationIdentifier));
             Peer.Start();
             Peer.Connect(aIP, aPort);
         }
 
         public static void Update()
         {
+            if (Peer == null)
+                return;
             NetIncomingMessage incMsg;
 
             while ((incMsg = Peer.ReadMessage()) != null)

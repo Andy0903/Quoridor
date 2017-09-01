@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI;
 using QuoridorNetwork;
+using System;
 
 namespace Quoridor
 {
@@ -22,6 +23,7 @@ namespace Quoridor
         private void NetworkManager_OnGameReadyToStart(object aSender, GameReadyToStartMessage e)
         {
             myGameBoard = new GameBoard(e.PlayerNames);
+            State = GameState.Playing;
         }
 
         public Game1()
@@ -51,12 +53,12 @@ namespace Quoridor
 
         private void NetworkManager_OnConnect(object sender, System.EventArgs e)
         {
-            State = GameState.Playing;
+            Console.WriteLine("OnConnect");
         }
 
         private void NetworkManager_OnDisconnect(object sender, System.EventArgs e)
         {
-            throw new System.NotImplementedException();
+            Exit();
         }
 
         protected override void LoadContent()
@@ -70,13 +72,13 @@ namespace Quoridor
 
         protected override void Update(GameTime gameTime)
         {
+            NetworkManager.Update();
             switch (State)
             {
                 case GameState.MainMenu:
                     UserInterface.Active.Update(gameTime);
                     break;
                 case GameState.Playing:
-                    NetworkManager.Update();
                     break;
                 default:
                     break;

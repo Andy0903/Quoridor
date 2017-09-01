@@ -21,7 +21,7 @@ namespace QuoridorNetwork
             NetOutgoingMessage outMessage = NetworkManager.Peer.CreateMessage();
             outMessage.Write((int)MessageType.NewTurn);
             outMessage.Write(aMessage.PlayerSlot);
-            return aMessage;
+            return outMessage;
         }
     }
 }

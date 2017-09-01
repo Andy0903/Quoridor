@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.PortGroup = new System.Windows.Forms.GroupBox();
             this.PortTextBox = new System.Windows.Forms.TextBox();
             this.NumberOfPlayersGroup = new System.Windows.Forms.GroupBox();
@@ -37,6 +38,7 @@
             this.LogTextBox = new System.Windows.Forms.RichTextBox();
             this.StartButton = new System.Windows.Forms.Button();
             this.PlayerLabel = new System.Windows.Forms.Label();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.PortGroup.SuspendLayout();
             this.NumberOfPlayersGroup.SuspendLayout();
             this.LogGroup.SuspendLayout();
@@ -132,6 +134,10 @@
             this.PlayerLabel.TabIndex = 4;
             this.PlayerLabel.Text = "Players: 0";
             // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            // 
             // QuoridorServerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -165,6 +171,7 @@
         public System.Windows.Forms.RichTextBox LogTextBox;
         private System.Windows.Forms.Button StartButton;
         private System.Windows.Forms.Label PlayerLabel;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 

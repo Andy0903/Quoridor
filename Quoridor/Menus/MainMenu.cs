@@ -66,7 +66,7 @@ namespace Quoridor
 
         private void OnConnect(object sender, System.EventArgs e)
         {
-            PlayerConnectMessage msg = new PlayerConnectMessage(myNameText.Value);
+            NetworkManager.Send(new PlayerConnectMessage(myNameText.Value));
         }
     }
 }

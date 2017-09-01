@@ -14,6 +14,7 @@ namespace QuoridorNetwork
 
         public GameReadyToStartMessage(NetIncomingMessage aIncMessage)
         {
+            PlayerNames = new List<string>();
             int numberOfPlayers = aIncMessage.ReadInt32();
             for (int i = 0; i < numberOfPlayers; i++)
             {

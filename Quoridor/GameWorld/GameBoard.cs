@@ -71,12 +71,12 @@ namespace Quoridor
         {
             mySF = Program.Game.Content.Load<SpriteFont>(@"GeonBit.UI/themes/hd/fonts/Regular"); //How to reach from GUI lib?
 
+            BuildBoard();
             for (int i = 0; i < aPlayerNames.Count; i++)
             {
                 myPlayers.Add(new Player(aPlayerNames[i], i, (aPlayerNames.Count == 2 ? 10 : 5), this));
             }
 
-            BuildBoard();
             NetworkManager.OnActionRejected += NetworkManager_OnActionRejected;
             NetworkManager.OnNewTurn += NetworkManager_OnNewTurn;
             NetworkManager.OnPlayerMoved += NetworkManager_OnPlayerMoved;
