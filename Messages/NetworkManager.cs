@@ -46,11 +46,6 @@ namespace QuoridorNetwork
             Peer.Start();
         }
 
-        public static void Deinitialize()
-        {
-            Peer.Shutdown("Disconnect");
-        }
-
         public static void InitializeClient(int aPort, string aIP)
         {
             Peer = new NetClient(new NetPeerConfiguration(myApplicationIdentifier));

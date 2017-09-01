@@ -69,10 +69,11 @@ namespace Quoridor
 
         public GameBoard(List<string> aPlayerNames)
         {
-            mySF = Program.Game.Content.Load<SpriteFont>(@"GeonBit.UI/themes/hd/fonts/Regular"); //How to reach from GUI lib?
+            mySF = Program.Game.Content.Load<SpriteFont>(@"GeonBit.UI/themes/hd/fonts/Regular");
 
-            BuildBoard();
-            for (int i = 0; i < aPlayerNames.Count; i++)
+            int numberOfPlayers = aPlayerNames.Count;
+            BuildBoard(numberOfPlayers);
+            for (int i = 0; i < numberOfPlayers; i++)
             {
                 myPlayers.Add(new Player(aPlayerNames[i], i, (aPlayerNames.Count == 2 ? 10 : 5), this));
             }
@@ -112,7 +113,7 @@ namespace Quoridor
             throw new NotImplementedException();
         }
 
-        private void BuildBoard()
+        private void BuildBoard(int aNumberOfPlayers)
         {
             const int boarderPadding = 10;
             const int tileWidth = 64;
@@ -135,7 +136,7 @@ namespace Quoridor
             myWideTiles[4, 8].IsOccupied = true;
             myWideTiles[4, 0].IsOccupied = true;
 
-            if (myPlayers.Count == 4)
+            if (aNumberOfPlayers == 4)
             {
                 for (int i = 0; i < myWideTiles.GetLength(1); i++)
                 {

@@ -54,6 +54,7 @@ namespace Quoridor
 
             connectButton.OnClick = (Entity button) =>
             {
+                connectButton.Disabled = true;
                 if (ipText.Value == "" && portText.Value == "" && myNameText.Value == "") //TODO remove?
                 {
                     myNameText.Value = "Default";

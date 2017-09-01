@@ -19,14 +19,7 @@ namespace QuoridorServer
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            if (StartButton.Text == "Start")
-            {
-                RunServer();
-            }
-            else
-            {
-                StopServer();
-            }
+            RunServer();
         }
 
         private void RunServer()
@@ -37,8 +30,7 @@ namespace QuoridorServer
 
             NumberOfPlayersGroup.Enabled = false;
             PortGroup.Enabled = false;
-
-            StartButton.Text = "Disconnect";
+            StartButton.Enabled = false;
 
             NetworkManager.OnPlayerConnected += NetworkManager_OnPlayerConnected;
             NetworkManager.OnConnect += NetworkManager_OnConnect;
@@ -48,7 +40,7 @@ namespace QuoridorServer
 
         private void NetworkManager_OnConnect(object sender, EventArgs e)
         {
-            LogTextBox.AppendText("Player connected!");
+            LogTextBox.AppendText("Player connected!" + "\n");
         }
 
         private void NetworkManager_OnPlayerConnected(object sender, PlayerConnectMessage e)
@@ -60,26 +52,13 @@ namespace QuoridorServer
             }
 
             myClients.Add(new Tuple<string, long>(e.PlayerName, e.Sender.RemoteUniqueIdentifier));
+            PlayerLabel.Text = "Players: " + myClients.Count;
 
             if (ServerIsFull)
             {
                 myGameboard = new Game(myClients);
                 myGameboard.Start();
             }
-        }
-
-        private void StopServer()
-        {
-            NetworkManager.Deinitialize();
-
-            LogTextBox.AppendText("Server closed!" + "\n\n");
-            NumberOfPlayersGroup.Enabled = true;
-            PortGroup.Enabled = true;
-            PlayerLabel.Text = "Players: 0";
-
-            StartButton.Text = "Start";
-
-            timer1.Stop();
         }
 
         private void timer1_Tick(object sender, EventArgs e)
