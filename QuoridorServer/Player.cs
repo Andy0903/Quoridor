@@ -10,13 +10,13 @@ namespace QuoridorServer
         public int NumberOfWalls { get; private set; }
         public Point WideTilePosition { get; set; }
 
-        public Player(string aName, long aRemoteUniqueIdentifier, int aNumberOfWalls, int aSlot)
+        public Player(string name, long remoteUniqueID, int numberOfWalls, int slot)
         {
-            Name = aName;
-            RemoteUniqueIdentifier = aRemoteUniqueIdentifier;
-            NumberOfWalls = aNumberOfWalls;
+            Name = name;
+            RemoteUniqueIdentifier = remoteUniqueID;
+            NumberOfWalls = numberOfWalls;
 
-            switch (aSlot)
+            switch (slot)
             {
                 case 0:
                     Color = Color.Red;

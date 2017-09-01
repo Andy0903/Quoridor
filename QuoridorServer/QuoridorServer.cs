@@ -7,10 +7,10 @@ namespace QuoridorServer
 {
     public partial class QuoridorServerForm : Form
     {
-        List<Tuple<string, long>> myClients = new List<Tuple<string, long>>();
-        Game myGameboard;
+        List<Tuple<string, long>> clients = new List<Tuple<string, long>>();
+        Game game;
 
-        private bool ServerIsFull { get { return (myClients.Count == (RadioButton2Players.Checked ? 2 : 4)); } }
+        private bool ServerIsFull { get { return (clients.Count == (RadioButton2Players.Checked ? 2 : 4)); } }
 
         public QuoridorServerForm()
         {
@@ -51,13 +51,13 @@ namespace QuoridorServer
                 return;
             }
 
-            myClients.Add(new Tuple<string, long>(e.PlayerName, e.Sender.RemoteUniqueIdentifier));
-            PlayerLabel.Text = "Players: " + myClients.Count;
+            clients.Add(new Tuple<string, long>(e.PlayerName, e.Sender.RemoteUniqueIdentifier));
+            PlayerLabel.Text = "Players: " + clients.Count;
 
             if (ServerIsFull)
             {
-                myGameboard = new Game(myClients);
-                myGameboard.Start();
+                game = new Game(clients);
+                game.Start();
             }
         }
 

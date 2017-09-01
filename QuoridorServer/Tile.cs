@@ -8,11 +8,11 @@ namespace QuoridorServer
         public Color Color { get; set; }
         public Point Position { get; private set; }
 
-        public Tile(Point aIndex)
+        public Tile(Point index)
         {
             IsOccupied = false;
             Color = Color.NONE;
-            Position = aIndex;
+            Position = index;
         }
     }
 }
