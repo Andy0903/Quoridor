@@ -6,21 +6,21 @@ namespace QuoridorNetwork
     {
         public int PlayerSlot { get; private set; }
 
-        public PlayerWonMessage(int aPlayerSlot)
+        public PlayerWonMessage(int playerSlot)
         {
-            PlayerSlot = aPlayerSlot;
+            PlayerSlot = playerSlot;
         }
 
-        public PlayerWonMessage(NetIncomingMessage aIncMessage) : base(aIncMessage)
+        public PlayerWonMessage(NetIncomingMessage incMsg) : base(incMsg)
         {
-            PlayerSlot = aIncMessage.ReadInt32();
+            PlayerSlot = incMsg.ReadInt32();
         }
 
-        public static implicit operator NetOutgoingMessage(PlayerWonMessage aMessage)
+        public static implicit operator NetOutgoingMessage(PlayerWonMessage msg)
         {
             NetOutgoingMessage outMessage = NetworkManager.Peer.CreateMessage();
             outMessage.Write((int)MessageType.PlayerWon);
-            outMessage.Write(aMessage.PlayerSlot);
+            outMessage.Write(msg.PlayerSlot);
             return outMessage;
         }
     }

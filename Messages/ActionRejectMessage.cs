@@ -8,11 +8,11 @@ namespace QuoridorNetwork
         {
         }
 
-        public ActionRejectMessage(NetIncomingMessage aIncMessage) : base(aIncMessage)
+        public ActionRejectMessage(NetIncomingMessage incMsg) : base(incMsg)
         {
         }
 
-        public static implicit operator NetOutgoingMessage(ActionRejectMessage aMessage)
+        public static implicit operator NetOutgoingMessage(ActionRejectMessage msg)
         {
             NetOutgoingMessage outMessage = NetworkManager.Peer.CreateMessage();
             outMessage.Write((int)MessageType.ActionReject);

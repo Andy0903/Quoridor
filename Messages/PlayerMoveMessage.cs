@@ -8,27 +8,27 @@ namespace QuoridorNetwork
         public int Row { get; private set; }
         public int PlayerSlot { get; private set; }
 
-        public PlayerMoveMessage(int aColumn, int aRow, int aPlayerSlot)
+        public PlayerMoveMessage(int column, int row, int playerSlot)
         {
-            Column = aColumn;
-            Row = aRow;
-            PlayerSlot = aPlayerSlot;
+            Column = column;
+            Row = row;
+            PlayerSlot = playerSlot;
         }
 
-        public PlayerMoveMessage(NetIncomingMessage aIncMessage) : base(aIncMessage)
+        public PlayerMoveMessage(NetIncomingMessage incMsg) : base(incMsg)
         {
-            Column = aIncMessage.ReadInt32();
-            Row = aIncMessage.ReadInt32();
-            PlayerSlot = aIncMessage.ReadInt32();
+            Column = incMsg.ReadInt32();
+            Row = incMsg.ReadInt32();
+            PlayerSlot = incMsg.ReadInt32();
         }
 
-        public static implicit operator NetOutgoingMessage(PlayerMoveMessage aMessage)
+        public static implicit operator NetOutgoingMessage(PlayerMoveMessage msg)
         {
             NetOutgoingMessage outMessage = NetworkManager.Peer.CreateMessage();
             outMessage.Write((int)MessageType.PlayerMove);
-            outMessage.Write(aMessage.Column);
-            outMessage.Write(aMessage.Row);
-            outMessage.Write(aMessage.PlayerSlot);
+            outMessage.Write(msg.Column);
+            outMessage.Write(msg.Row);
+            outMessage.Write(msg.PlayerSlot);
             return outMessage;
         }
     }

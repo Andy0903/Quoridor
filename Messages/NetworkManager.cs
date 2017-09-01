@@ -15,24 +15,24 @@ namespace QuoridorNetwork
         public static event EventHandler<GameReadyToStartMessage> OnGameReadyToStart;
         public static event EventHandler<PlayerConnectMessage> OnPlayerConnected;
 
-        const string myApplicationIdentifier = "QuoridorConfig";
+        const string applicationIdentifier = "QuoridorConfig";
 
         public static NetPeer Peer { get; private set; }
 
-        public static void Send(NetOutgoingMessage aOutMsg, NetConnection aRecipient = null)
+        public static void Send(NetOutgoingMessage outMsg, NetConnection recipient = null)
         {
-            if (aRecipient != null)
+            if (recipient != null)
             {
-                Peer.SendMessage(aOutMsg, aRecipient, NetDeliveryMethod.ReliableOrdered);
+                Peer.SendMessage(outMsg, recipient, NetDeliveryMethod.ReliableOrdered);
             }
             else if (Peer is NetClient)
             {
-                ((NetClient)Peer).SendMessage(aOutMsg, NetDeliveryMethod.ReliableOrdered);
+                ((NetClient)Peer).SendMessage(outMsg, NetDeliveryMethod.ReliableOrdered);
             }
             else if (Peer is NetServer)
             {
                 NetServer server = (NetServer)Peer;
-                server.SendMessage(aOutMsg, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
+                server.SendMessage(outMsg, server.Connections, NetDeliveryMethod.ReliableOrdered, 0);
             }
             else
             {
@@ -40,17 +40,17 @@ namespace QuoridorNetwork
             }
         }
 
-        public static void InitializeServer(int aPort)
+        public static void InitializeServer(int port)
         {
-            Peer = new NetServer(new NetPeerConfiguration(myApplicationIdentifier) { Port = aPort });
+            Peer = new NetServer(new NetPeerConfiguration(applicationIdentifier) { Port = port });
             Peer.Start();
         }
 
-        public static void InitializeClient(int aPort, string aIP)
+        public static void InitializeClient(int port, string ip)
         {
-            Peer = new NetClient(new NetPeerConfiguration(myApplicationIdentifier));
+            Peer = new NetClient(new NetPeerConfiguration(applicationIdentifier));
             Peer.Start();
-            Peer.Connect(aIP, aPort);
+            Peer.Connect(ip, port);
         }
 
         public static void Update()

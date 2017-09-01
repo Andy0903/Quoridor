@@ -9,30 +9,30 @@ namespace QuoridorNetwork
         public int Row { get; private set; }
         public int PlayerSlot { get; private set; }
 
-        public PlaceWallMessage(TileType aWallType, int aColumn, int aRow, int aPlayerSlot)
+        public PlaceWallMessage(TileType wallType, int column, int row, int playerSlot)
         {
-            WallType = aWallType;
-            Column = aColumn;
-            Row = aRow;
-            PlayerSlot = aPlayerSlot;
+            WallType = wallType;
+            Column = column;
+            Row = row;
+            PlayerSlot = playerSlot;
         }
 
-        public PlaceWallMessage(NetIncomingMessage aIncMessage) : base(aIncMessage)
+        public PlaceWallMessage(NetIncomingMessage incMsg) : base(incMsg)
         {
-            WallType = (TileType)aIncMessage.ReadInt32();
-            Column = aIncMessage.ReadInt32();
-            Row = aIncMessage.ReadInt32();
-            PlayerSlot = aIncMessage.ReadInt32();
+            WallType = (TileType)incMsg.ReadInt32();
+            Column = incMsg.ReadInt32();
+            Row = incMsg.ReadInt32();
+            PlayerSlot = incMsg.ReadInt32();
         }
 
-        public static implicit operator NetOutgoingMessage(PlaceWallMessage aMessage)
+        public static implicit operator NetOutgoingMessage(PlaceWallMessage msg)
         {
             NetOutgoingMessage outMessage = NetworkManager.Peer.CreateMessage();
             outMessage.Write((int)MessageType.PlaceWall);
-            outMessage.Write((int)aMessage.WallType);
-            outMessage.Write(aMessage.Column);
-            outMessage.Write(aMessage.Row);
-            outMessage.Write(aMessage.PlayerSlot);
+            outMessage.Write((int)msg.WallType);
+            outMessage.Write(msg.Column);
+            outMessage.Write(msg.Row);
+            outMessage.Write(msg.PlayerSlot);
             return outMessage;
         }
     }

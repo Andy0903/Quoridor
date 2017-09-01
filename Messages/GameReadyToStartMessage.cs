@@ -7,27 +7,27 @@ namespace QuoridorNetwork
     {
         public List<string> PlayerNames { get; private set; }
         
-        public GameReadyToStartMessage(List<string> aPlayerNames)
+        public GameReadyToStartMessage(List<string> playerNames)
         {
-            PlayerNames = aPlayerNames;
+            PlayerNames = playerNames;
         }
 
-        public GameReadyToStartMessage(NetIncomingMessage aIncMessage)
+        public GameReadyToStartMessage(NetIncomingMessage incMsg)
         {
             PlayerNames = new List<string>();
-            int numberOfPlayers = aIncMessage.ReadInt32();
+            int numberOfPlayers = incMsg.ReadInt32();
             for (int i = 0; i < numberOfPlayers; i++)
             {
-                PlayerNames.Add(aIncMessage.ReadString());
+                PlayerNames.Add(incMsg.ReadString());
             }
         }
 
-        public static implicit operator NetOutgoingMessage(GameReadyToStartMessage aMessage)
+        public static implicit operator NetOutgoingMessage(GameReadyToStartMessage msg)
         {
             NetOutgoingMessage outMessage = NetworkManager.Peer.CreateMessage();
             outMessage.Write((int)MessageType.GameReadyToStart);
-            outMessage.Write(aMessage.PlayerNames.Count);
-            foreach (string name in aMessage.PlayerNames)
+            outMessage.Write(msg.PlayerNames.Count);
+            foreach (string name in msg.PlayerNames)
             {
                 outMessage.Write(name);
             }

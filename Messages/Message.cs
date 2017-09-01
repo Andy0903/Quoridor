@@ -10,9 +10,9 @@ namespace QuoridorNetwork
         {
         }
 
-        public Message(NetIncomingMessage aIncMsg)
+        public Message(NetIncomingMessage incMsg)
         {
-            Sender = aIncMsg.SenderConnection;
+            Sender = incMsg.SenderConnection;
         }
     }
 }

@@ -6,21 +6,21 @@ namespace QuoridorNetwork
     {
         public string PlayerName { get; private set; }
 
-        public PlayerConnectMessage(string aPlayerName)
+        public PlayerConnectMessage(string playerName)
         {
-            PlayerName = aPlayerName;
+            PlayerName = playerName;
         }
 
-        public PlayerConnectMessage(NetIncomingMessage aIncMessage) : base(aIncMessage)
+        public PlayerConnectMessage(NetIncomingMessage incMsg) : base(incMsg)
         {
-            PlayerName = aIncMessage.ReadString();
+            PlayerName = incMsg.ReadString();
         }
 
-        public static implicit operator NetOutgoingMessage(PlayerConnectMessage aMessage)
+        public static implicit operator NetOutgoingMessage(PlayerConnectMessage msg)
         {
             NetOutgoingMessage outMessage = NetworkManager.Peer.CreateMessage();
             outMessage.Write((int)MessageType.PlayerConnect);
-            outMessage.Write(aMessage.PlayerName);
+            outMessage.Write(msg.PlayerName);
             return outMessage;
         }
     }
