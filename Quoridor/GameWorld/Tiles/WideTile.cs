@@ -4,7 +4,7 @@ using QuoridorNetwork;
 
 namespace Quoridor
 {
-    class WideTile : Tile
+    public class WideTile : Tile
     {
         Texture2D texture;
         public Color Color { get; set; }

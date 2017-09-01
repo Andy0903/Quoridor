@@ -2,12 +2,13 @@
 using System.Windows.Forms;
 using QuoridorNetwork;
 using System.Collections.Generic;
+using Lidgren.Network;
 
 namespace QuoridorServer
 {
     public partial class QuoridorServerForm : Form
     {
-        List<Tuple<string, long>> clients = new List<Tuple<string, long>>();
+        List<Tuple<string, NetConnection>> clients = new List<Tuple<string, NetConnection>>();
         Game game;
 
         private bool ServerIsFull { get { return (clients.Count == (RadioButton2Players.Checked ? 2 : 4)); } }
@@ -51,7 +52,7 @@ namespace QuoridorServer
                 return;
             }
 
-            clients.Add(new Tuple<string, long>(e.PlayerName, e.Sender.RemoteUniqueIdentifier));
+            clients.Add(new Tuple<string, NetConnection>(e.PlayerName, e.Sender));
             PlayerLabel.Text = "Players: " + clients.Count;
 
             if (ServerIsFull)

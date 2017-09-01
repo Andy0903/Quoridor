@@ -11,7 +11,7 @@ namespace Quoridor
         [STAThread]
         static void Main()
         {
-            using (Game = new Game1())
+            using (Game = new Game1(new AI.DeterministicAgent()))
                 Game.Run();
         }
     }

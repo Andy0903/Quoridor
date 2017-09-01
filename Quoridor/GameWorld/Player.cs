@@ -2,7 +2,7 @@
 
 namespace Quoridor
 {
-    class Player : GraphicalObject
+    public class Player : GraphicalObject
     {
         public string Name { get; private set; }
         public int NumberOfWalls { get; set; }
@@ -22,18 +22,22 @@ namespace Quoridor
                 case 0:
                     Color = Color.Red;
                     Position = gameBoard.GetPositionOfTile(4, 8);
+                    WideTilePosition = new Point(4, 8);
                     break;
                 case 1:
                     Color = Color.Blue;
                     Position = gameBoard.GetPositionOfTile(4, 0);
+                    WideTilePosition = new Point(4, 0);
                     break;
                 case 2:
                     Color = Color.Green;
                     Position = gameBoard.GetPositionOfTile(0, 4);
+                    WideTilePosition = new Point(0, 4);
                     break;
                 case 3:
                     Color = Color.Yellow;
                     Position = gameBoard.GetPositionOfTile(8, 4);
+                    WideTilePosition = new Point(8, 4);
                     break;
                 default:
                     throw new System.ArgumentOutOfRangeException();

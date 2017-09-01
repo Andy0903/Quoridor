@@ -18,7 +18,7 @@ namespace QuoridorServer
         Player CurrentPlayer => players[playerIndexThisTurn];
         bool PlayerInGoal => wideTiles[CurrentPlayer.WideTilePosition.X, CurrentPlayer.WideTilePosition.Y].Color == CurrentPlayer.Color;
 
-        public Game(List<Tuple<string, long>> clients)
+        public Game(List<Tuple<string, NetConnection>> clients)
         {
             for (int i = 0; i < clients.Count; i++)
             {
@@ -75,13 +75,20 @@ namespace QuoridorServer
         {
             NetworkManager.OnPlayerMoved += NetworkManager_OnPlayerMoved;
             NetworkManager.OnNewWallPlaced += NetworkManager_OnNewWallPlaced;
-            NetworkManager.Send(new GameReadyToStartMessage(players.Select(i => i.Name).ToList()));
+
+            List<string> names = players.Select(i => i.Name).ToList();
+
+            for (int i = 0; i < players.Count; i++)
+            {
+                NetworkManager.Send(new GameReadyToStartMessage(names, i), players[i].Connection);
+            }
+
             NextTurn();
         }
 
         private void NetworkManager_OnNewWallPlaced(object sender, PlaceWallMessage e)
         {
-            if (e.Sender.RemoteUniqueIdentifier != CurrentPlayer.RemoteUniqueIdentifier)
+            if (e.Sender.RemoteUniqueIdentifier != CurrentPlayer.Connection.RemoteUniqueIdentifier)
                 return;
 
             bool validWallPlacement = PlaceWall(e);
@@ -98,7 +105,7 @@ namespace QuoridorServer
 
         private void NetworkManager_OnPlayerMoved(object sender, PlayerMoveMessage e)
         {
-            if (e.Sender.RemoteUniqueIdentifier != CurrentPlayer.RemoteUniqueIdentifier)
+            if (e.Sender.RemoteUniqueIdentifier != CurrentPlayer.Connection.RemoteUniqueIdentifier)
                 return;
 
             bool validMove = Move(e);
@@ -307,14 +314,14 @@ namespace QuoridorServer
                     adjacent.Add(wideTiles[index.X - 1, index.Y]); //Left
                 }
             }
-            if (index.Y + 1 < wideTiles.Length)
+            if (index.Y + 1 < wideTiles.GetLength(1))
             {
                 if (horizontals[index.Y, index.X].IsOccupied == false)
                 {
                     adjacent.Add(wideTiles[index.X, index.Y + 1]); //Down
                 }
             }
-            if (index.X + 1 < wideTiles.Length)
+            if (index.X + 1 < wideTiles.GetLength(0))
             {
                 if (verticals[index.X, index.Y].IsOccupied == false)
                 {

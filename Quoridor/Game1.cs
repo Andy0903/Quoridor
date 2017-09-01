@@ -19,15 +19,17 @@ namespace Quoridor
         MainMenu mainMenu;
         public GameState state { get; set; }
         GameBoard gameBoard;
+        AI.Agent agent;
 
         private void NetworkManager_OnGameReadyToStart(object aSender, GameReadyToStartMessage e)
         {
-            gameBoard = new GameBoard(e.PlayerNames);
+            gameBoard = new GameBoard(e.PlayerNames, e.ThisClientSlot, agent);
             state = GameState.Playing;
         }
 
-        public Game1()
+        public Game1(AI.Agent agent)
         {
+            this.agent = agent;
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = 740;
             graphics.PreferredBackBufferWidth = 1000;
@@ -73,15 +75,10 @@ namespace Quoridor
         protected override void Update(GameTime gameTime)
         {
             NetworkManager.Update();
-            switch (state)
+
+            if (state == GameState.MainMenu)
             {
-                case GameState.MainMenu:
-                    UserInterface.Active.Update(gameTime);
-                    break;
-                case GameState.Playing:
-                    break;
-                default:
-                    break;
+                UserInterface.Active.Update(gameTime);
             }
 
             base.Update(gameTime);

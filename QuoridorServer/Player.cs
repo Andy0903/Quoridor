@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Lidgren.Network;
+using Microsoft.Xna.Framework;
 
 namespace QuoridorServer
 {
@@ -6,14 +7,14 @@ namespace QuoridorServer
     {
         public Color Color { get; private set; }
         public string Name { get; private set; }
-        public long RemoteUniqueIdentifier { get; private set; }
+        public NetConnection Connection { get; private set; }
         public int NumberOfWalls { get; private set; }
         public Point WideTilePosition { get; set; }
 
-        public Player(string name, long remoteUniqueID, int numberOfWalls, int slot)
+        public Player(string name, NetConnection connection, int numberOfWalls, int slot)
         {
             Name = name;
-            RemoteUniqueIdentifier = remoteUniqueID;
+            Connection = connection;
             NumberOfWalls = numberOfWalls;
 
             switch (slot)

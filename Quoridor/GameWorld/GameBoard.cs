@@ -6,16 +6,19 @@ using QuoridorNetwork;
 
 namespace Quoridor
 {
-    class GameBoard
+    public class GameBoard
     {
         SpriteFont spriteFont;
         WideTile[,] wideTiles = new WideTile[9, 9];
-        NarrowVerticalTile[,] verticals = new NarrowVerticalTile[8, 9];
-        NarrowHorizontalTile[,] horizontals = new NarrowHorizontalTile[9, 8];
+        VerticalTile[,] verticals = new VerticalTile[8, 9];
+        HorizontalTile[,] horizontals = new HorizontalTile[9, 8];
         List<GraphicalObject> walls = new List<GraphicalObject>();
         bool someoneWon = false;
         Color winTextColor;
         string winnerName;
+
+        AI.Agent agent;
+        int clientSlot;
 
         List<Player> players = new List<Player>();
         int currentSlotTurn;
@@ -67,8 +70,9 @@ namespace Quoridor
             players[slot].NumberOfWalls--;
         }
 
-        public GameBoard(List<string> playerNames)
+        public GameBoard(List<string> playerNames, int thisClientSlot, AI.Agent agent)
         {
+            clientSlot = thisClientSlot;
             spriteFont = Program.Game.Content.Load<SpriteFont>(@"GeonBit.UI/themes/hd/fonts/Regular");
 
             int numberOfPlayers = playerNames.Count;
@@ -77,6 +81,7 @@ namespace Quoridor
             {
                 players.Add(new Player(playerNames[i], i, (playerNames.Count == 2 ? 10 : 5), this));
             }
+            this.agent = agent;
 
             NetworkManager.OnActionRejected += NetworkManager_OnActionRejected;
             NetworkManager.OnNewTurn += NetworkManager_OnNewTurn;
@@ -105,12 +110,36 @@ namespace Quoridor
         {
             currentSlotTurn = e.PlayerSlot;
             numberOfTurns++;
+
+            if (currentSlotTurn == clientSlot)
+            {
+                DoTurn();
+            }
+        }
+
+        private void DoTurn()
+        {
+            AI.GameStatus status = new AI.GameStatus(players, horizontals, verticals, wideTiles, clientSlot);
+            AI.Action action = agent.Behavior(status);
+            if (action is AI.MoveAction)
+            {
+                AI.MoveAction move = (AI.MoveAction)action;
+                NetworkManager.Send(new PlayerMoveMessage(move.Column, move.Row, clientSlot));
+            }
+            else if (action is AI.PlaceWallAction)
+            {
+                AI.PlaceWallAction placeWall = (AI.PlaceWallAction)action;
+                NetworkManager.Send(new PlaceWallMessage(placeWall.WallAlignment, placeWall.Column, placeWall.Row, clientSlot));
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
         }
 
         private void NetworkManager_OnActionRejected(object sender, ActionRejectMessage e)
         {
-            //Call on AI to do something (Ask what AI want to do?)
-            throw new NotImplementedException();
+            throw new InvalidOperationException("Did not follow the game rules.");
         }
 
         private void BuildBoard(int numberOfPlayers)
@@ -152,7 +181,7 @@ namespace Quoridor
             {
                 for (int k = 0; k < verticals.GetLength(1); k++)
                 {
-                    verticals[i, k] = new NarrowVerticalTile(new Vector2(boarderPadding + tileWidth + i * (tileWidth + tilePadding),
+                    verticals[i, k] = new VerticalTile(new Vector2(boarderPadding + tileWidth + i * (tileWidth + tilePadding),
                         boarderPadding + k * (tileWidth + tilePadding)));
                 }
             }
@@ -161,7 +190,7 @@ namespace Quoridor
             {
                 for (int k = 0; k < verticals.GetLength(0); k++)
                 {
-                    horizontals[i, k] = new NarrowHorizontalTile(new Vector2(boarderPadding + i * (tileWidth + tilePadding),
+                    horizontals[i, k] = new HorizontalTile(new Vector2(boarderPadding + i * (tileWidth + tilePadding),
                         boarderPadding + tileWidth + k * (tileWidth + tilePadding)));
                 }
             }

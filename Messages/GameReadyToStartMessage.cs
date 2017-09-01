@@ -6,10 +6,12 @@ namespace QuoridorNetwork
     public class GameReadyToStartMessage : Message
     {
         public List<string> PlayerNames { get; private set; }
+        public int ThisClientSlot { get; private set; }
         
-        public GameReadyToStartMessage(List<string> playerNames)
+        public GameReadyToStartMessage(List<string> playerNames, int thisClientSlot)
         {
             PlayerNames = playerNames;
+            ThisClientSlot = thisClientSlot;
         }
 
         public GameReadyToStartMessage(NetIncomingMessage incMsg)
@@ -31,6 +33,7 @@ namespace QuoridorNetwork
             {
                 outMessage.Write(name);
             }
+            outMessage.Write(msg.ThisClientSlot);
             return outMessage;
         }
     }
