@@ -109,7 +109,7 @@ namespace Quoridor.AI
 
                 foreach (Point p in GetAdjacentTiles(current, s))
                 {
-                    if (S.Contains(p) == false)
+                    if (S.Contains(p) == false) //TODO point isn't comparable! 
                     {
                         S.Add(p);
                         Q.Enqueue(p);
