@@ -6,18 +6,11 @@ namespace Quoridor
 {
     public class NarrowVerticalTile : Tile
     {
-        private Texture2D myTexture;
-        public Color Color { get; set; }
+        private Texture2D texture;
 
-        public NarrowVerticalTile(Vector2 aPosition) : base(TileType.NarrowVertical, aPosition)
+        public NarrowVerticalTile(Vector2 position) : base(TileType.NarrowVertical, position)
         {
-            myTexture = Program.Game.Content.Load<Texture2D>("NarrowVertical");
-            Color = Color.Red;
-        }
-
-        public void Draw(SpriteBatch aSB)
-        {
-            aSB.Draw(myTexture, Position, Color);
+            texture = Program.Game.Content.Load<Texture2D>("NarrowVertical");
         }
     }
 }

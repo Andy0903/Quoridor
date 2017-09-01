@@ -14,35 +14,35 @@ namespace Quoridor
 
     public class Game1 : Game
     {
-        public GraphicsDeviceManager myGraphics;
-        SpriteBatch mySpriteBatch;
-        MainMenu myMainMenu;
-        public GameState State { get; set; }
-        GameBoard myGameBoard;
+        public GraphicsDeviceManager graphics;
+        SpriteBatch spriteBatch;
+        MainMenu mainMenu;
+        public GameState state { get; set; }
+        GameBoard gameBoard;
 
         private void NetworkManager_OnGameReadyToStart(object aSender, GameReadyToStartMessage e)
         {
-            myGameBoard = new GameBoard(e.PlayerNames);
-            State = GameState.Playing;
+            gameBoard = new GameBoard(e.PlayerNames);
+            state = GameState.Playing;
         }
 
         public Game1()
         {
-            myGraphics = new GraphicsDeviceManager(this);
-            myGraphics.PreferredBackBufferHeight = 740;
-            myGraphics.PreferredBackBufferWidth = 1000;
+            graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferHeight = 740;
+            graphics.PreferredBackBufferWidth = 1000;
             Content.RootDirectory = "Content";
 
-            myGraphics.SynchronizeWithVerticalRetrace = false;
+            graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = true;
-            myGraphics.ApplyChanges();
+            graphics.ApplyChanges();
         }
 
         protected override void Initialize()
         {
             UserInterface.Initialize(Content, BuiltinThemes.hd);
-            myMainMenu = new MainMenu();
-            State = GameState.MainMenu;
+            mainMenu = new MainMenu();
+            state = GameState.MainMenu;
 
             NetworkManager.OnGameReadyToStart += NetworkManager_OnGameReadyToStart;
             NetworkManager.OnDisconnect += NetworkManager_OnDisconnect;
@@ -51,19 +51,19 @@ namespace Quoridor
             base.Initialize();
         }
 
-        private void NetworkManager_OnConnect(object sender, System.EventArgs e)
+        private void NetworkManager_OnConnect(object sender, EventArgs e)
         {
             Console.WriteLine("OnConnect");
         }
 
-        private void NetworkManager_OnDisconnect(object sender, System.EventArgs e)
+        private void NetworkManager_OnDisconnect(object sender, EventArgs e)
         {
             Exit();
         }
 
         protected override void LoadContent()
         {
-            mySpriteBatch = new SpriteBatch(GraphicsDevice);
+            spriteBatch = new SpriteBatch(GraphicsDevice);
         }
 
         protected override void UnloadContent()
@@ -73,7 +73,7 @@ namespace Quoridor
         protected override void Update(GameTime gameTime)
         {
             NetworkManager.Update();
-            switch (State)
+            switch (state)
             {
                 case GameState.MainMenu:
                     UserInterface.Active.Update(gameTime);
@@ -90,15 +90,15 @@ namespace Quoridor
         {
             GraphicsDevice.Clear(Color.Black);
 
-            switch (State)
+            switch (state)
             {
                 case GameState.MainMenu:
-                    UserInterface.Active.Draw(mySpriteBatch);
+                    UserInterface.Active.Draw(spriteBatch);
                     break;
                 case GameState.Playing:
-                    mySpriteBatch.Begin();
-                    myGameBoard.Draw(mySpriteBatch);
-                    mySpriteBatch.End();
+                    spriteBatch.Begin();
+                    gameBoard.Draw(spriteBatch);
+                    spriteBatch.End();
                     break;
             }
 

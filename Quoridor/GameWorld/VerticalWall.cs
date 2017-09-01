@@ -1,14 +1,13 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace Quoridor
 {
     class VerticalWall : GraphicalObject
     {
-        public VerticalWall(Vector2 aPosition, Color aColor) : base(16, 144, "VerticalWall")
+        public VerticalWall(Vector2 position, Color color) : base(16, 144, "VerticalWall")
         {
-            Position = aPosition;
-            Color = aColor;
+            Position = position;
+            Color = color;
         }
     }
 }

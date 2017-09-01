@@ -10,18 +10,18 @@ namespace Quoridor
         public Color Color { get; protected set; }
         public Vector2 Position { get; set; }
 
-        protected Texture2D myTexture;
+        protected Texture2D texture;
 
-        public GraphicalObject(int aWidth, int aHeight, string aGraphicsString)
+        public GraphicalObject(int width, int height, string textureFileName)
         {
-            Width = aWidth;
-            Height = aHeight;
-            myTexture = Program.Game.Content.Load<Texture2D>(aGraphicsString);
+            Width = width;
+            Height = height;
+            texture = Program.Game.Content.Load<Texture2D>(textureFileName);
         }
 
-        public virtual void Draw(SpriteBatch aSB)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
-            aSB.Draw(myTexture, Position, Color);
+            spriteBatch.Draw(texture, Position, Color);
         }
     }
 }

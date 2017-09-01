@@ -10,12 +10,12 @@ namespace Quoridor
         public int Width { get; protected set; }
         public Vector2 Position { get; protected set; }
 
-        public Tile(TileType aType, Vector2 aPosition)
+        public Tile(TileType type, Vector2 position)
         {
             IsOccupied = false;
-            Position = aPosition;
+            Position = position;
 
-            switch (aType)
+            switch (type)
             {
                 case TileType.NarrowVertical:
                     Width = 16;
@@ -28,8 +28,6 @@ namespace Quoridor
                 case TileType.Wide:
                     Width = 64;
                     Height = 64;
-                    break;
-                default:
                     break;
             }
         }

@@ -6,18 +6,18 @@ namespace Quoridor
 {
     class WideTile : Tile
     {
-        private Texture2D myTexture;
+        Texture2D texture;
         public Color Color { get; set; }
 
-        public WideTile(Vector2 aPosition) : base(TileType.Wide, aPosition)
+        public WideTile(Vector2 position) : base(TileType.Wide, position)
         {
-            myTexture = Program.Game.Content.Load<Texture2D>("WideTile");
+            texture = Program.Game.Content.Load<Texture2D>("WideTile");
             Color = Color.DimGray;
         }
 
         public void Draw(SpriteBatch aSB)
         {
-            aSB.Draw(myTexture, Position, Color);
+            aSB.Draw(texture, Position, Color);
         }
     }
 }

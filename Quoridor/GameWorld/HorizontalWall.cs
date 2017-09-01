@@ -9,10 +9,10 @@ namespace Quoridor
 {
     class HorizontalWall : GraphicalObject
     {
-        public HorizontalWall(Vector2 aPosition, Color aColor) : base(144, 16, "HorizontalWall")
+        public HorizontalWall(Vector2 position, Color color) : base(144, 16, "HorizontalWall")
         {
-            Position = aPosition;
-            Color = aColor;
+            Position = position;
+            Color = color;
         }
     }
 }

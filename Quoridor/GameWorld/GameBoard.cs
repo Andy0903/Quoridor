@@ -8,74 +8,74 @@ namespace Quoridor
 {
     class GameBoard
     {
-        SpriteFont mySF;
-        WideTile[,] myWideTiles = new WideTile[9, 9];
-        NarrowVerticalTile[,] myVerticals = new NarrowVerticalTile[8, 9];
-        NarrowHorizontalTile[,] myHorizontals = new NarrowHorizontalTile[9, 8];
-        List<GraphicalObject> myWalls = new List<GraphicalObject>();
-        bool mySomeoneWon = false;
-        Color myWinTextColor;
-        string myWinnerName;
+        SpriteFont spriteFont;
+        WideTile[,] wideTiles = new WideTile[9, 9];
+        NarrowVerticalTile[,] verticals = new NarrowVerticalTile[8, 9];
+        NarrowHorizontalTile[,] horizontals = new NarrowHorizontalTile[9, 8];
+        List<GraphicalObject> walls = new List<GraphicalObject>();
+        bool someoneWon = false;
+        Color winTextColor;
+        string winnerName;
 
-        List<Player> myPlayers = new List<Player>();
-        int myCurrentSlotTurn;
-        int myNumberOfTurns;
+        List<Player> players = new List<Player>();
+        int currentSlotTurn;
+        int numberOfTurns;
 
-        public bool TileNotOccupied(int aColumn, int aRow)
+        public bool TileNotOccupied(int column, int row)
         {
-            return myWideTiles[aColumn, aRow].IsOccupied == false;
+            return wideTiles[column, row].IsOccupied == false;
         }
 
-        public void SetWideTilesOccupied(int aColumn, int aRow, bool aState)
+        public void SetWideTilesOccupied(int column, int row, bool state)
         {
-            myWideTiles[aColumn, aRow].IsOccupied = aState;
+            wideTiles[column, row].IsOccupied = state;
         }
 
-        public bool IsWithinGameBoard(int aColumn, int aRow)
+        public bool IsWithinGameBoard(int column, int row)
         {
-            return (0 <= aColumn && aColumn < myWideTiles.GetLength(0) &&
-                    0 <= aRow && aRow < myWideTiles.GetLength(1));
+            return (0 <= column && column < wideTiles.GetLength(0) &&
+                    0 <= row && row < wideTiles.GetLength(1));
         }
 
-        public Vector2 GetPositionOfTile(int aColumn, int aRow)
+        public Vector2 GetPositionOfTile(int column, int row)
         {
-            return myWideTiles[aColumn, aRow].Position;
+            return wideTiles[column, row].Position;
         }
 
-        public void PlayerWon(int aSlot)
+        public void PlayerWon(int slot)
         {
-            mySomeoneWon = true;
-            myWinTextColor = myPlayers[aSlot].Color;
-            myWinnerName = myPlayers[aSlot].Name;
+            someoneWon = true;
+            winTextColor = players[slot].Color;
+            winnerName = players[slot].Name;
         }
 
-        public void PlaceWall(int aSlot, TileType aType, int aColumn, int aRow)
+        public void PlaceWall(int slot, TileType type, int column, int row)
         {
-            if (aType == TileType.NarrowVertical)
+            if (type == TileType.NarrowVertical)
             {
-                myWalls.Add(new VerticalWall(myVerticals[aColumn, aRow].Position, myPlayers[aSlot].Color));
-                myVerticals[aColumn, aRow].IsOccupied = true;
-                myVerticals[aColumn, aRow + 1].IsOccupied = true;
+                walls.Add(new VerticalWall(verticals[column, row].Position, players[slot].Color));
+                verticals[column, row].IsOccupied = true;
+                verticals[column, row + 1].IsOccupied = true;
             }
-            else if (aType == TileType.NarrowHorizontal)
+            else if (type == TileType.NarrowHorizontal)
             {
-                myWalls.Add(new HorizontalWall(myHorizontals[aColumn, aRow].Position, myPlayers[aSlot].Color));
-                myHorizontals[aColumn, aRow].IsOccupied = true;
-                myHorizontals[aColumn + 1, aRow].IsOccupied = true;
+                walls.Add(new HorizontalWall(horizontals[column, row].Position, players[slot].Color));
+                horizontals[column, row].IsOccupied = true;
+                horizontals[column + 1, row].IsOccupied = true;
             }
 
-            myPlayers[aSlot].NumberOfWalls--;
+            players[slot].NumberOfWalls--;
         }
 
-        public GameBoard(List<string> aPlayerNames)
+        public GameBoard(List<string> playerNames)
         {
-            mySF = Program.Game.Content.Load<SpriteFont>(@"GeonBit.UI/themes/hd/fonts/Regular");
+            spriteFont = Program.Game.Content.Load<SpriteFont>(@"GeonBit.UI/themes/hd/fonts/Regular");
 
-            int numberOfPlayers = aPlayerNames.Count;
+            int numberOfPlayers = playerNames.Count;
             BuildBoard(numberOfPlayers);
             for (int i = 0; i < numberOfPlayers; i++)
             {
-                myPlayers.Add(new Player(aPlayerNames[i], i, (aPlayerNames.Count == 2 ? 10 : 5), this));
+                players.Add(new Player(playerNames[i], i, (playerNames.Count == 2 ? 10 : 5), this));
             }
 
             NetworkManager.OnActionRejected += NetworkManager_OnActionRejected;
@@ -97,14 +97,14 @@ namespace Quoridor
 
         private void NetworkManager_OnPlayerMoved(object sender, PlayerMoveMessage e)
         {
-            myPlayers[myCurrentSlotTurn].Position = GetPositionOfTile(e.Column, e.Row);
+            players[currentSlotTurn].Position = GetPositionOfTile(e.Column, e.Row);
             MoveOccupation(e.Column, e.Row, e.PlayerSlot);
         }
 
         private void NetworkManager_OnNewTurn(object sender, NewTurnMessage e)
         {
-            myCurrentSlotTurn = e.PlayerSlot;
-            myNumberOfTurns++;
+            currentSlotTurn = e.PlayerSlot;
+            numberOfTurns++;
         }
 
         private void NetworkManager_OnActionRejected(object sender, ActionRejectMessage e)
@@ -113,104 +113,99 @@ namespace Quoridor
             throw new NotImplementedException();
         }
 
-        private void BuildBoard(int aNumberOfPlayers)
+        private void BuildBoard(int numberOfPlayers)
         {
             const int boarderPadding = 10;
             const int tileWidth = 64;
             const int tilePadding = 16;
-            for (int i = 0; i < myWideTiles.GetLength(0); i++)
+            for (int i = 0; i < wideTiles.GetLength(0); i++)
             {
-                for (int k = 0; k < myWideTiles.GetLength(1); k++)
+                for (int k = 0; k < wideTiles.GetLength(1); k++)
                 {
-                    myWideTiles[i, k] = new WideTile(new Vector2(boarderPadding + (i * (tileWidth + tilePadding)),
+                    wideTiles[i, k] = new WideTile(new Vector2(boarderPadding + (i * (tileWidth + tilePadding)),
                         boarderPadding + (k * (tileWidth + tilePadding))));
                 }
             }
 
-            for (int i = 0; i < myWideTiles.GetLength(0); i++)
+            for (int i = 0; i < wideTiles.GetLength(0); i++)
             {
-                myWideTiles[i, 0].Color = new Color(1, 0.4f, 0.4f);
-                myWideTiles[i, myWideTiles.GetLength(0) - 1].Color = new Color(0.4f, 0.4f, 1f);
+                wideTiles[i, 0].Color = new Color(1, 0.4f, 0.4f);
+                wideTiles[i, wideTiles.GetLength(0) - 1].Color = new Color(0.4f, 0.4f, 1f);
             }
 
-            myWideTiles[4, 8].IsOccupied = true;
-            myWideTiles[4, 0].IsOccupied = true;
+            wideTiles[4, 8].IsOccupied = true;
+            wideTiles[4, 0].IsOccupied = true;
 
-            if (aNumberOfPlayers == 4)
+            if (numberOfPlayers == 4)
             {
-                for (int i = 0; i < myWideTiles.GetLength(1); i++)
+                for (int i = 0; i < wideTiles.GetLength(1); i++)
                 {
-                    myWideTiles[0, i].Color = new Color(0.8f, 0.8f, 0);
-                    myWideTiles[myWideTiles.GetLength(1) - 1, i].Color = new Color(0.4f, 1f, 0.4f);
+                    wideTiles[0, i].Color = new Color(0.8f, 0.8f, 0);
+                    wideTiles[wideTiles.GetLength(1) - 1, i].Color = new Color(0.4f, 1f, 0.4f);
                 }
 
-                myWideTiles[0, 4].IsOccupied = true;
-                myWideTiles[8, 4].IsOccupied = true;
+                wideTiles[0, 4].IsOccupied = true;
+                wideTiles[8, 4].IsOccupied = true;
             }
 
-            for (int i = 0; i < myVerticals.GetLength(0); i++)
+            for (int i = 0; i < verticals.GetLength(0); i++)
             {
-                for (int k = 0; k < myVerticals.GetLength(1); k++)
+                for (int k = 0; k < verticals.GetLength(1); k++)
                 {
-                    myVerticals[i, k] = new NarrowVerticalTile(new Vector2(boarderPadding + tileWidth + i * (tileWidth + tilePadding),
+                    verticals[i, k] = new NarrowVerticalTile(new Vector2(boarderPadding + tileWidth + i * (tileWidth + tilePadding),
                         boarderPadding + k * (tileWidth + tilePadding)));
                 }
             }
 
-            for (int i = 0; i < myVerticals.GetLength(1); i++)
+            for (int i = 0; i < verticals.GetLength(1); i++)
             {
-                for (int k = 0; k < myVerticals.GetLength(0); k++)
+                for (int k = 0; k < verticals.GetLength(0); k++)
                 {
-                    myHorizontals[i, k] = new NarrowHorizontalTile(new Vector2(boarderPadding + i * (tileWidth + tilePadding),
+                    horizontals[i, k] = new NarrowHorizontalTile(new Vector2(boarderPadding + i * (tileWidth + tilePadding),
                         boarderPadding + tileWidth + k * (tileWidth + tilePadding)));
                 }
             }
         }
 
-        public void MoveOccupation(int aColumn, int aRow, int aPlayerSlot)
+        public void MoveOccupation(int column, int row, int playerSlot)
         {
-            myWideTiles[aColumn, aRow].IsOccupied = true;
-            myWideTiles[myPlayers[aPlayerSlot].WideTilePosition.X, myPlayers[aPlayerSlot].WideTilePosition.Y].IsOccupied = false;
+            wideTiles[column, row].IsOccupied = true;
+            wideTiles[players[playerSlot].WideTilePosition.X, players[playerSlot].WideTilePosition.Y].IsOccupied = false;
         }
 
-        public void NothingHappened(int aSlotThatShouldDoSomethingNew)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            throw new NotImplementedException();
-        }
-
-        public void Draw(SpriteBatch aSB)
-        {
-            foreach (WideTile wTile in myWideTiles)
+            foreach (WideTile wTile in wideTiles)
             {
-                wTile.Draw(aSB);
+                wTile.Draw(spriteBatch);
             }
 
-            foreach (GraphicalObject wall in myWalls)
+            foreach (GraphicalObject wall in walls)
             {
-                wall.Draw(aSB);
+                wall.Draw(spriteBatch);
             }
 
-            for (int i = 0; i < myPlayers.Count; i++)
+            for (int i = 0; i < players.Count; i++)
             {
-                myPlayers[i].Draw(aSB);
-                aSB.DrawString(mySF, myPlayers[i].Name, new Vector2(800, 150 * i + 50), myPlayers[i].Color);
-                aSB.DrawString(mySF, "Walls: " + myPlayers[i].NumberOfWalls.ToString(), new Vector2(800, 150 * i + 75), myPlayers[i].Color);
+                players[i].Draw(spriteBatch);
+                spriteBatch.DrawString(spriteFont, players[i].Name, new Vector2(800, 150 * i + 50), players[i].Color);
+                spriteBatch.DrawString(spriteFont, "Walls: " + players[i].NumberOfWalls.ToString(), new Vector2(800, 150 * i + 75), players[i].Color);
             }
 
-            aSB.DrawString(mySF, "-->", new Vector2(750, 150 * myCurrentSlotTurn + 50), myPlayers[myCurrentSlotTurn].Color);
+            spriteBatch.DrawString(spriteFont, "-->", new Vector2(750, 150 * currentSlotTurn + 50), players[currentSlotTurn].Color);
 
-            if (myNumberOfTurns >= 0)
+            if (numberOfTurns >= 0)
             {
-                aSB.DrawString(mySF, "Turns: " + myNumberOfTurns, new Vector2(800, 10), Color.DarkGray);
+                spriteBatch.DrawString(spriteFont, "Turns: " + numberOfTurns, new Vector2(800, 10), Color.DarkGray);
             }
             else
             {
-                aSB.DrawString(mySF, "Waiting for players..", new Vector2(725, 10), Color.DarkGray);
+                spriteBatch.DrawString(spriteFont, "Waiting for players..", new Vector2(725, 10), Color.DarkGray);
             }
 
-            if (mySomeoneWon)
+            if (someoneWon)
             {
-                OutlinedText.DrawCenteredText(aSB, mySF, 3.5f, myWinnerName + " wins!", new Vector2(500, 360), myWinTextColor);
+                OutlinedText.DrawCenteredText(spriteBatch, spriteFont, 3.5f, winnerName + " wins!", new Vector2(500, 360), winTextColor);
             }
         }
     }
