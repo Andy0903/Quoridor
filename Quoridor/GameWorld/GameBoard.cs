@@ -73,7 +73,7 @@ namespace Quoridor
         public GameBoard(List<string> playerNames, int thisClientSlot, AI.Agent agent)
         {
             clientSlot = thisClientSlot;
-            spriteFont = Program.Game.Content.Load<SpriteFont>(@"GeonBit.UI/themes/hd/fonts/Regular");
+            spriteFont = Game1.CM.Load<SpriteFont>(@"GeonBit.UI/themes/hd/fonts/Regular");
 
             int numberOfPlayers = playerNames.Count;
             BuildBoard(numberOfPlayers);

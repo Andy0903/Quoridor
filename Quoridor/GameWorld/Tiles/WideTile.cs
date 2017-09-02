@@ -11,7 +11,7 @@ namespace Quoridor
 
         public WideTile(Vector2 position) : base(TileType.Wide, position)
         {
-            texture = Program.Game.Content.Load<Texture2D>("WideTile");
+            texture = Game1.CM.Load<Texture2D>("WideTile");
             Color = Color.DimGray;
         }
 

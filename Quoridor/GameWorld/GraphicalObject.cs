@@ -16,7 +16,7 @@ namespace Quoridor
         {
             Width = width;
             Height = height;
-            texture = Program.Game.Content.Load<Texture2D>(textureFileName);
+            texture = Game1.CM.Load<Texture2D>(textureFileName);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)

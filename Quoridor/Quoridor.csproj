@@ -64,7 +64,6 @@
     <Compile Include="GameWorld\VerticalWall.cs" />
     <Compile Include="Menus\MainMenu.cs" />
     <Compile Include="GameWorld\Player.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

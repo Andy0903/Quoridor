@@ -1,8 +1,14 @@
 ﻿namespace Quoridor.AI
 {
-    public interface Agent
+    public abstract class Agent
     {
-        Action DoAction(GameData status);
-        Action RedoAction(GameData status);
+        public abstract Action DoAction(GameData status);
+        public abstract Action RedoAction(GameData status);
+
+        public void Start()
+        {
+            using (Game1 game = new Game1(this))
+                game.Run();
+        }
     }
 }

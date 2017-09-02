@@ -1,5 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Quoridor.AI
@@ -10,7 +9,12 @@ namespace Quoridor.AI
         GameData data;
         Random rnd = new Random();
 
-        public Action DoAction(GameData data)
+        public static void Main()
+        {
+            new DeterministicAgent().Start();
+        }
+
+        public override Action DoAction(GameData data)
         {
             this.data = data;
             roundCounter++;
@@ -37,7 +41,7 @@ namespace Quoridor.AI
             return new MoveAction(nextTile.Position.X, nextTile.Position.Y);
         }
 
-        public Action RedoAction(GameData status)
+        public override Action RedoAction(GameData status)
         {
             return DoAction(status);
         }

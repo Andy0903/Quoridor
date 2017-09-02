@@ -10,7 +10,7 @@ namespace Quoridor
 
         public VerticalTile(Vector2 position) : base(TileType.Vertical, position)
         {
-            texture = Program.Game.Content.Load<Texture2D>("NarrowVertical");
+            texture = Game1.CM.Load<Texture2D>("NarrowVertical");
         }
     }
 }

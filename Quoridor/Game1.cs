@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using GeonBit.UI;
 using QuoridorNetwork;
 using System;
+using Microsoft.Xna.Framework.Content;
 
 namespace Quoridor
 {
@@ -21,6 +22,8 @@ namespace Quoridor
         GameBoard gameBoard;
         AI.Agent agent;
 
+        public static ContentManager CM;
+
         private void NetworkManager_OnGameReadyToStart(object aSender, GameReadyToStartMessage e)
         {
             gameBoard = new GameBoard(e.PlayerNames, e.ThisClientSlot, agent);
@@ -29,11 +32,17 @@ namespace Quoridor
 
         public Game1(AI.Agent agent)
         {
+            if (CM != null)
+            {
+                throw new Exception("Can only have one game at a time.");
+            }
+
             this.agent = agent;
             graphics = new GraphicsDeviceManager(this);
             graphics.PreferredBackBufferHeight = 740;
             graphics.PreferredBackBufferWidth = 1000;
             Content.RootDirectory = "Content";
+            CM = Content;
 
             graphics.SynchronizeWithVerticalRetrace = false;
             IsFixedTimeStep = true;
@@ -55,7 +64,6 @@ namespace Quoridor
 
         private void NetworkManager_OnConnect(object sender, EventArgs e)
         {
-            Console.WriteLine("OnConnect");
         }
 
         private void NetworkManager_OnDisconnect(object sender, EventArgs e)
