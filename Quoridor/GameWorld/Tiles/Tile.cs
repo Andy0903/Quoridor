@@ -17,11 +17,11 @@ namespace Quoridor
 
             switch (type)
             {
-                case TileType.NarrowVertical:
+                case TileType.Vertical:
                     Width = 16;
                     Height = 64;
                     break;
-                case TileType.NarrowHorizontal:
+                case TileType.Horizontal:
                     Width = 64;
                     Height = 16;
                     break;

@@ -39,8 +39,8 @@ namespace QuoridorNetwork
 
     public enum TileType
     {
-        NarrowVertical,
-        NarrowHorizontal,
+        Vertical,
+        Horizontal,
         Wide
     }
 }

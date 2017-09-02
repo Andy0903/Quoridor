@@ -8,7 +8,7 @@ namespace Quoridor
     {
         private Texture2D texture;
 
-        public VerticalTile(Vector2 position) : base(TileType.NarrowVertical, position)
+        public VerticalTile(Vector2 position) : base(TileType.Vertical, position)
         {
             texture = Program.Game.Content.Load<Texture2D>("NarrowVertical");
         }

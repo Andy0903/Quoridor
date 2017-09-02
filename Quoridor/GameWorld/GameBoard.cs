@@ -54,13 +54,13 @@ namespace Quoridor
 
         public void PlaceWall(int slot, TileType type, int column, int row)
         {
-            if (type == TileType.NarrowVertical)
+            if (type == TileType.Vertical)
             {
                 walls.Add(new VerticalWall(verticals[column, row].Position, players[slot].Color));
                 verticals[column, row].IsOccupied = true;
                 verticals[column, row + 1].IsOccupied = true;
             }
-            else if (type == TileType.NarrowHorizontal)
+            else if (type == TileType.Horizontal)
             {
                 walls.Add(new HorizontalWall(horizontals[column, row].Position, players[slot].Color));
                 horizontals[column, row].IsOccupied = true;
@@ -102,8 +102,9 @@ namespace Quoridor
 
         private void NetworkManager_OnPlayerMoved(object sender, PlayerMoveMessage e)
         {
-            players[currentSlotTurn].Position = GetPositionOfTile(e.Column, e.Row);
-            MoveOccupation(e.Column, e.Row, e.PlayerSlot);
+            wideTiles[e.Column, e.Row].IsOccupied = true;
+            wideTiles[players[e.PlayerSlot].WideTilePosition.X, players[e.PlayerSlot].WideTilePosition.Y].IsOccupied = false;
+            players[currentSlotTurn].WideTilePosition = new Point(e.Column, e.Row);
         }
 
         private void NetworkManager_OnNewTurn(object sender, NewTurnMessage e)
@@ -119,8 +120,20 @@ namespace Quoridor
 
         private void DoTurn()
         {
-            AI.GameStatus status = new AI.GameStatus(players, horizontals, verticals, wideTiles, clientSlot);
-            AI.Action action = agent.Behavior(status);
+            AI.GameData status = new AI.GameData(players, horizontals, verticals, wideTiles, clientSlot);
+            AI.Action action = agent.DoAction(status);
+            PerformAction(action);
+        }
+
+        private void NetworkManager_OnActionRejected(object sender, ActionRejectMessage e)
+        {
+            AI.GameData status = new AI.GameData(players, horizontals, verticals, wideTiles, clientSlot);
+            AI.Action action = agent.RedoAction(status);
+            PerformAction(action);
+        }
+
+        private void PerformAction(AI.Action action)
+        {
             if (action is AI.MoveAction)
             {
                 AI.MoveAction move = (AI.MoveAction)action;
@@ -129,17 +142,14 @@ namespace Quoridor
             else if (action is AI.PlaceWallAction)
             {
                 AI.PlaceWallAction placeWall = (AI.PlaceWallAction)action;
-                NetworkManager.Send(new PlaceWallMessage(placeWall.WallAlignment, placeWall.Column, placeWall.Row, clientSlot));
+
+                TileType type = placeWall.WallAlignment == AI.WallOrientation.Horizontal ? TileType.Horizontal : TileType.Vertical;
+                NetworkManager.Send(new PlaceWallMessage(type, placeWall.Column, placeWall.Row, clientSlot));
             }
             else
             {
                 throw new InvalidOperationException();
             }
-        }
-
-        private void NetworkManager_OnActionRejected(object sender, ActionRejectMessage e)
-        {
-            throw new InvalidOperationException("Did not follow the game rules.");
         }
 
         private void BuildBoard(int numberOfPlayers)
@@ -194,12 +204,6 @@ namespace Quoridor
                         boarderPadding + tileWidth + k * (tileWidth + tilePadding)));
                 }
             }
-        }
-
-        public void MoveOccupation(int column, int row, int playerSlot)
-        {
-            wideTiles[column, row].IsOccupied = true;
-            wideTiles[players[playerSlot].WideTilePosition.X, players[playerSlot].WideTilePosition.Y].IsOccupied = false;
         }
 
         public void Draw(SpriteBatch spriteBatch)

@@ -2,6 +2,7 @@
 {
     public interface Agent
     {
-        Action Behavior(GameStatus status);
+        Action DoAction(GameData status);
+        Action RedoAction(GameData status);
     }
 }

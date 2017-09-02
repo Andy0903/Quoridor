@@ -22,6 +22,7 @@ namespace QuoridorNetwork
             {
                 PlayerNames.Add(incMsg.ReadString());
             }
+            ThisClientSlot = incMsg.ReadInt32();
         }
 
         public static implicit operator NetOutgoingMessage(GameReadyToStartMessage msg)

@@ -51,6 +51,7 @@
     <Compile Include="AI\PlaceWallAction.cs" />
     <Compile Include="AI\Player.cs" />
     <Compile Include="AI\Tile.cs" />
+    <Compile Include="AI\WallOrientation.cs" />
     <Compile Include="OutlinedText.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="GameWorld\GameBoard.cs" />

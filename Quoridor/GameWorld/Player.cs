@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Quoridor
 {
@@ -6,7 +7,7 @@ namespace Quoridor
     {
         public string Name { get; private set; }
         public int NumberOfWalls { get; set; }
-        public Point WideTilePosition { get; private set; }
+        public Point WideTilePosition { get; set; }
         GameBoard gameBoard;
         private int slot;
 
@@ -42,6 +43,11 @@ namespace Quoridor
                 default:
                     throw new System.ArgumentOutOfRangeException();
             }
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            spriteBatch.Draw(texture, gameBoard.GetPositionOfTile(WideTilePosition.X, WideTilePosition.Y), Color);
         }
     }
 }

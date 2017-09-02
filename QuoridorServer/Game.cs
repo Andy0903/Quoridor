@@ -16,7 +16,7 @@ namespace QuoridorServer
         Tile[,] horizontals = new Tile[9, 8];
 
         Player CurrentPlayer => players[playerIndexThisTurn];
-        bool PlayerInGoal => wideTiles[CurrentPlayer.WideTilePosition.X, CurrentPlayer.WideTilePosition.Y].Color == CurrentPlayer.Color;
+        bool PlayerInGoal => wideTiles[CurrentPlayer.Position.X, CurrentPlayer.Position.Y].Color == CurrentPlayer.Color;
 
         public Game(List<Tuple<string, NetConnection>> clients)
         {
@@ -193,17 +193,17 @@ namespace QuoridorServer
             if (wideTiles[msg.Column, msg.Row].IsOccupied)
                 return false;
 
-            List<Point> validMoves = ValidMovesFromTilePosition(CurrentPlayer.WideTilePosition);
+            List<Point> validMoves = ValidMovesFromTilePosition(CurrentPlayer.Position);
             Point newPosition = new Point(msg.Column, msg.Row);
 
             if (!validMoves.Contains(newPosition))
                 return false;
 
-            int oldColumn = CurrentPlayer.WideTilePosition.X;
-            int oldRow = CurrentPlayer.WideTilePosition.Y;
+            int oldColumn = CurrentPlayer.Position.X;
+            int oldRow = CurrentPlayer.Position.Y;
             wideTiles[oldColumn, oldRow].IsOccupied = false;
 
-            CurrentPlayer.WideTilePosition = newPosition;
+            CurrentPlayer.Position = newPosition;
             wideTiles[msg.Column, msg.Row].IsOccupied = true;
 
             return true;
@@ -219,7 +219,7 @@ namespace QuoridorServer
 
             switch (msg.WallType)
             {
-                case TileType.NarrowVertical:
+                case TileType.Vertical:
                     if (column < 0 || verticals.GetLength(0) <= column)
                         return false;
                     if (row < 0 || verticals.GetLength(1) - 1 <= row)
@@ -237,7 +237,7 @@ namespace QuoridorServer
                         return false;
                     }
                     break;
-                case TileType.NarrowHorizontal:
+                case TileType.Horizontal:
                     if (column < 0 || horizontals.GetLength(0) - 1 <= column)
                         return false;
                     if (row < 0 || horizontals.GetLength(1) <= row)
@@ -266,70 +266,95 @@ namespace QuoridorServer
 
         private bool PathToGoalExists()
         {
-            SortedSet<Tile> S = new SortedSet<Tile>();
-            Queue<Tile> Q = new Queue<Tile>();
-
             foreach (Player p in players)
             {
-                Tile root = wideTiles[p.WideTilePosition.X, p.WideTilePosition.Y];
-                S.Add(root);
-                Q.Enqueue(root);
+                if (!PathToGoalExists(p))
+                    return false;
+            }
+            return true;
+        }
 
-                while (Q.Count > 0)
+        private bool PathToGoalExists(Player player)
+        {
+            HashSet<Tile> S = new HashSet<Tile>();
+            Queue<Tile> Q = new Queue<Tile>();
+
+            Tile root = wideTiles[player.Position.X, player.Position.Y];
+            S.Add(root);
+            Q.Enqueue(root);
+
+            while (Q.Count > 0)
+            {
+                Tile current = Q.Dequeue();
+
+                if (wideTiles[current.Position.X, current.Position.Y].Color == player.Color)
                 {
-                    Tile current = Q.Dequeue();
+                    return true;
+                }
 
-                    if (current.Color == p.Color) //Current is a goal tile for the player.
-                        return true;
-
-                    foreach (Tile t in GetAdjacentTiles(current.Position))
+                foreach (Tile p in ValidMovesFromTilePosition(current))
+                {
+                    if (S.Contains(p) == false)
                     {
-                        if (S.Contains(t) == false)
-                        {
-                            S.Add(t);
-                            Q.Enqueue(t);
-                        }
+                        S.Add(p);
+                        Q.Enqueue(p);
+                    }
+                }
+            }
+            return false;
+        }
+
+        private List<Tile> ValidMovesFromTilePosition(Tile tile, bool isInFirstStep = true)
+        {
+            List<Tile> validTiles = new List<Tile>();
+
+            for (int i = -1; i <= 1; i++)
+            {
+                for (int k = -1; k <= 1; k++)
+                {
+                    if ((i != 0 && k != 0) || (i == 0 && k == 0))
+                        continue;
+
+                    int column = tile.Position.X + i;
+                    int row = tile.Position.Y + k;
+
+                    if (!IsWithinGameBoard(column, row))
+                        continue;
+
+                    Tile t = wideTiles[column, row];
+
+                    if (!CanMoveBetween(tile, t))
+                        continue;
+
+
+                    if (!wideTiles[t.Position.X, t.Position.Y].IsOccupied)
+                    {
+                        validTiles.Add(t);
+                    }
+                    else if (isInFirstStep)
+                    {
+                        validTiles.AddRange(ValidMovesFromTilePosition(t, false));
                     }
                 }
             }
 
-            return false;
+            return validTiles;
         }
 
-        private List<Tile> GetAdjacentTiles(Point index)
+        private bool CanMoveBetween(Tile start, Tile end)
         {
-            List<Tile> adjacent = new List<Tile>();
-
-            if (index.Y - 1 >= 0)
+            if (start.Position.X == end.Position.X)
             {
-                if (horizontals[index.X, index.Y - 1].IsOccupied == false)
-                {
-                    adjacent.Add(wideTiles[index.X, index.Y - 1]); //Up
-                }
+                int minRow = Math.Min(start.Position.Y, end.Position.Y);
+                return !horizontals[start.Position.X, minRow].IsOccupied;
             }
-            if (index.X - 1 >= 0)
+            else if (start.Position.Y == end.Position.Y)
             {
-                if (verticals[index.X - 1, index.Y].IsOccupied == false)
-                {
-                    adjacent.Add(wideTiles[index.X - 1, index.Y]); //Left
-                }
-            }
-            if (index.Y + 1 < wideTiles.GetLength(1))
-            {
-                if (horizontals[index.Y, index.X].IsOccupied == false)
-                {
-                    adjacent.Add(wideTiles[index.X, index.Y + 1]); //Down
-                }
-            }
-            if (index.X + 1 < wideTiles.GetLength(0))
-            {
-                if (verticals[index.X, index.Y].IsOccupied == false)
-                {
-                    adjacent.Add(wideTiles[index.X + 1, index.Y]);  //Right
-                }
+                int minColumn = Math.Min(start.Position.X, end.Position.X);
+                return !verticals[minColumn, start.Position.Y].IsOccupied;
             }
 
-            return adjacent;
+            return false;
         }
     }
 }

@@ -38,10 +38,14 @@
             this.LogTextBox = new System.Windows.Forms.RichTextBox();
             this.StartButton = new System.Windows.Forms.Button();
             this.PlayerLabel = new System.Windows.Forms.Label();
-            this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.tickTimer = new System.Windows.Forms.Timer(this.components);
+            this.delayNumeric = new System.Windows.Forms.NumericUpDown();
+            this.DelayGroup = new System.Windows.Forms.GroupBox();
             this.PortGroup.SuspendLayout();
             this.NumberOfPlayersGroup.SuspendLayout();
             this.LogGroup.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.delayNumeric)).BeginInit();
+            this.DelayGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // PortGroup
@@ -98,9 +102,9 @@
             // LogGroup
             // 
             this.LogGroup.Controls.Add(this.LogTextBox);
-            this.LogGroup.Location = new System.Drawing.Point(12, 122);
+            this.LogGroup.Location = new System.Drawing.Point(12, 185);
             this.LogGroup.Name = "LogGroup";
-            this.LogGroup.Size = new System.Drawing.Size(283, 355);
+            this.LogGroup.Size = new System.Drawing.Size(283, 292);
             this.LogGroup.TabIndex = 1;
             this.LogGroup.TabStop = false;
             this.LogGroup.Text = "Log";
@@ -116,7 +120,7 @@
             // 
             // StartButton
             // 
-            this.StartButton.Location = new System.Drawing.Point(185, 80);
+            this.StartButton.Location = new System.Drawing.Point(190, 156);
             this.StartButton.Name = "StartButton";
             this.StartButton.Size = new System.Drawing.Size(104, 23);
             this.StartButton.TabIndex = 3;
@@ -134,15 +138,53 @@
             this.PlayerLabel.TabIndex = 4;
             this.PlayerLabel.Text = "Players: 0";
             // 
-            // timer1
+            // tickTimer
             // 
-            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
+            this.tickTimer.Tick += new System.EventHandler(this.tickTimer_Tick);
+            // 
+            // delayNumeric
+            // 
+            this.delayNumeric.Increment = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.delayNumeric.Location = new System.Drawing.Point(6, 19);
+            this.delayNumeric.Maximum = new decimal(new int[] {
+            60000,
+            0,
+            0,
+            0});
+            this.delayNumeric.Minimum = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            this.delayNumeric.Name = "delayNumeric";
+            this.delayNumeric.Size = new System.Drawing.Size(146, 20);
+            this.delayNumeric.TabIndex = 5;
+            this.delayNumeric.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // DelayGroup
+            // 
+            this.DelayGroup.Controls.Add(this.delayNumeric);
+            this.DelayGroup.Location = new System.Drawing.Point(12, 122);
+            this.DelayGroup.Name = "DelayGroup";
+            this.DelayGroup.Size = new System.Drawing.Size(158, 57);
+            this.DelayGroup.TabIndex = 6;
+            this.DelayGroup.TabStop = false;
+            this.DelayGroup.Text = "Delay (ms)";
             // 
             // QuoridorServerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(306, 489);
+            this.Controls.Add(this.DelayGroup);
             this.Controls.Add(this.PlayerLabel);
             this.Controls.Add(this.StartButton);
             this.Controls.Add(this.LogGroup);
@@ -155,6 +197,8 @@
             this.NumberOfPlayersGroup.ResumeLayout(false);
             this.NumberOfPlayersGroup.PerformLayout();
             this.LogGroup.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.delayNumeric)).EndInit();
+            this.DelayGroup.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -171,7 +215,9 @@
         public System.Windows.Forms.RichTextBox LogTextBox;
         private System.Windows.Forms.Button StartButton;
         private System.Windows.Forms.Label PlayerLabel;
-        private System.Windows.Forms.Timer timer1;
+        private System.Windows.Forms.Timer tickTimer;
+        private System.Windows.Forms.NumericUpDown delayNumeric;
+        private System.Windows.Forms.GroupBox DelayGroup;
     }
 }
 

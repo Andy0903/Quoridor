@@ -6,7 +6,7 @@ namespace Quoridor.AI
     /// <summary>
     /// Class used to contain information/status about the game.
     /// </summary>
-    public class GameStatus
+    public class GameData
     {
         /// <summary>
         /// List of all the players.
@@ -29,7 +29,7 @@ namespace Quoridor.AI
         /// </summary>
         public Player Self { get; private set; }
 
-        public GameStatus(List<Quoridor.Player> players, HorizontalTile[,] hTiles, VerticalTile[,] vTiles, WideTile[,] wTiles, int slot)
+        public GameData(List<Quoridor.Player> players, HorizontalTile[,] hTiles, VerticalTile[,] vTiles, WideTile[,] wTiles, int slot)
         {
             Players = players.Select(p => new Player(p.NumberOfWalls, p.WideTilePosition, p.Color)).ToList();
             Self = Players[slot];

@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using System;
 
 namespace Quoridor.AI
 {
@@ -28,6 +29,10 @@ namespace Quoridor.AI
             else if (color == new Microsoft.Xna.Framework.Color(0.8f, 0.8f, 0))
             {
                 Color = Color.Yellow;
+            }
+            else
+            {
+                Color = Color.None;
             }
 
         }

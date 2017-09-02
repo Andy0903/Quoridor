@@ -32,11 +32,14 @@ namespace QuoridorServer
             NumberOfPlayersGroup.Enabled = false;
             PortGroup.Enabled = false;
             StartButton.Enabled = false;
+            DelayGroup.Enabled = false;
 
             NetworkManager.OnPlayerConnected += NetworkManager_OnPlayerConnected;
             NetworkManager.OnConnect += NetworkManager_OnConnect;
 
-            timer1.Start();
+            tickTimer.Interval = (int)delayNumeric.Value;
+
+            tickTimer.Start();
         }
 
         private void NetworkManager_OnConnect(object sender, EventArgs e)
@@ -62,7 +65,7 @@ namespace QuoridorServer
             }
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void tickTimer_Tick(object sender, EventArgs e)
         {
             NetworkManager.Update();
         }

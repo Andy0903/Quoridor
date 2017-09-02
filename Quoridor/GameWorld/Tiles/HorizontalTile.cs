@@ -9,7 +9,7 @@ namespace Quoridor
     {
         private Texture2D texture;
         
-        public HorizontalTile(Vector2 position) : base(TileType.NarrowHorizontal, position)
+        public HorizontalTile(Vector2 position) : base(TileType.Horizontal, position)
         {
             texture = Program.Game.Content.Load<Texture2D>("NarrowHorizontal");
         }
