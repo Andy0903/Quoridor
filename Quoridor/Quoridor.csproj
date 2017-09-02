@@ -7,13 +7,13 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{6631BC11-9362-40BA-9544-D87370DC833E}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Quoridor</RootNamespace>
     <AssemblyName>Quoridor</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MonoGamePlatform>Windows</MonoGamePlatform>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
@@ -38,18 +38,19 @@
   <PropertyGroup>
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <StartupObject />
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="AI\Action.cs" />
     <Compile Include="AI\Agent.cs" />
     <Compile Include="AI\Color.cs" />
-    <Compile Include="AI\DeterministicAgent.cs" />
     <Compile Include="AI\GameStatus.cs" />
     <Compile Include="AI\MoveAction.cs" />
     <Compile Include="AI\PlaceWallAction.cs" />
     <Compile Include="AI\Player.cs" />
+    <Compile Include="AI\Point.cs" />
     <Compile Include="AI\Tile.cs" />
     <Compile Include="AI\WallOrientation.cs" />
     <Compile Include="OutlinedText.cs" />

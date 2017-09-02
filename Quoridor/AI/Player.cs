@@ -1,6 +1,4 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace Quoridor.AI
+﻿namespace Quoridor.AI
 {
     public class Player
     {

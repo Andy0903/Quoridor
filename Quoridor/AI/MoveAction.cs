@@ -1,6 +1,6 @@
 ﻿namespace Quoridor.AI
 {
-    class MoveAction : Action
+    public class MoveAction : Action
     {
         public int Column { get; private set; }
         public int Row { get; private set; }
