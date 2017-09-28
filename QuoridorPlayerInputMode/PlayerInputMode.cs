@@ -130,9 +130,13 @@ namespace Quoridor.AI
                 {
                     for (int k = 0; k < data.HorizontalWall.GetLength(1); k++)
                     {
-                        if (InputMessenger.MousePosition == data.HorizontalWallPixelPosition[i,k] && data.HorizontalWall[i,k] == false)
+                        if (IsWithinGameBoard(i, k) && IsWithinGameBoard(i + 1, k))
                         {
-                            return new PlaceWallAction(i, k, WallOrientation.Horizontal);
+                            if (InputMessenger.MousePosition == data.HorizontalWallPixelPosition[i, k]
+                            && data.HorizontalWall[i, k] == false && data.HorizontalWall[i + 1, k] == false)
+                            {
+                                return new PlaceWallAction(i, k, WallOrientation.Horizontal);
+                            }
                         }
                     }
                 }
@@ -141,9 +145,13 @@ namespace Quoridor.AI
                 {
                     for (int k = 0; k < data.VerticalWall.GetLength(1); k++)
                     {
-                        if (InputMessenger.MousePosition == data.VerticalWallPixelPosition[i, k] && data.VerticalWall[i, k] == false)
+                        if (IsWithinGameBoard(i, k) && IsWithinGameBoard(i, k + 1))
                         {
-                            return new PlaceWallAction(i, k, WallOrientation.Vertical);
+                            if (InputMessenger.MousePosition == data.VerticalWallPixelPosition[i, k]
+                            && data.VerticalWall[i, k] == false && data.VerticalWall[i, k + 1] == false)
+                            {
+                                return new PlaceWallAction(i, k, WallOrientation.Vertical);
+                            }
                         }
                     }
                 }
@@ -154,7 +162,7 @@ namespace Quoridor.AI
 
         public override Action RedoAction(GameData status)
         {
-            throw new NotImplementedException();
+            return DoAction(status);
         }
     }
 }
