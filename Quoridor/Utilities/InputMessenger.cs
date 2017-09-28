@@ -21,7 +21,7 @@ namespace Quoridor
         public static bool PressedS => KeyboardUtility.WasClicked(Keys.S);
         public static bool PressedD => KeyboardUtility.WasClicked(Keys.D);
 
-        public static Point MousePosition => MouseUtility.Position;
+        public static Quoridor.AI.Point MousePosition => MouseUtility.Position;
         public static bool PressedLMB => MouseUtility.WasLeftClicked;
     }
 }

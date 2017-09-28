@@ -74,51 +74,82 @@ namespace Quoridor.AI
         public override Action DoAction(GameData status)
         {
             data = status;
-            bool waitingForInput = true;
-
             Point position = data.Self.Position;
             Tile tile = data.Tiles[position.X, position.Y];
             List<Tile> validMoves = ValidMovesFromTilePosition(tile);
 
-            while (waitingForInput) //Exit with return statement
-            {
-                InputMessenger.Update();
+            InputMessenger.Update();
 
-                if (InputMessenger.PressedW)
+            #region snyggt sätt att bryta ut?
+            if (InputMessenger.PressedW)
+            {
+                if (IsWithinGameBoard(position.X, position.Y - 1))
                 {
                     if (validMoves.Contains(data.Tiles[position.X, position.Y - 1]))
                     {
-                        waitingForInput = false;
                         return new MoveAction(position.X, position.Y - 1);
                     }
                 }
-                else if (InputMessenger.PressedA)
+            }
+            else if (InputMessenger.PressedA)
+            {
+                if (IsWithinGameBoard(position.X - 1, position.Y))
                 {
                     if (validMoves.Contains(data.Tiles[position.X - 1, position.Y]))
                     {
-                        waitingForInput = false;
                         return new MoveAction(position.X - 1, position.Y);
+
                     }
                 }
-                else if (InputMessenger.PressedS)
+            }
+            else if (InputMessenger.PressedS)
+            {
+                if (IsWithinGameBoard(position.X, position.Y + 1))
                 {
                     if (validMoves.Contains(data.Tiles[position.X, position.Y + 1]))
                     {
-                        waitingForInput = false;
                         return new MoveAction(position.X, position.Y + 1);
                     }
                 }
-                else if (InputMessenger.PressedD)
+            }
+            else if (InputMessenger.PressedD)
+            {
+                if (IsWithinGameBoard(position.X + 1, position.Y))
                 {
                     if (validMoves.Contains(data.Tiles[position.X + 1, position.Y]))
                     {
-                        waitingForInput = false;
                         return new MoveAction(position.X + 1, position.Y);
                     }
                 }
             }
+            #endregion
 
-            return new MoveAction(position.X, position.Y);
+            if (InputMessenger.PressedLMB)
+            {
+                for (int i = 0; i < data.HorizontalWall.GetLength(0); i++)
+                {
+                    for (int k = 0; k < data.HorizontalWall.GetLength(1); k++)
+                    {
+                        if (InputMessenger.MousePosition == data.HorizontalWallPixelPosition[i,k] && data.HorizontalWall[i,k] == false)
+                        {
+                            return new PlaceWallAction(i, k, WallOrientation.Horizontal);
+                        }
+                    }
+                }
+
+                for (int i = 0; i < data.VerticalWall.GetLength(0); i++)
+                {
+                    for (int k = 0; k < data.VerticalWall.GetLength(1); k++)
+                    {
+                        if (InputMessenger.MousePosition == data.VerticalWallPixelPosition[i, k] && data.VerticalWall[i, k] == false)
+                        {
+                            return new PlaceWallAction(i, k, WallOrientation.Vertical);
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         public override Action RedoAction(GameData status)

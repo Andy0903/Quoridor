@@ -26,6 +26,7 @@ namespace Quoridor
 
         private void NetworkManager_OnGameReadyToStart(object aSender, GameReadyToStartMessage e)
         {
+            IsMouseVisible = true;
             gameBoard = new GameBoard(e.PlayerNames, e.ThisClientSlot, agent);
             state = GameState.Playing;
         }
@@ -87,6 +88,15 @@ namespace Quoridor
             if (state == GameState.MainMenu)
             {
                 UserInterface.Active.Update(gameTime);
+            }
+
+            if (gameBoard != null)
+            {
+                if (gameBoard.StillWaitingOnInput)
+                {
+                    gameBoard.DoTurn();
+                }
+
             }
 
             base.Update(gameTime);

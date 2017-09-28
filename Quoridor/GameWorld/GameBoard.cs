@@ -24,6 +24,8 @@ namespace Quoridor
         int currentSlotTurn;
         int numberOfTurns;
 
+        public bool StillWaitingOnInput { get; private set; }
+
         public bool TileNotOccupied(int column, int row)
         {
             return wideTiles[column, row].IsOccupied == false;
@@ -118,11 +120,20 @@ namespace Quoridor
             }
         }
 
-        private void DoTurn()
+        public void DoTurn()
         {
             AI.GameData status = new AI.GameData(players, horizontals, verticals, wideTiles, clientSlot);
             AI.Action action = agent.DoAction(status);
-            PerformAction(action);
+
+            if (action == null)
+            {
+                StillWaitingOnInput = true;
+            }
+            else
+            {
+                StillWaitingOnInput = false;
+                PerformAction(action);
+            }
         }
 
         private void NetworkManager_OnActionRejected(object sender, ActionRejectMessage e)

@@ -9,6 +9,14 @@ namespace Quoridor.AI
     public class GameData
     {
         /// <summary>
+        /// Horizontally aligned walls pixel positions, quick way to get player input working.
+        /// </summary>
+        public Point[,] HorizontalWallPixelPosition { get; private set; }
+        /// <summary>
+        /// Vertically aligned walls pixel positions, quick way to get player input working.
+        /// </summary>
+        public Point[,] VerticalWallPixelPosition { get; private set; }
+        /// <summary>
         /// List of all the players.
         /// </summary>
         public List<Player> Players { get; private set; }
@@ -35,22 +43,26 @@ namespace Quoridor.AI
             Self = Players[slot];
 
             HorizontalWall = new bool[hTiles.GetLength(0), hTiles.GetLength(1)];
+            HorizontalWallPixelPosition = new Point[hTiles.GetLength(0), hTiles.GetLength(1)];
 
             for (int i = 0; i < hTiles.GetLength(0); i++)
             {
                 for (int k = 0; k < hTiles.GetLength(1); k++)
                 {
                     HorizontalWall[i, k] = hTiles[i, k].IsOccupied;
+                    HorizontalWallPixelPosition[i, k] = hTiles[i, k].Position;
                 }
             }
 
             VerticalWall = new bool[vTiles.GetLength(0), vTiles.GetLength(1)];
+            VerticalWallPixelPosition = new Point[vTiles.GetLength(0), vTiles.GetLength(1)];
 
             for (int i = 0; i < vTiles.GetLength(0); i++)
             {
                 for (int k = 0; k < vTiles.GetLength(1); k++)
                 {
                     VerticalWall[i, k] = vTiles[i, k].IsOccupied;
+                    VerticalWallPixelPosition[i, k] = vTiles[i, k].Position;
                 }
             }
 
