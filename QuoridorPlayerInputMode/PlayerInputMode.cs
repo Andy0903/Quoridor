@@ -80,49 +80,14 @@ namespace Quoridor.AI
 
             InputMessenger.Update();
 
-            #region snyggt sätt att bryta ut?
-            if (InputMessenger.PressedW)
+            if (InputMessenger.PressedW || InputMessenger.PressedA || InputMessenger.PressedS || InputMessenger.PressedD)
             {
-                if (IsWithinGameBoard(position.X, position.Y - 1))
-                {
-                    if (validMoves.Contains(data.Tiles[position.X, position.Y - 1]))
-                    {
-                        return new MoveAction(position.X, position.Y - 1);
-                    }
-                }
-            }
-            else if (InputMessenger.PressedA)
-            {
-                if (IsWithinGameBoard(position.X - 1, position.Y))
-                {
-                    if (validMoves.Contains(data.Tiles[position.X - 1, position.Y]))
-                    {
-                        return new MoveAction(position.X - 1, position.Y);
+                int posX = position.X + (InputMessenger.PressedA ? -1 : (InputMessenger.PressedD ? 1 : 0));
+                int posY = position.Y + (InputMessenger.PressedW ? -1 : (InputMessenger.PressedS ? 1 : 0));
 
-                    }
-                }
+                if (IsWithinGameBoard(posX, posY) && validMoves.Contains(data.Tiles[posX, posY]))
+                    return new MoveAction(posX, posY);
             }
-            else if (InputMessenger.PressedS)
-            {
-                if (IsWithinGameBoard(position.X, position.Y + 1))
-                {
-                    if (validMoves.Contains(data.Tiles[position.X, position.Y + 1]))
-                    {
-                        return new MoveAction(position.X, position.Y + 1);
-                    }
-                }
-            }
-            else if (InputMessenger.PressedD)
-            {
-                if (IsWithinGameBoard(position.X + 1, position.Y))
-                {
-                    if (validMoves.Contains(data.Tiles[position.X + 1, position.Y]))
-                    {
-                        return new MoveAction(position.X + 1, position.Y);
-                    }
-                }
-            }
-            #endregion
 
             if (InputMessenger.PressedLMB)
             {
@@ -130,13 +95,11 @@ namespace Quoridor.AI
                 {
                     for (int k = 0; k < data.HorizontalWall.GetLength(1); k++)
                     {
-                        if (IsWithinGameBoard(i, k) && IsWithinGameBoard(i + 1, k))
+                        if (IsWithinGameBoard(i, k) && IsWithinGameBoard(i + 1, k) &&
+                            InputMessenger.MousePosition == data.HorizontalWallPixelPosition[i, k] &&
+                            data.HorizontalWall[i, k] == false && data.HorizontalWall[i + 1, k] == false)
                         {
-                            if (InputMessenger.MousePosition == data.HorizontalWallPixelPosition[i, k]
-                            && data.HorizontalWall[i, k] == false && data.HorizontalWall[i + 1, k] == false)
-                            {
-                                return new PlaceWallAction(i, k, WallOrientation.Horizontal);
-                            }
+                            return new PlaceWallAction(i, k, WallOrientation.Horizontal);
                         }
                     }
                 }
@@ -145,13 +108,11 @@ namespace Quoridor.AI
                 {
                     for (int k = 0; k < data.VerticalWall.GetLength(1); k++)
                     {
-                        if (IsWithinGameBoard(i, k) && IsWithinGameBoard(i, k + 1))
+                        if (IsWithinGameBoard(i, k) && IsWithinGameBoard(i, k + 1) &&
+                            InputMessenger.MousePosition == data.VerticalWallPixelPosition[i, k] &&
+                            data.VerticalWall[i, k] == false && data.VerticalWall[i, k + 1] == false)
                         {
-                            if (InputMessenger.MousePosition == data.VerticalWallPixelPosition[i, k]
-                            && data.VerticalWall[i, k] == false && data.VerticalWall[i, k + 1] == false)
-                            {
-                                return new PlaceWallAction(i, k, WallOrientation.Vertical);
-                            }
+                            return new PlaceWallAction(i, k, WallOrientation.Vertical);
                         }
                     }
                 }
