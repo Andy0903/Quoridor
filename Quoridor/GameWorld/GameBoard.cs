@@ -138,9 +138,7 @@ namespace Quoridor
 
         private void NetworkManager_OnActionRejected(object sender, ActionRejectMessage e)
         {
-            AI.GameData status = new AI.GameData(players, horizontals, verticals, wideTiles, clientSlot);
-            AI.Action action = agent.RedoAction(status);
-            PerformAction(action);
+            throw new InvalidOperationException("Rejected illegal action!");
         }
 
         private void PerformAction(AI.Action action)

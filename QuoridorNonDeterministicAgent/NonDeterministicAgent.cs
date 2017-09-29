@@ -39,11 +39,6 @@ namespace Quoridor.AI
             return new MoveAction(nextTile.Position.X, nextTile.Position.Y);
         }
 
-        public override Action RedoAction(GameData status)
-        {
-            return DoAction(status);
-        }
-
         private Player GetRandomOpponent()
         {
             int index = rnd.Next(0, data.Players.Count - 1);

@@ -3,7 +3,6 @@
     public abstract class Agent
     {
         public abstract Action DoAction(GameData status);
-        public abstract Action RedoAction(GameData status);
 
         public void Start()
         {

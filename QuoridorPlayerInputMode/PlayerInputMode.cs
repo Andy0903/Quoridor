@@ -120,10 +120,5 @@ namespace Quoridor.AI
 
             return null;
         }
-
-        public override Action RedoAction(GameData status)
-        {
-            return DoAction(status);
-        }
     }
 }
