@@ -11,11 +11,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuoridorNetwork", "Messages
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuoridorDeterministicAgent", "QuoridorDeterministicAgent\QuoridorDeterministicAgent.csproj", "{609CED56-C4F7-4405-A00B-613FF2D9490F}"
 EndProject
-<<<<<<< HEAD
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuoridorNonDeterministicAgent", "QuoridorNonDeterministicAgent\QuoridorNonDeterministicAgent.csproj", "{119EB40F-A121-4559-85A6-32862F1ABE8F}"
-=======
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuoridorPlayerInputMode", "QuoridorPlayerInputMode\QuoridorPlayerInputMode.csproj", "{700377A6-564F-400E-864D-7A66F809CC3A}"
->>>>>>> PlayerInputTesting
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +28,7 @@ Global
 		{6631BC11-9362-40BA-9544-D87370DC833E}.Debug|x86.ActiveCfg = Debug|x86
 		{6631BC11-9362-40BA-9544-D87370DC833E}.Debug|x86.Build.0 = Debug|x86
 		{6631BC11-9362-40BA-9544-D87370DC833E}.Release|Any CPU.ActiveCfg = Release|x86
+		{6631BC11-9362-40BA-9544-D87370DC833E}.Release|Any CPU.Build.0 = Release|x86
 		{6631BC11-9362-40BA-9544-D87370DC833E}.Release|x86.ActiveCfg = Release|x86
 		{6631BC11-9362-40BA-9544-D87370DC833E}.Release|x86.Build.0 = Release|x86
 		{5B7FA3B0-63E4-4AAC-8953-DB11E40F8F96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -56,7 +55,6 @@ Global
 		{609CED56-C4F7-4405-A00B-613FF2D9490F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{609CED56-C4F7-4405-A00B-613FF2D9490F}.Release|x86.ActiveCfg = Release|Any CPU
 		{609CED56-C4F7-4405-A00B-613FF2D9490F}.Release|x86.Build.0 = Release|Any CPU
-<<<<<<< HEAD
 		{119EB40F-A121-4559-85A6-32862F1ABE8F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{119EB40F-A121-4559-85A6-32862F1ABE8F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{119EB40F-A121-4559-85A6-32862F1ABE8F}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -65,7 +63,6 @@ Global
 		{119EB40F-A121-4559-85A6-32862F1ABE8F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{119EB40F-A121-4559-85A6-32862F1ABE8F}.Release|x86.ActiveCfg = Release|Any CPU
 		{119EB40F-A121-4559-85A6-32862F1ABE8F}.Release|x86.Build.0 = Release|Any CPU
-=======
 		{700377A6-564F-400E-864D-7A66F809CC3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{700377A6-564F-400E-864D-7A66F809CC3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{700377A6-564F-400E-864D-7A66F809CC3A}.Debug|x86.ActiveCfg = Debug|Any CPU
@@ -74,7 +71,6 @@ Global
 		{700377A6-564F-400E-864D-7A66F809CC3A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{700377A6-564F-400E-864D-7A66F809CC3A}.Release|x86.ActiveCfg = Release|Any CPU
 		{700377A6-564F-400E-864D-7A66F809CC3A}.Release|x86.Build.0 = Release|Any CPU
->>>>>>> PlayerInputTesting
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
