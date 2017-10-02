@@ -29,19 +29,19 @@ namespace Quoridor
             HorizontalLine hline0 = new HorizontalLine();
             mainPanel.AddChild(hline0);
             myNameText = new TextInput(false);
-            myNameText.PlaceholderText = "Insert name here..";
+            myNameText.PlaceholderText = "Name: Default";
             mainPanel.AddChild(myNameText);
             HorizontalLine hline1 = new HorizontalLine();
             mainPanel.AddChild(hline1);
 
             TextInput ipText = new TextInput(false);
-            ipText.PlaceholderText = "Insert IP here..";
+            ipText.PlaceholderText = "IP: 127.0.0.1";
             mainPanel.AddChild(ipText);
             HorizontalLine hline2 = new HorizontalLine();
             mainPanel.AddChild(hline2);
 
             TextInput portText = new TextInput(false);
-            portText.PlaceholderText = "Insert port here..";
+            portText.PlaceholderText = "Port: 14242";
             mainPanel.AddChild(portText);
             HorizontalLine hline3 = new HorizontalLine();
             mainPanel.AddChild(hline3);

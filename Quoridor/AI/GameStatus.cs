@@ -21,11 +21,11 @@ namespace Quoridor.AI
         /// </summary>
         public List<Player> Players { get; private set; }
         /// <summary>
-        /// Horizontally aligned walls.
+        /// Horizontally aligned walls. True indicates that a wall is placed on the position.
         /// </summary>
         public bool[,] HorizontalWall { get; private set; }
         /// <summary>
-        /// Vertically aligned walls.
+        /// Vertically aligned walls. True indicates that a wall is placed on the position.
         /// </summary>
         public bool[,] VerticalWall { get; private set; }
         /// <summary>

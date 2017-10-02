@@ -7,7 +7,8 @@ namespace Quoridor.AI
     {
         int roundCounter = 0;
         GameData data;
-        Random rnd = new Random();
+        const int seed = 0903;
+        Random rnd = new Random(0903);
 
         public static void Main()
         {
