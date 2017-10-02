@@ -17,7 +17,7 @@ namespace Quoridor.AI
         {
             this.data = data;
 
-            if (rnd.Next(1, 100) < 200)
+            if (rnd.Next(1, 200) < 100)
             {
                 Player rndPlayer = GetRandomOpponent();
                 Tile opponentNextTile = PathToGoal(rndPlayer);
