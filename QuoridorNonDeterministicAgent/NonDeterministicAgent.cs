@@ -17,7 +17,7 @@ namespace Quoridor.AI
         {
             this.data = data;
 
-            if (rnd.Next(1, 200) > 100)
+            if (rnd.Next(1, 100) < 200)
             {
                 Player rndPlayer = GetRandomOpponent();
                 Tile opponentNextTile = PathToGoal(rndPlayer);
@@ -26,12 +26,18 @@ namespace Quoridor.AI
                 if (rndPlayer.Position.X == opponentNextTile.Position.X)
                 {
                     alignment = WallOrientation.Horizontal;
-                    return new PlaceWallAction(opponentNextTile.Position.X, opponentNextTile.Position.Y, alignment);
+                    if (PlaceWall(opponentNextTile, alignment))
+                    {
+                        return new PlaceWallAction(opponentNextTile.Position.X, opponentNextTile.Position.Y, alignment);
+                    }
                 }
                 else if (rndPlayer.Position.Y == opponentNextTile.Position.Y)
                 {
                     alignment = WallOrientation.Vertical;
-                    return new PlaceWallAction(opponentNextTile.Position.X, opponentNextTile.Position.Y, alignment);
+                    if (PlaceWall(opponentNextTile, alignment))
+                    {
+                        return new PlaceWallAction(opponentNextTile.Position.X, opponentNextTile.Position.Y, alignment);
+                    }
                 }
             }
 
@@ -149,5 +155,98 @@ namespace Quoridor.AI
             return false;
         }
 
+        public bool PlaceWall(Tile wantToPlaceAt, WallOrientation alignment)
+        {
+            int row = wantToPlaceAt.Position.Y;
+            int column = wantToPlaceAt.Position.X;
+
+            if (data.Self.NumberOfWalls <= 0)
+                return false;
+
+            switch (alignment)
+            {
+                case WallOrientation.Vertical:
+                    if (column < 0 || data.VerticalWall.GetLength(0) <= column)
+                        return false;
+                    if (row < 0 || data.VerticalWall.GetLength(1) - 1 <= row)
+                        return false;
+                    if (data.VerticalWall[column, row] || data.VerticalWall[column, row + 1])
+                        return false;
+
+                    data.VerticalWall[column, row] = true;
+                    data.VerticalWall[column, row + 1] = true;
+
+                    if (!PathToGoalExists())
+                    {
+                        data.VerticalWall[column, row] = false;
+                        data.VerticalWall[column, row + 1] = false;
+                        return false;
+                    }
+                    break;
+                case WallOrientation.Horizontal:
+                    if (column < 0 || data.HorizontalWall.GetLength(0) - 1 <= column)
+                        return false;
+                    if (row < 0 || data.HorizontalWall.GetLength(1) <= row)
+                        return false;
+                    if (data.HorizontalWall[column, row] || data.HorizontalWall[column + 1, row])
+                        return false;
+
+                    data.HorizontalWall[column, row] = true;
+                    data.HorizontalWall[column + 1, row] = true;
+
+                    if (!PathToGoalExists())
+                    {
+                        data.HorizontalWall[column, row] = false;
+                        data.HorizontalWall[column + 1, row] = false;
+                        return false;
+                    }
+
+                    break;
+                default:
+                    return false;
+            }
+
+            return true;
+        }
+
+        private bool PathToGoalExists()
+        {
+            foreach (Player p in data.Players)
+            {
+                if (!PathToGoalExists(p))
+                    return false;
+            }
+            return true;
+        }
+
+        private bool PathToGoalExists(Player player)
+        {
+            HashSet<Tile> S = new HashSet<Tile>();
+            Queue<Tile> Q = new Queue<Tile>();
+
+            Tile root = data.Tiles[player.Position.X, player.Position.Y];
+            S.Add(root);
+            Q.Enqueue(root);
+
+            while (Q.Count > 0)
+            {
+                Tile current = Q.Dequeue();
+
+                if (data.Tiles[current.Position.X, current.Position.Y].Color == player.Color)
+                {
+                    return true;
+                }
+
+                foreach (Tile p in ValidMovesFromTilePosition(current))
+                {
+                    if (S.Contains(p) == false)
+                    {
+                        S.Add(p);
+                        Q.Enqueue(p);
+                    }
+                }
+            }
+            return false;
+        }
     }
 }
