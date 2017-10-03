@@ -85,8 +85,23 @@ namespace Quoridor.AI
                 int posX = position.X + (InputMessenger.PressedA ? -1 : (InputMessenger.PressedD ? 1 : 0));
                 int posY = position.Y + (InputMessenger.PressedW ? -1 : (InputMessenger.PressedS ? 1 : 0));
 
-                if (IsWithinGameBoard(posX, posY) && validMoves.Contains(data.Tiles[posX, posY]))
-                    return new MoveAction(posX, posY);
+                if (data.Tiles[posX, posY].IsOccupied)
+                {
+                    if (InputMessenger.PressedW || InputMessenger.PressedA || InputMessenger.PressedS || InputMessenger.PressedD)
+                    {
+                        int jumpX = posX + (InputMessenger.PressedA ? -1 : (InputMessenger.PressedD ? 1 : 0));
+                        int jumpY = posY + (InputMessenger.PressedW ? -1 : (InputMessenger.PressedS ? 1 : 0));
+
+                        if (IsWithinGameBoard(jumpX, jumpY) && validMoves.Contains(data.Tiles[jumpX, jumpY]))
+                            return new MoveAction(jumpX, jumpY);
+                    }
+                }
+                else
+                {
+                    if (IsWithinGameBoard(posX, posY) && validMoves.Contains(data.Tiles[posX, posY]))
+                        return new MoveAction(posX, posY);
+                }
+
             }
 
             if (InputMessenger.PressedLMB)
