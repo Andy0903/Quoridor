@@ -55,10 +55,16 @@ namespace Quoridor
             connectButton.OnClick = (Entity button) =>
             {
                 connectButton.Disabled = true;
-                if (ipText.Value == "" && portText.Value == "" && myNameText.Value == "")
+                if (myNameText.Value == "")
                 {
                     myNameText.Value = "Default";
+                }
+                if (ipText.Value == "")
+                {
                     ipText.Value = "127.0.0.1";
+                }
+                if (portText.Value == "")
+                {
                     portText.Value = "14242";
                 }
                 NetworkManager.InitializeClient(int.Parse(portText.Value), ipText.Value);
